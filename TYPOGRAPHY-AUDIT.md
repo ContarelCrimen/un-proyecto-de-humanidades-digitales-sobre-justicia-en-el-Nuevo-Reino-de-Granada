@@ -1,550 +1,563 @@
 # Auditoría de tipografía
 
-Diagnóstico del estado actual de la tipografía en el repositorio. **No modifica código.**
-
-**Alcance de la búsqueda:** todo `src/`, `public/`, `astro.config.mjs`, `tools/`, `eslint.config.js`,
-`tsconfig.json`, `.prettierrc.json` y `.github/workflows/`. Extensiones `.astro`, `.scss`, `.ts`,
-`.js`, `.mjs`, `.html`, `.json`.
-
-**Excluidos:** `node_modules/` y `dist/`. `dist/` es salida de build obsoleta (contiene 11 páginas;
-`src/pages/` tiene 8), así que auditarla describiría un sitio que ya no existe.
-
-**Superficie auditada:** 8 páginas `.astro`, 26 hojas `.scss`, 23 módulos de gráfico en
-`src/scripts/charts/`, 2 en `src/scripts/tables/`, 2 en `src/scripts/ui/`.
-
----
-
-## 1. Tipografías
-
-Hay **seis pilas de fuentes declaradas** y **cinco familias reales** nombradas. Todas se declaran en
-un solo sitio, `src/styles/abstracts/_variables.scss`.
-
-| Token SCSS | Valor | Custom property | Cómo se carga |
-|---|---|---|---|
-| `$font-display` (`_variables.scss:43`) | `'IM Fell English', Georgia, serif` | `--font-display` (`_root.scss:47`) | Google Fonts — `ital@0;1` |
-| `$font-body` (`_variables.scss:44`) | `'Source Sans 3', system-ui, sans-serif` | `--font-body` (`_root.scss:48`) | Google Fonts — `wght@300;400;600` |
-| `$font-mono` (`_variables.scss:45`) | `'Source Code Pro', monospace` | `--font-mono` (`_root.scss:49`) | Google Fonts — `wght@400;600` |
-| `$font-mapa` (`_variables.scss:46`) | `Georgia, serif` | **`--mapa-font`** (`_root.scss:50`) | **No se carga.** Fuente del sistema |
-| `$font-sistema` (`_variables.scss:53`) | `system-ui, sans-serif` | *ninguna* | Fuente del sistema |
-| `$font-sans` (`_variables.scss:54`) | `sans-serif` | *ninguna* | Genérica del navegador |
-
-### Origen de cada familia
-
-**Enlaces externos.** Un único punto de carga, `src/layouts/BaseLayout.astro:46-51`, que llega a las
-8 páginas:
-
-```
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet" />
-```
-
-Eso descarga exactamente:
-
-| Familia | Pesos y estilos descargados |
-|---|---|
-| IM Fell English | 400 redonda, 400 cursiva |
-| Source Sans 3 | 300, 400, 600 (solo redonda) |
-| Source Code Pro | 400, 600 (solo redonda) |
-
-**`@font-face`:** ninguna en todo el repositorio.
-
-**Archivos de fuente locales:** ninguno. `public/` contiene 4 PNG y 13 archivos de datos;
-`src/assets/images/` contiene un JPG. No hay `.woff`, `.woff2`, `.ttf` ni `.otf`.
-
-**Familias nombradas sin declaración propia (recaen en la fuente instalada o en la genérica):**
-
-| Familia | Dónde | Estado |
-|---|---|---|
-| `Georgia` | `$font-mapa`, y como respaldo de `$font-display` | Fuente del sistema. Si no está instalada, cae a `serif` |
-| `system-ui` | `$font-sistema`, y respaldo de `$font-body` | La fuente de interfaz del SO |
-| `serif` / `sans-serif` / `monospace` | genéricas finales de cada pila | Las decide el navegador |
-| `serif` (suelta) | `src/scripts/charts/ConteoCrimenes.ts:42` | Dentro de un módulo muerto — ver §5.8 |
-
-**Nota sobre el contrato de runtime.** `src/scripts/dev/verificarVariablesCss.ts` verifica 27 custom
-properties que el JS lee con `getComputedStyle`. **Ninguna es de tipografía** — la lista es solo de
-color. Renombrar o reorganizar los tokens de fuente no rompe ningún gráfico.
-
----
-
-## 2. Tamaños de fuente
-
-**38 valores distintos** repartidos en **159 declaraciones `font-size`** en SCSS, en dos sistemas de
-unidades que conviven.
-
-### 2.1 Definidos como custom properties
-
-**Ninguno.** No existe ni un `$font-size-*` en `_variables.scss` ni un `--font-size-*` en
-`_root.scss`. Los tokens cubren color, tipografía (familia), breakpoints y z-index; la escala
-tipográfica no está tokenizada. Los 159 tamaños son literales escritos en el sitio de uso.
-
-### 2.2 Hardcodeados en SCSS — valores en `px` (17 distintos, 101 declaraciones)
-
-| Valor | Veces | Dónde aparece (muestra) |
-|---|---|---|
-| `9.5px` | 1 | `apilado.scss:25` `.apilado-eje-siglo` |
-| `10px` | 7 | `mariposa.scss:14`, `sunburst.scss:29`, `mapa.scss:582,606,655,737`, `paneles-filtro.scss:47` |
-| `10.5px` | 4 | `mariposa.scss:23`, `linaje.scss:253,272`, `crimenesPorTipo.scss:234` |
-| `11px` | 14 | `graficos.scss:40,50`, `mapa.scss:595,650,665,678`, `filtros-chip.scss:18`, `agentes-filtros.scss:17`, `lineaTiempoCasos.scss:138,159`, `crimenesPorTipo.scss:91,200`, `paneles-filtro.scss:40`, `mariposa.scss:28` |
-| `11.5px` | 7 | `apilado.scss:132`, `agentes-filtros.scss:65`, `mapa.scss:228,301`, `crimenesPorTipo.scss:60,142`, `paneles-filtro.scss:130` |
-| `12px` | 17 | `sunburst.scss:24`, `tooltips.scss:19`, `botones.scss:12,42,58,75`, `mapa.scss:271,318,575`, `filtros-chip.scss:113,136`, `linaje.scss:338`, `agentes-filtros.scss:105,121`, `mariposa.scss:54`, `paneles-filtro.scss:153,166` |
-| `12.5px` | 14 | `apilado.scss:19,84,95`, `agentes-filtros.scss:37`, `filtros-chip.scss:38,102,153`, `faq.scss:19`, `linaje.scss:77`, `mapa.scss:287`, `botones.scss:106`, `crimenesPorTipo.scss:172`, `lineaTiempoCasos.scss:225`, `preguntasTarjetas.scss:122` |
-| `13px` | 13 | `sunburst.scss:40`, `botones.scss:29`, `mapa.scss:244,422,588`, `mariposa.scss:33`, `paneles-filtro.scss:88,121,147`, `lineaTiempoCasos.scss:242,257,278`, `preguntasTarjetas.scss:51` |
-| `13.5px` | 4 | `filtros-chip.scss:57`, `faq.scss:128`, `linaje.scss:358,370` |
-| `14px` | 4 | `global.scss:307` `.legend-item`, `mapa.scss:570,644`, `paneles-filtro.scss:29` |
-| `14.5px` | 3 | `faq.scss:85`, `historiaMetodologia.scss:89`, `preguntasTarjetas.scss:134` |
-| `15px` | 6 | `faq.scss:50`, `linaje.scss:152,247,352`, `mapa.scss:220,562` |
-| `16px` | 3 | `tooltips.scss:49`, `crimenesPorTipo.scss:82`, `lineaTiempoCasos.scss:217` |
-| `20px` | 1 | `lineaTiempoCasos.scss:210` |
-| `22px` | 1 | `crimenesPorTipo.scss:227` |
-| `44px` | 1 | `lineaTiempoCasos.scss:86` |
-| `56px` | 1 | `lineaTiempoCasos.scss:97` |
-
-Los `px` se concentran en las hojas de gráficos, mapa y filtros.
-
-### 2.3 Hardcodeados en SCSS — valores en `rem` (19 distintos, 56 declaraciones)
-
-| Valor | = px @16 | Veces | Dónde aparece |
-|---|---|---|---|
-| `0.62rem` | 9.92 | 1 | `caso.scss:176` |
-| `0.65rem` | 10.4 | 2 | `caso.scss:113,267` |
-| `0.7rem` | 11.2 | 1 | `caso.scss:354` |
-| `0.75rem` | 12 | 2 | `global.scss:407`, `caso.scss:373` |
-| `0.78rem` | 12.48 | 2 | `caso.scss:220,262` |
-| `0.8rem` | 12.8 | 5 | `caso.scss:102,281`, `conteo.scss:151,266,430` |
-| `0.85rem` | 13.6 | 9 | `global.scss:259,465`, `caso.scss:51,304,362,379`, `conteo.scss:302,341,353` |
-| `0.88rem` | 14.08 | 1 | `caso.scss:197` |
-| `0.9rem` | 14.4 | 3 | `global.scss:158,418`, `caso.scss:247` |
-| `0.95rem` | 15.2 | 10 | `_typography.scss:30` (`p`), `global.scss:336,355,374,500`, `conteo.scss:36,66,143,261,413` |
-| `1rem` | 16 | 3 | `_reset.scss:15` (`body`), `caso.scss:34,67` |
-| `1.05rem` | 16.8 | 3 | `apilado.scss:65,121`, `conteo.scss:335` |
-| `1.1rem` | 17.6 | 5 | `apilado.scss:72`, `caso.scss:122`, `conteo.scss:119,196`, `faq.scss:98` |
-| `1.15rem` | 18.4 | 1 | `global.scss:227` (`a.card h3`) |
-| `1.2rem` | 19.2 | 3 | `global.scss:61` (`.logo`, muerto), `caso.scss:392`, `historiaMetodologia.scss:142` |
-| `1.35rem` | 21.6 | 1 | `caso.scss:191` |
-| `1.4rem` | 22.4 | 1 | `_typography.scss:19` (`.section-title`) |
-| `1.6rem` | 25.6 | 2 | `conteo.scss:231`, `linaje.scss:323` |
-| `2rem` | 32 | 1 | `_typography.scss:5` (`.section-mainTitle`) |
-
-Los `rem` se concentran en `global.scss`, `base/`, `caso.scss` y `conteo.scss` — el contenido
-editorial.
-
-### 2.4 `clamp()` (2)
-
-| Valor | Dónde |
-|---|---|
-| `clamp(1.4rem, 3vw, 2rem)` | `caso.scss:80` `.case-title` |
-| `clamp(2rem, 6vw, 3.4rem)` | `conteo.scss:137` `.conteo-stat-cuadro-valor` |
-
-Son las dos únicas reglas fluidas del repositorio.
-
-### 2.5 Estilos en línea en archivos `.astro`
-
-**Ninguno.** No hay ni un atributo `style=` ni un bloque `<style>` en ninguno de los 8 `.astro`, ni
-en `BaseLayout.astro`, `Nav.astro` o `Footer.astro`. Toda la tipografía del marcado vive en SCSS.
-
-### 2.6 Definidos en JS/TS
-
-Esta es la sección que menos contenido tiene, y es una buena noticia: la migración movió la
-tipografía de los gráficos a clases CSS. Los scripts asignan clases (`.attr('class', ...)`) y las
-hojas les dan el tipo. Solo quedan **dos sitios** donde el JS fija tipografía, **uno de ellos
-muerto**:
-
-| Sitio | Qué hace | Estado |
-|---|---|---|
-| `TiempoCrimenesMapa.ts:1774` | `.style('font-size', lista.length > 6 ? '9px' : '12px')` sobre los ticks del eje X | **Vivo.** Único tamaño fijado por JS |
-| `ConteoCrimenes.ts:45,52` | `<style>` inyectado con `font-size: 1.5rem` y `font-size:1rem` en línea | **Muerto** — ningún módulo lo importa |
-
-`.style()` de D3 escribe un estilo en línea, así que ese `9px`/`12px` gana sobre la clase
-`.mapa-linea-eje-x-texto` (`mapa.scss:660`), que deliberadamente no declara `font-size`.
-
-**Observable Plot** — `TiposCasos.ts` es el único uso de `@observablehq/plot` en el repo.
-`Plot.plot({...})` recibe `width`, `marginLeft`, `x`, `y`, `color` y `marks`, pero **ninguna opción
-`style`**. El SVG resultante sale con los valores por defecto de Plot (`10px`, `system-ui`) escritos
-en sus propios estilos, y no hereda nada del sitio.
-
-**OpenLayers** — `mapaBaseTopografico.ts` no crea ningún `ol/style/Text`; el mapa base solo pinta
-tiles. `ol/ol.css` entra importado en la línea 7 y aporta la tipografía de los controles de
-OpenLayers, ajena a los tokens del proyecto.
-
-**Tablas** (`src/scripts/tables/caso.ts`, `tablageneral.ts`) y **UI**
-(`src/scripts/ui/navMenu.ts`, `vistaToggle.ts`) no contienen ninguna referencia a `font`.
-
----
-
-## 3. Pesos y alturas de línea
-
-### 3.1 Pesos — 5 valores distintos en SCSS, 66 declaraciones
-
-| Valor | Veces | Dónde (muestra) |
-|---|---|---|
-| `400` | 2 | `faq.scss:99`, `mapa.scss:598` |
-| `600` | 25 | `global.scss:159,260,466,499`, `botones.scss:19,36,63,80,108`, `caso.scss:52,103,241,276,374`, `linaje.scss:297,372`, `graficos.scss:51`, `mapa.scss:276,679`, `faq.scss:21,86`, `agentes-filtros.scss:38`, `crimenesPorTipo.scss:201`, `preguntasTarjetas.scss:52`, `tooltips.scss:50` |
-| `700` | 34 | `conteo.scss` (×10), `mapa.scss:221,288,423,576,602,645`, `caso.scss:190,221`, `lineaTiempoCasos.scss:87,218,258,279`, `linaje.scss:78,254`, `mariposa.scss:34,43`, `crimenesPorTipo.scss:61,77`, `filtros-chip.scss:19,55`, `apilado.scss:20`, `agentes-filtros.scss:18`, `paneles-filtro.scss:30`, `preguntasTarjetas.scss:123` |
-| `800` | 3 | `crimenesPorTipo.scss:83,228`, `lineaTiempoCasos.scss:87` |
-| `normal` | 2 | `global.scss:62` (muerto), `caso.scss:81` |
-
-Fuera de SCSS: `font-weight: bold` ×2 en `ConteoCrimenes.ts:45,46` (módulo muerto). **Ningún peso
-está tokenizado.**
-
-### 3.2 Alturas de línea — 11 valores distintos, 26 declaraciones
-
-| Valor | Veces | Dónde |
-|---|---|---|
-| `0.5` | 2 | `caso.scss:192,198` |
-| `1` | 9 | `apilado.scss:73`, `caso.scss:393`, `conteo.scss:120,139,234`, `crimenesPorTipo.scss:84`, `historiaMetodologia.scss:143`, `lineaTiempoCasos.scss:88,211` |
-| `1.15` | 2 | `linaje.scss:255,273` |
-| `1.3` | 1 | `preguntasTarjetas.scss:124` |
-| `1.35` | 2 | `caso.scss:83`, `preguntasTarjetas.scss:53` |
-| `1.4` | 1 | `caso.scss:363` |
-| `1.5` | 2 | `mapa.scss:245`, `crimenesPorTipo.scss:173` |
-| `1.55` | 1 | `faq.scss:129` |
-| `1.6` | 2 | `linaje.scss:353`, `historiaMetodologia.scss:90` |
-| `1.65` | 1 | `preguntasTarjetas.scss:135` |
-| `1.7` | 3 | `_reset.scss:16` (`body`), `_typography.scss:31` (`p`), `caso.scss:35` (`body`, duplicado) |
-
-**Ninguna altura de línea está tokenizada.** Definidas en JS: ninguna.
-
-### 3.3 Complementos (catalogados por completitud)
-
-- **`letter-spacing`** — 11 valores distintos en 25 declaraciones: `0.01em`, `0.02em`, `0.03em`,
-  `0.04em`, `0.05em`, `0.06em`, `0.08em`, `0.09em`, `0.1em`. Sin tokenizar.
-- **`font-style: italic`** — 19 declaraciones. La más visible es `global.scss:155`, que pone en
-  cursiva el título del sitio y los enlaces del menú.
-- **`text-transform: uppercase`** — 18 declaraciones en 7 hojas.
-
----
-
-## 4. Mapa de cobertura
-
-**Cadena de carga.** `BaseLayout.astro:6` importa `global.scss` (que a su vez trae `abstracts/root`,
-`base/reset` y `base/typography`) en las 8 páginas. Cada página importa además sus propias hojas:
-
-| Página | Hojas propias |
-|---|---|
-| `index.astro` (portada) | `home.scss` |
-| `about/index.astro` | `botones`, `mapa`, `linaje`, `tooltips`, `faq`, `historiaMetodologia`, `preguntasTarjetas` |
-| `base-de-datos/index.astro` | `caso` |
-| `base-de-datos/caso.astro` | `caso` |
-| `personas/index.astro` | `conteo` |
-| `personas/personas.astro` | `tooltips`, `botones`, `graficos`, `filtros-chip`, `mariposa`, `apilado`, `lineas`, `sunburst`, `dashboard`, `paneles-filtro`, `mapa` |
-| `personas/otrosAgentes.astro` | `tooltips`, `botones`, `graficos`, `filtros-chip`, `mariposa`, `agentes-filtros`, `sunburst`, `lineas`, `dashboard` |
-| `tiempo/index.astro` | `tooltips`, `botones`, `paneles-filtro`, `mapa`, `crimenesPorTipo`, `lineaTiempoCasos` |
-
-### 4.1 IM Fell English — `var(--font-display)` — 11 declaraciones, 6 hojas
-
-| Archivo:línea | Selector | Qué tipografía |
-|---|---|---|
-| `base/_typography.scss:4` | `.section-mainTitle` | Título principal (h1) de todas las páginas |
-| `base/_typography.scss:18` | `section h2`, `.section-title` | Títulos de sección |
-| `global.scss:154` | `.logo`, `.nav-links a` | Título del sitio en el nav + los 5 enlaces del menú hamburguesa (en **cursiva**) |
-| `global.scss:226` | `a.card h3` | Titular de las tarjetas-enlace |
-| `global.scss:289` | `#mapa-contenedor` | Contenedor raíz del mapa (heredado por su contenido) |
-| `apilado.scss:64` | `.apilado-panel-titulo` | Título del panel de detalle *(clase huérfana, §5.8)* |
-| `apilado.scss:120` | `.apilado-sankey-titulo` | Título del sankey *(clase huérfana, §5.8)* |
-| `caso.scss:79` | `.case-title` | Título del caso (cursiva, `clamp`) |
-| `conteo.scss:136` | `.conteo-stat-cuadro-valor` | Cifra grande de los cuadros de estadística |
-| `conteo.scss:195` | `.conteo-detalle-header h3` | Cabecera del panel de detalle |
-| `linaje.scss:322` | `.linaje-panel-titulo` | Título del panel de linaje |
-
-**Alcance:** portada, `about`, `personas/*`, `base-de-datos/*`, `tiempo`. Titulares y navegación —
-nunca cuerpo de texto ni gráficos.
-
-### 4.2 Source Sans 3 — `var(--font-body)` — 28 declaraciones, 10 hojas
-
-| Archivo:línea | Selector | Qué tipografía |
-|---|---|---|
-| `base/_reset.scss:14` | `body` | **Todo el sitio por herencia** |
-| `global.scss:258` | `.about-tab` | Pestañas de "Sobre el proyecto" |
-| `global.scss:335,354,373` | `.filters select/input`, `.filtro-checkbox`, `.filtro-rango-anio input` | Controles de filtro |
-| `global.scss:433` | `.cargando` | Mensaje de carga (cursiva) |
-| `global.scss:464` | `.btn-descarga` | Botones de descarga |
-| `global.scss:498` | `.vista-toggle-btn` | Conmutador Dashboard/Historia |
-| `botones.scss:107` | `.btn-ver-casos-generico` | Botón "ver casos" fuera del mapa |
-| `agentes-filtros.scss:39,122` | `.ag-chip`, `.ag-btn-limpiar` | Chips y botón de limpiar de `otrosAgentes` |
-| `caso.scss:33,50,303` | `body`, `.back-link`, `.similares-tab` | Ficha de caso |
-| `conteo.scss:64` | `.conteo-toggle-btn` | Botón de conmutación del conteo |
-| `faq.scss:20,84` | `.btn-descargar-datos`, `.linaje-faq-pregunta` | FAQ de `about` |
-| `filtros-chip.scss:39,103,155` | `.filtro-chip`, `.filtro-select-generico`, `.filtro-switch` | Filtros de `personas/*` |
-| `linaje.scss:76,210,252,318,337,371` | `.linaje-nivel-titulo`, `.linaje-nodo`, `.linaje-nodo-circulo-texto`, `.linaje-panel`, `.linaje-selector-crimen`, `.linaje-panel-boton` | Grafo de linaje y su panel |
-| `preguntasTarjetas.scss:50,121` | `.preguntas-tarjetas-pildora`, `.preguntas-tarjetas-chip` | Tarjetas de preguntas |
-
-**Alcance:** las 8 páginas. Cuerpo, formularios, botones, chips y el grafo de linaje.
-
-### 4.3 Source Code Pro — `var(--font-mono)` — 5 declaraciones, 2 hojas
-
-| Archivo:línea | Selector | Qué tipografía |
-|---|---|---|
-| `global.scss:406` | `.tabla-datos th`, `.tabla-metadatos th` | Encabezados de las tablas archivísticas |
-| `caso.scss:116` | `.meta-pill .label` | Etiqueta de las píldoras de metadatos |
-| `caso.scss:175` | `[data-tooltip]::after` | Tooltip CSS de la ficha de caso |
-| `caso.scss:266` | `.sf-label` | Etiqueta de campo de fuente |
-| `caso.scss:353` | `.similar-card-meta` | Metadatos de las tarjetas de casos similares |
-
-**Alcance:** solo `base-de-datos/index.astro` y `base-de-datos/caso.astro`. Es la familia más
-acotada del sitio.
-
-### 4.4 Georgia — `var(--mapa-font)` — 36 declaraciones, 6 hojas
-
-La familia **más usada por número de declaraciones**, y la única que no se descarga.
-
-| Archivo | Declaraciones | Qué tipografía |
-|---|---|---|
-| `mapa.scss` (17,219,227,243,270,286,300,317,560,577,583,590,596,607,747) | 15 | Selector de vista, tarjetas del mapa, info de lugar, avisos, cápsulas, y el SVG del grafo (`.mapa-grafo-svg`) |
-| `botones.scss` (18,35,48,62,79) | 5 | Los 5 botones del dashboard de mapa |
-| `paneles-filtro.scss` (22,90,148,165) | 4 | Panel de filtros del mapa, combo, select, aviso |
-| `lineaTiempoCasos.scss` (140,160,190,256,277) | 5 | Nota, leyenda, panel de caso y sus dos botones |
-| `crimenesPorTipo.scss` (59,93,141,199,233) | 5 | Nombre de tipo, nota, chip de leyenda, pestaña de dona, etiqueta del total |
-| `tooltips.scss` (20) | 1 | `.tooltip-grafico` — **el tooltip por defecto de todos los gráficos** |
-
-**Alcance:** `tiempo/index.astro`, `personas/personas.astro`, `about/index.astro` — toda la
-superficie de mapa y línea de tiempo, más los tooltips.
-
-### 4.5 system-ui — `$font-sistema` — 9 declaraciones, 5 hojas
-
-Solo llega por SCSS (no hay custom property), y tipografía **los cuerpos de los SVG de D3**:
-
-| Archivo:línea | Selector | Gráficos que lo reciben |
-|---|---|---|
-| `graficos.scss:23` | `.grafico-svg` | `AgentesButterfly`, `ButterflyGenero`, `ParticipacionTiempo`, `ParticipacionTiempoAgentes`, `InstitucionesAtributo`, `DelitosSunburstGenero` |
-| `mapa.scss:702` | `.mapa-linea-svg` | Gráfico de líneas de `TiempoCrimenesMapa.ts:1737` |
-| `crimenesPorTipo.scss:108,216` | `.crimenes-tipo-spike-svg`, `.crimenes-tipo-donut-svg` | `CrimenesPorTipo.ts:375,520` |
-| `crimenesPorTipo.scss:81,226` | `.crimenes-tipo-numero`, `.crimenes-tipo-donut-total-num` | Cifras del panel |
-| `lineaTiempoCasos.scss:85` | `.linea-tiempo-casos-anio-numero` | Año grande de la línea de tiempo |
-| `tooltips.scss:32,39` | `.tooltip-grafico--sans`, `.tooltip-grafico--neutro` | Variantes de tooltip de `personas/*` |
-
-### 4.6 sans-serif — `$font-sans` — 1 declaración
-
-| Archivo:línea | Selector | Gráficos |
-|---|---|---|
-| `sunburst.scss:10` | `.sunburst-svg` | `InstitucionesAtributo.ts:139`, `DelitosSunburstGenero.ts:148` |
-
-Los dos sunbursts reciben `class="sunburst-svg grafico-svg"`. `.sunburst-svg` se declara después en
-la cascada de la página, así que en la práctica gana `sans-serif` sobre `system-ui`.
-`MIGRATION.md:789-792` documenta que esta separación fue deliberada.
-
-### 4.7 Tipografía de los gráficos, por módulo
-
-| Script | Clase(s) que asigna | Hoja que las tipografía | Familia final |
-|---|---|---|---|
-| `AgentesButterfly.ts:168` | `grafico-svg`, `mariposa-eje-tick-texto`, `mariposa-valor-texto` | `graficos.scss`, `mariposa.scss` | system-ui, 10–13px |
-| `ButterflyGenero.ts:227` | idem | idem | system-ui, 10–13px |
-| `ParticipacionTiempo.ts:185,192` | `grafico-svg`, `grafico-eje-texto` | `graficos.scss` | system-ui, 11px |
-| `ParticipacionTiempoAgentes.ts:172,183` | idem | idem | system-ui, 11px |
-| `InstitucionesAtributo.ts:139,213` | `sunburst-svg grafico-svg`, `sunburst-texto-central` | `sunburst.scss` | sans-serif, 10–13px |
-| `DelitosSunburstGenero.ts:148,226` | idem | idem | sans-serif, 10–13px |
-| `RelacionCrimenes.ts:225` | `mapa-grafo-svg`, `mapa-grafo-etiqueta` | `mapa.scss:737,747` | Georgia, 10px |
-| `CrimenesPorTipo.ts:375,382,399,520` | `crimenes-tipo-spike-svg`, `crimenes-tipo-donut-svg`, `mapa-linea-eje-*-texto` | `crimenesPorTipo.scss`, `mapa.scss` | system-ui, 11px |
-| `TiempoCrimenesMapa.ts:1737,1773,1782` | `mapa-linea-svg`, `mapa-linea-eje-*-texto` | `mapa.scss` | system-ui, 11px + **9px/12px en línea** |
-| `Linaje.ts:225` | `linaje-nodo linaje-nodo-circulo` | `linaje.scss` | Source Sans 3, 10.5–15px |
-| `TiposCasos.ts` | *ninguna* | *ninguna* | **Defaults de Observable Plot** |
-| `mapaBaseTopografico.ts` | *ninguna* | `ol/ol.css` | Defaults de OpenLayers |
-
----
-
-## 5. Inconsistencias
-
-### 5.1 `rem` y `px` chocan en casi cada escalón de la escala
-
-Las dos unidades cubren el mismo rango sin coordinarse. Con la raíz en 16px (`body` está en `1rem`,
-nadie la reescala):
-
-| En `rem` | Equivale a | Literal `px` cercano en el repo | Diferencia |
-|---|---|---|---|
-| `0.62rem` (`caso.scss:176`) | 9.92px | `9.5px` (`apilado.scss:25`), `10px` (×7) | 0.08–0.42px |
-| `0.65rem` (`caso.scss:113,267`) | 10.4px | `10.5px` (×4) | **0.1px** |
-| `0.7rem` (`caso.scss:354`) | 11.2px | `11px` (×14), `11.5px` (×7) | 0.2–0.3px |
-| `0.75rem` (`global.scss:407`) | **12px** | `12px` (×17) | **exactamente el mismo tamaño, escrito de dos formas** |
-| `0.78rem` (`caso.scss:220,262`) | 12.48px | `12.5px` (×14) | **0.02px** |
-| `0.8rem` (×5) | 12.8px | `12.5px` (×14), `13px` (×13) | 0.2–0.3px |
-| `0.85rem` (×9) | 13.6px | `13.5px` (×4) | **0.1px** |
-| `0.88rem` (`caso.scss:197`) | 14.08px | `14px` (×4) | **0.08px** |
-| `0.9rem` (×3) | 14.4px | `14.5px` (×3) | **0.1px** |
-| `0.95rem` (×10) | 15.2px | `15px` (×6) | **0.2px** |
-| `1rem` (×3) | **16px** | `16px` (×3) | **el mismo tamaño, dos escrituras** |
-| `1.05rem` (×3) | 16.8px | `16px` (×3) | 0.8px |
-| `1.4rem` (`_typography.scss:19`) | 22.4px | `22px` (`crimenesPorTipo.scss:227`) | **0.4px** |
-
-Diez pares están a **0.5px o menos** entre sí. Ninguno de esos pares es una diferencia que alguien
-haya decidido; son dos escalas que crecieron por separado (la editorial en `rem`, la de gráficos en
-`px`) y se solapan.
-
-### 5.2 `caso.scss` emite un segundo bloque `:root` que duplica los tres tokens de fuente
-
-`src/styles/pages/caso.scss:7-19` declara su propio `:root` con 8 tokens de color **y los tres de
-tipografía**:
-
-```scss
-:root {
-  --ink: #1a1410;
-  ...
-  --font-display: 'IM Fell English', Georgia, serif;
-  --font-body: 'Source Sans 3', system-ui, sans-serif;
-  --font-mono: 'Source Code Pro', monospace;
-}
-```
-
-Son los mismos valores que `_variables.scss:43-45` emite vía `_root.scss:47-49`. El problema no es
-el peso: es que la cabecera de `src/styles/abstracts/_root.scss` afirma ser *"el ÚNICO que emite el
-bloque `:root`"* y explica en detalle por qué tener varias fuentes declarando lo mismo hace que
-**decida el orden de la cascada**. Esa afirmación ya no es cierta. Las dos páginas que cargan
-`caso.scss` (`base-de-datos/index.astro` y `base-de-datos/caso.astro`) resuelven sus tokens de
-fuente por orden de bundle.
-
-Hoy los valores coinciden, así que no se ve nada. Es exactamente el fallo invisible que
-`_root.scss` documenta, reintroducido en una hoja de página. Además, la copia de `caso.scss`
-**no incluye `--mapa-font`**, así que las dos declaraciones tampoco son equivalentes.
-
-En la misma hoja, `caso.scss:30-36` vuelve a declarar `body` con `font-family: var(--font-body)`,
-`font-size: 1rem` y `line-height: 1.7` — idénticos a `base/_reset.scss:14-16`, que ya se aplica a
-esa página vía `global.scss`.
-
-### 5.3 Los pesos 700 y 800 se usan 37 veces y no se descarga ninguno
-
-El `<link>` de `BaseLayout.astro:49` pide:
-
-- IM Fell English → **solo 400** (redonda y cursiva)
-- Source Sans 3 → **300, 400, 600**
-- Source Code Pro → **400, 600**
-
-Contra eso, el CSS pide:
-
-| Declaración | Familia que resuelve | ¿Descargado? |
-|---|---|---|
-| `font-weight: 700` ×34 | Source Sans 3 en su mayoría (herencia de `body`) | **No** → negrita sintética |
-| `font-weight: 800` ×3 | `system-ui` (`crimenesPorTipo`, `lineaTiempoCasos`) | N/A — fuente del sistema |
-| `font-weight: 600` en `global.scss:159` | **IM Fell English cursiva** (`.logo`, `.nav-links a`) | **No** → sintética |
-| `font-weight: 700` en `conteo.scss:138` | **IM Fell English** (`.conteo-stat-cuadro-valor`, a `clamp(2rem, 6vw, 3.4rem)`) | **No** → sintética, y a 54px se nota |
-| `font-weight: 600` ×24 restantes | Source Sans 3 | Sí |
-| `font-weight: 400` ×2 | Source Sans 3 / Georgia | Sí |
-
-El caso más visible es el título del sitio y los enlaces del menú: IM Fell English cursiva a 600
-sintético en todas las páginas.
-
-**A la inversa: Source Sans 3 300 se descarga y no se usa ni una vez.** No hay ningún
-`font-weight: 300` en el repositorio. Es un archivo de fuente que se pide en las 8 páginas y nunca
-pinta nada.
-
-### 5.4 La tipografía propia de `.logo` está muerta
-
-```scss
-/* global.scss:60-63 */
-.logo {
-  font-size: 1.2rem;
-  font-weight: normal;
-}
-/* global.scss:153-162 */
-.logo,
-.nav-links a {
-  font-size: 0.9rem;
-  font-weight: 600;
-  ...
-}
-```
-
-Misma especificidad (0,1,0), la segunda va después, gana la segunda. `1.2rem` y `normal` no pintan
-nada. El propio archivo ya lo señala en un comentario (`global.scss:57-59`); queda registrado aquí
-como hallazgo, sin tocar.
-
-### 5.5 Georgia es la tipografía del mapa y nunca se carga
-
-`$font-mapa: Georgia, serif` es la familia con más declaraciones del repositorio (36), y cubre toda
-la interfaz de mapa y línea de tiempo más el tooltip por defecto de los gráficos. Georgia es una
-fuente del sistema: viene con Windows y macOS, pero **no con la mayoría de distribuciones Linux ni
-con Android**. En esas máquinas todo ese bloque de interfaz cae al `serif` genérico del navegador —
-la única familia que el proyecto nunca eligió.
-
-Nada la descarga, y no hay ninguna alternativa web declarada delante de ella. Es el "font
-referenced but never loaded" más consecuente del repo, precisamente porque sí se ve bien en las
-máquinas donde se desarrolla.
-
-### 5.6 La tipografía de los gráficos no coincide con la del sitio
-
-| Qué | Dónde | Desajuste |
-|---|---|---|
-| Observable Plot | `TiposCasos.ts` | Sin opción `style`. Ejes y leyenda salen a `10px` / `system-ui`, los defaults de Plot. Aparece en `about/index.astro`, rodeado de Source Sans 3 |
-| Cuerpos de SVG en D3 | `graficos.scss:23`, `mapa.scss:702`, `crimenesPorTipo.scss:108,216` | `system-ui` mientras la página corre en Source Sans 3 |
-| Sunbursts | `sunburst.scss:10` | `sans-serif` a secas — ni `system-ui` ni la del sitio |
-| Grafo de crimenes | `mapa.scss:747` | Georgia, mientras los demás gráficos de la misma página van en `system-ui` |
-| Tamaño de eje X | `TiempoCrimenesMapa.ts:1774` | `9px` en línea. **Ese valor no existe en ninguna hoja**; el más pequeño del CSS es `9.5px`. Y al ser estilo en línea, gana sobre cualquier clase |
-| Tooltips | `tooltips.scss:20` vs `:32,39` | El tooltip base va en Georgia; las variantes `--sans` y `--neutro` en `system-ui`. Tres gráficos de la misma página pueden mostrar tooltips en dos familias distintas |
-
-En una misma página (`personas/personas.astro`) conviven Source Sans 3 (cuerpo), Georgia (mapa y
-tooltip base), `system-ui` (gráficos) y `sans-serif` (sunburst).
-
-### 5.7 El nombre del cuarto token rompe el patrón
-
-Tres tokens salen como `--font-display`, `--font-body`, `--font-mono`. El cuarto sale como
-**`--mapa-font`** (`_root.scss:50`), invirtiendo el orden de las palabras, aunque su variable SCSS
-sí sigue el patrón (`$font-mapa`). Buscar `--font-` en el repo encuentra tres de las cuatro.
-
-A eso se suma que `$font-sistema` y `$font-sans` **no se emiten como custom property**, así que solo
-son alcanzables desde SCSS: no se pueden usar en un `style` en línea, ni leer desde JS, ni redefinir
-por página. La decisión de mantenerlas separadas está justificada en `MIGRATION.md:789-792` (unificar
-cambiaría lo que se dibuja en el sunburst), pero el resultado es que hay dos categorías de token de
-fuente con alcances distintos y nada lo indica.
-
-### 5.8 Tipografía muerta
-
-**`ConteoCrimenes.ts` no lo importa nadie.** Ni una página ni otro módulo de `charts/` lo referencia,
-así que su `<style>` inyectado nunca llega al bundle. Si se reviviera, haría dos cosas que chocan con
-`global.scss`:
-
-- `.col-root { font-family: serif; ... }` (línea 42) — `global.scss:188` ya define `.col-root` como
-  contenedor flex, y la regla inyectada le pondría `serif`, una familia que no está en los tokens.
-- `.card { ... }` (línea 43) — `global.scss:203` ya define `.card`. Las dos reglas competirían por
-  orden de inserción, y la inyectada se añade al DOM en tiempo de ejecución, así que ganaría.
-
-También trae los únicos `font-weight: bold` (palabra clave, no número) y un `font-size` en un
-atributo `style` en línea (línea 52) del repositorio.
-
-**Reglas `apilado-*` sin marcado.** `apilado.scss` está importada por `personas/personas.astro`, pero
-de sus 20 clases **solo `.apilado-sankey-wrapper` aparece en el código**
-(`DelitosSunburstGenero.ts:104`). Las demás no las escribe ningún script ni ningún `.astro`. Eso deja
-sin efecto, entre otras, esta tipografía:
-
-| Regla | Tipografía que define |
-|---|---|
-| `.apilado-eje-atributo` (`:18-20`) | `12.5px` / `700` |
-| `.apilado-eje-siglo` (`:24-25`) | `9.5px` — el tamaño más pequeño del repo |
-| `.apilado-panel-titulo` (`:63-65`) | `--font-display` / `1.05rem` |
-| `.apilado-panel-cerrar` (`:69-73`) | `1.1rem` / `line-height: 1` |
-| `.apilado-panel-total` (`:83-84`) | `12.5px` |
-| `.apilado-genero-fila` (`:89-95`) | `12.5px` |
-| `.apilado-sankey-titulo` (`:119-121`) | `--font-display` / `1.05rem` |
-| `.apilado-sankey-etiqueta` (`:131-132`) | `11.5px` |
-
-Ocho de los 38 tamaños distintos del inventario solo existen aquí o aquí y en otro sitio; `9.5px`
-solo existe aquí.
-
-### 5.9 `line-height: 0.5` recorta descendentes
-
-`caso.scss:192` (`.crime-name`, a `1.35rem`) y `caso.scss:198` (`.crime-sub`, a `0.88rem`) usan
-`line-height: 0.5` — media línea para el tamaño de fuente. Es el valor más extremo del repo y
-recorta las descendentes (`g`, `j`, `p`, `q`, `y`) en los nombres de crimen de la ficha de caso.
-Los otros nueve `line-height: 1` del repo están todos sobre cifras o iconos, donde no hay
-descendentes; estos dos están sobre texto corrido.
+Diagnóstico de solo lectura del estado de la tipografía al 17 de octubre de 2026 (rama
+`colores-visualizaciones`, HEAD `f804311`). **No se modificó código.**
+
+> Este archivo reemplaza la auditoría anterior (`TYPOGRAPHY-AUDIT.md`, commit `da71fee`). En macOS
+> los dos nombres son el mismo archivo. Esa versión describía el sistema **anterior** a `da71fee`,
+> cuando `--font-body` era Source Sans 3 y existían `$font-mapa`, `$font-sistema` y `$font-sans`.
+> Para recuperarla: `git show da71fee:TYPOGRAPHY-AUDIT.md`.
+
+**Alcance:** los 12 `.astro`, las 22 `.scss`, los 23 `.ts` de `src/`, los `.mjs` de `tools/`,
+`astro.config.mjs` y el CSS de terceros que se importa (`ol/ol.css`, `lenis/dist/lenis.css`).
+**Excluidos:** `node_modules/` (salvo esos dos CSS) y `dist/`, que es salida de build obsoleta.
+
+**Método:** extracción automática de cada declaración `font-family`, `font-size`, `font-weight`,
+`font-style`, `line-height`, `letter-spacing`, `text-transform` y `font`, en CSS y en JS (`.attr`,
+`.style`, `style.cssText`, opciones `fontFamily`/`fontSize`). Después se relacionó cada declaración
+con su selector y se siguió la herencia a mano en los casos dudosos. En las tablas de las secciones 3
+y 4 la línea es la de la declaración. En la sección 2 es la del selector.
+
+**Totales:** 125 `font-family`, 192 `font-size`, 74 `font-weight`, 22 `font-style`, 34
+`line-height`, 30 `letter-spacing`, 23 `text-transform`, 2 `font` abreviado. Todo está en SCSS
+salvo una declaración en JS.
 
 ---
 
 ## Resumen
 
-| Métrica | Valor |
+- **Familias cargadas:** cuatro. IM Fell English, Crimson Pro, Source Sans 3 y Source Code Pro. La
+  cuarta (monoespaciada) no está en el sistema previsto.
+- **Source Sans 3 no se usa solo en gráficas.** De sus 76 declaraciones, 20 están dentro de
+  gráficas, 37 en controles y paneles junto a las gráficas y 19 en interfaz general (tabla,
+  ficha de caso, encabezados de página).
+- **Hay texto de gráficas en serif.** 18 declaraciones usan `--mapa-font` (alias de Crimson Pro).
+  Siete de ellas son texto SVG dentro del mapa y del donut.
+- **Dos gráficas tienen los ejes en una sans genérica.** En el mapa (línea temporal) y en el spike
+  de Crímenes por tipo, las etiquetas de los ejes no salen en Source Sans 3. D3 pone
+  `font-family="sans-serif"` en el `<g>` del eje y ninguna regla CSS lo corrige ahí.
+- **Seis botones usan la fuente del navegador.** No hay `button { font: inherit }` global, y estos
+  seis no declaran familia.
+- **Todos los h1–h6 están en IM Fell**, pero varios títulos de tarjeta y de panel que no son
+  encabezados (`.mapa-tarjeta-titulo`, `.panel-filtros-titulo`, `.crime-name`,
+  `.linaje-nivel-titulo`) están en Crimson Pro o en Source Sans 3.
+- **La escala de tamaños se respeta casi siempre** (188 de 192). Los problemas son de diseño de la
+  escala: cuatro pasos de 1px entre 10 y 13px, y 15px contra 16px para el texto corrido.
+- **No hay tokens para peso ni para tracking.** Hay 13 valores distintos de `letter-spacing`, todos
+  hardcodeados.
+
+---
+
+## 1. Familias tipográficas
+
+### Declaración
+
+Todas las pilas se declaran en `src/styles/abstracts/_variables.scss` y se emiten como custom
+properties en `src/styles/abstracts/_root.scss`.
+
+| Token SCSS | Pila | Custom property | Usos directos |
+|---|---|---|---|
+| `$font-display` (`_variables.scss:43`) | `'IM Fell English', Georgia, serif` | `--font-display` (`_root.scss:47`) | 16 |
+| `$font-body` (`_variables.scss:44`) | `'Crimson Pro', Georgia, serif` | `--font-body` (`_root.scss:48`) | 8 (+ herencia desde `body`) |
+| `$font-ui` (`_variables.scss:45`) | `'Source Sans 3', system-ui, sans-serif` | `--font-ui` (`_root.scss:49`) | 76 |
+| `$font-mono` (`_variables.scss:46`) | `'Source Code Pro', monospace` | `--font-mono` (`_root.scss:50`) | 7 |
+| *(ninguno)* | `var(--font-body)` | `--mapa-font` (`_root.scss:51`) | 18 |
+
+`--mapa-font` es un alias de `--font-body` que solo existe como custom property. No tiene variable
+SCSS y su nombre no sigue el patrón `--font-*`.
+
+### Carga
+
+**Un solo punto de carga:** `src/layouts/BaseLayout.astro:46-52`, que llega a todas las páginas.
+
+```
+https://fonts.googleapis.com/css2
+  ?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400
+  &family=IM+Fell+English:ital@0;1
+  &family=Source+Code+Pro:wght@400;600
+  &family=Source+Sans+3:ital,wght@0,400;0,600;0,700;0,800;1,400
+  &display=swap
+```
+
+Hay `preconnect` a `fonts.googleapis.com` y a `fonts.gstatic.com` (`BaseLayout.astro:46-47`).
+
+| Familia | Caras cargadas | Caras que se piden en el CSS |
+|---|---|---|
+| IM Fell English | 400, 400 itálica | 400 (h1–h6, 16 reglas), 400 itálica (nav, `.case-title`) |
+| Crimson Pro | 400, 600, 700, 400 itálica | 400, 600, 700, 400 itálica |
+| Source Sans 3 | 400, 600, 700, 800, 400 itálica | 400, 600, 700, 800, 400 itálica (`.cargando`) |
+| Source Code Pro | 400, 600 | 400, 600 y **700 implícito** (`th` es negrita por defecto, ver §6) |
+
+- **`@font-face`:** ninguna en el repositorio.
+- **`@import` de fuentes:** ninguno.
+- **Archivos de fuente locales:** ninguno (no hay `.woff`, `.woff2`, `.ttf`, `.otf` ni `.eot`
+  versionados).
+- **Familias definidas desde JS:** ninguna. Ningún `.ts` llama `.attr('font-family')`,
+  `.style('font-family')` ni usa `fontFamily`. El repo **no usa Observable Plot**: no está en
+  `package.json`. El único `style: { fontFamily: 'var(--font-ui)' }` se eliminó en `758d0a9`.
+- **Familias que vienen de librerías, sin cargar:**
+  - `sans-serif` genérica: d3-axis la escribe como atributo SVG en cada `<g>` de eje
+    (`ComposicionLinea.ts:68,81`, `LineaTiempoCasos.ts:554,565`, `TiempoCrimenesMapa.ts:1558,1568,1589`,
+    `CrimenesPorTipo.ts:338,343`). Se ve en dos gráficas (ver §6).
+  - La fuente de botones del navegador (en macOS, `system-ui` a 13.33px) aparece en los seis botones
+    sin `font-family` (ver §6).
+  - `ol/ol.css` (importado en `mapaBaseTopografico.ts:7`) no fija familia, así que la atribución del
+    mapa hereda IM Fell de `#mapa-contenedor`. Además fija `font-size: 10px` y `12px`.
+
+### Dónde se usa cada familia
+
+Rutas relativas a `src/styles/` (`pages/` omitido).
+
+| Valor | Usos | Dónde |
+|---|---|---|
+| `var(--font-ui)` | 76 | `global.scss` 320, 473, 504, 538; `botones.scss` 18, 40, 53, 67, 84, 116; `caso.scss` 52, 73, 92, 468, 516; `composicion.scss` 36, 60, 116, 161, 198, 287, 314, 409, 545, 595, 679, 751, 786; `crimenesPorTipo.scss` 33, 48, 70, 146, 181, 214, 272, 300, 310; `faq.scss` 16; `graficos.scss` 23; `linaje.scss` 83, 217, 259, 344, 378; `lineaTiempoCasos.scss` 24, 81, 110, 147, 211, 244, 304, 382, 491, 516; `mapa.scss` 18, 371, 412, 453, 503, 510, 529, 921; `paneles-filtro.scss` 90, 148; `preguntasTarjetas.scss` 50, 121; `sunburst.scss` 10; `tablaGeneral.scss` 43, 105, 156, 213, 362, 377; `tooltips.scss` 20, 32, 39 |
+| `var(--mapa-font)` | 18 | `crimenesPorTipo.scss` 124, 158, 244, 317; `lineaTiempoCasos.scss` 284, 344; `mapa.scss` 278, 286, 301, 536, 774, 791, 797, 804, 810, 821; `paneles-filtro.scss` 22, 165 |
+| `var(--font-display)` | 16 | `_typography.scss` 9, 14, 28; `global.scss` 200, 288, 351; `caso.scss` 133, 178; `composicion.scss` 223, 349, 518, 554; `linaje.scss` 329; `mapa.scss` 338, 380, 405 |
+| `var(--font-body)` | 8 | `_reset.scss` 14; `global.scss` 360, 383, 393; `caso.scss` 22; `composicion.scss` 131; `linaje.scss` 325; `mapa.scss` 389 |
+| `var(--font-mono)` | 7 | `global.scss` 421; `caso.scss` 125, 173, 256, 289, 400, 566 |
+
+**Por herencia:**
+
+- `body` usa `--font-body` (`base/_reset.scss:14`). `pages/caso.scss:22` lo repite. Todo el texto
+  sin `font-family` propio sale en Crimson Pro, salvo controles de formulario (§6).
+- `#mapa-contenedor` usa `--font-display` (`global.scss:351`). Todo lo que hay dentro del mapa y no
+  declara familia sale en IM Fell, incluida la atribución de OpenLayers.
+- Los SVG con clase `.grafico-svg`, `.sunburst-svg`, `.cs-svg`, `.crimenes-tipo-spike-svg`,
+  `.crimenes-tipo-donut-svg` y `.mapa-linea-svg` usan `--font-ui`, y su texto lo hereda.
+  `.mapa-svg` (el mapa) y `.linea-tiempo-casos-linea-svg` **no** fijan familia.
+
+---
+
+## 2. Qué familia usa cada tipo de elemento
+
+Abreviaturas: **Fell** = IM Fell English, **Crimson** = Crimson Pro, **Sans** = Source Sans 3,
+**Mono** = Source Code Pro. La línea es la del selector.
+
+### Encabezados h1–h6
+
+Regla base: `h1–h6 { font-family: var(--font-display); font-weight: 400 }`
+(`base/_typography.scss:8`). **Todos los encabezados reales salen en Fell.**
+
+| Elemento | Dónde aparece | Familia · tamaño | Regla |
+|---|---|---|---|
+| `h1.section-mainTitle` | home, about, estudios-de-caso, tiempo | Fell · 32px · 0.02em | `_typography.scss:13` |
+| `h1.tg-titulo` | base-de-datos | Fell · 44px (32px en móvil) | `tablaGeneral.scss:33, 532` |
+| `h1.cs-titulo` | personas | Fell · 44px | `composicion.scss:43` |
+| `h1.case-title` | caso (`caso.ts:204`) | Fell **itálica** · clamp 24→32px | `caso.scss:132` |
+| `h2` en `<section>` | about (6) | Fell · 24px | `_typography.scss:27` |
+| `h2.section-title` | caso (`caso.ts:431`) | Fell · **18px** (`caso.scss` pisa los 24px globales) | `caso.scss:177` |
+| `h2.cs-seccion-titulo` | personas (2) | Fell · **11px versalitas 0.2em** | `composicion.scss:216` |
+| `h3.cs-panel-titulo` | personas (4) | Fell · 24px | `composicion.scss:370` |
+| `h3.cs-rol-titulo` | personas (`ComposicionSocial.ts:242`) | Fell · 18px | `composicion.scss:480` |
+| `h3.linaje-panel-titulo` | about (`Linaje.ts:58`) | Fell · 24px | `linaje.scss:328` |
+| `h3.lugar-ficha-titulo` | tiempo (`TiempoCrimenesMapa.ts:395`) | Fell · 32px | `mapa.scss:334` |
+| `h4` sin clase | caso (`caso.ts:248`) | Fell · tamaño del navegador | — |
+| `h4.ficha-titulo` | caso (`caso.ts:302`) | Fell · tamaño del navegador (la clase no tiene regla) | — |
+| `a.card h3` | **no existe en el markup** | Fell · 18px | `global.scss:287` (regla muerta) |
+
+### Títulos que no son `<h*>`
+
+Cumplen función de título, pero no usan Fell.
+
+| Clase | Dónde | Familia · tamaño · peso | Regla |
+|---|---|---|---|
+| `.mapa-tarjeta-titulo` | tiempo, 6 tarjetas ("Instrucciones", "Top de crimenes", …) | **Crimson** · 15px · 700 | `mapa.scss:277` |
+| `.mapa-tarjeta-subtitulo` | tiempo | Crimson · 11px | `mapa.scss:285` |
+| `.panel-filtros-titulo` | tiempo | **Crimson** · 15px · 700 | `paneles-filtro.scss:28` |
+| `.crime-name` | caso | **Crimson** · 24px · 700 | `caso.scss:270` |
+| `.linaje-nivel-titulo` | about | **Sans** · 12px · 700 · versalitas | `linaje.scss:81` |
+| `.cs-rol-delito-titulo` | personas | **Sans** · 11px · 700 · versalitas | `composicion.scss:544` |
+| `.tg-activos-titulo` | base-de-datos | **Sans** · 11px · versalitas | `tablaGeneral.scss:375` |
+| `.mapa-linea-titulo` (SVG) | tiempo, dentro de la gráfica | Sans · 15px · 700 | `mapa.scss:857` |
+| `.mapa-capsula-titulo` (SVG) | tiempo, dentro del mapa | **Crimson** · 12px · 700 | `mapa.scss:788` |
+
+### ⚠ Bloques de título que mezclan serif y sans
+
+| Bloque | Composición |
 |---|---|
-| Familias declaradas | 6 pilas / 5 familias reales |
-| Fuentes web descargadas | 3 (IM Fell English, Source Sans 3, Source Code Pro) |
-| `@font-face` | 0 |
-| Archivos de fuente locales | 0 |
-| Familias usadas sin descargar | 2 (Georgia, `system-ui`) + 3 genéricas |
-| Tamaños distintos | 38 (17 px, 19 rem, 2 clamp) |
-| Declaraciones `font-size` | 159 en SCSS + 1 viva en JS |
-| Tamaños tokenizados | **0** |
-| Pesos distintos | 5 (`400`, `600`, `700`, `800`, `normal`) |
-| Pesos tokenizados | **0** |
-| Pesos usados y no descargados | `700` (×34), `600` sobre IM Fell (×2) |
-| Pesos descargados y no usados | `300` de Source Sans 3 |
-| Alturas de línea distintas | 11 |
-| Alturas de línea tokenizadas | **0** |
-| Bloques `:root` que declaran fuentes | **2** (`_root.scss`, `caso.scss`) |
-| Estilos tipográficos en línea en `.astro` | 0 |
-| Sitios donde el JS fija tipografía | 2 (1 vivo, 1 muerto) |
+| Cabecera de base-de-datos (`base-de-datos/index.astro:15-16`) | `p.tg-subtitulo` **Sans** 12px versalitas 0.2em + `h1.tg-titulo` **Fell** 44px + `.tg-conteo` **Crimson** 700 |
+| Cabecera de personas (`_ComposicionSocial.astro:37-38`) | `p.cs-eyebrow` **Sans** 11px versalitas 0.22em + `h1.cs-titulo` **Fell** 44px |
+| Cabecera de caso (`caso.ts:203-204`) | `p.case-eyebrow` **Mono** 11px versalitas 0.16em + `h1.case-title` **Fell** itálica |
+| Tarjetas de personas (`.cs-tarjeta`) | `.cs-tarjeta-nombre` **Sans** versalitas + `.cs-tarjeta-valor` **Fell** 44px + `.cs-tarjeta-sub` **Crimson** (tres familias) |
+| Rol en personas (`ComposicionSocial.ts:242-261`) | `h3.cs-rol-titulo` **Fell** + `.cs-rol-delito-titulo` **Sans** + `strong.cs-rol-delito-nombre` **Fell** |
+| Ficha de lugar en el mapa (`.lugar-ficha-*`) | título **Fell** + `-dato-etiqueta` **Sans** + `-dato-valor` **Fell** + `-subtitulo` **Fell** + `-resumen` **Sans** + `-notas` **Crimson** itálica |
+| Ficha de caso, campos (`caso.scss:285, 399`) | `.crime-field-label` / `.sf-label` **Mono** + valor **Crimson** |
+
+Hay además un caso de **mismo estilo con distinta familia**. `h2.cs-seccion-titulo` (Fell, 11px,
+versalitas, 0.2em) tiene el aspecto de una ceja (*eyebrow*), igual que `.cs-eyebrow`, `.tg-subtitulo`
+y `.tg-etiqueta`, que están en Sans.
+
+### Navegación
+
+| Elemento | Familia | Regla |
+|---|---|---|
+| `.logo` (título del proyecto en el nav, ahora en 2 líneas) | Fell **itálica** · 15px · 400 · versalitas · 0.1em | `global.scss:199` |
+| `.nav-links a` | Fell **itálica** · 15px · 400 · versalitas · 0.1em | `global.scss:199` |
+| `.nav-toggle` | sin texto (icono) | — |
+| Footer | sin texto | — |
+
+### Cuerpo de texto
+
+| Elemento | Familia · tamaño · interlineado | Regla |
+|---|---|---|
+| `body` | Crimson · **16px** · 1.7 | `_reset.scss:11` (repetido en `caso.scss:19`) |
+| `p` (global) | hereda Crimson · **15px** · 1.7 | `_typography.scss:39` |
+| `.historia-slide-texto`, `.preguntas-tarjetas-respuesta`, `.linaje-panel-definicion` | Crimson · 15px · 1.7 | `historiaMetodologia.scss:86`, `preguntasTarjetas.scss:127`, `linaje.scss:358` |
+| `.mapa-tarjeta-parrafo` | Crimson · 13px · 1.5 | `mapa.scss:300` |
+| `.tabla-datos td` | Crimson · 15px | `global.scss:431` |
+| `.agent-meta`, `.crime-sub` | Crimson · 15px | `caso.scss:364, 278` |
+
+### Captions, notas y estados vacíos
+
+| Elemento | Familia | Regla |
+|---|---|---|
+| `.cs-medidor figcaption strong` / `span` | **Fell** 24px / Crimson 13px | `composicion.scss:517, 523` |
+| `.cs-nota`, `.cs-pista`, `.cs-panel-subtitulo` | Crimson 13px | `composicion.scss:391, 82, 376` |
+| `.crimenes-tipo-nota`, `.linea-tiempo-casos-nota` | Crimson 11px itálica | `crimenesPorTipo.scss:155`, `lineaTiempoCasos.scss:281` |
+| `.crime-descripcion` | Crimson 13px itálica | `caso.scss:217` |
+| `.mapa-aviso-vacio`, `.mapa-info-lugar-vacio`, `.filtro-aviso-sin-datos` | Crimson itálica 15 / 12 / 12px | `mapa.scss:768, 535`, `paneles-filtro.scss:156` |
+| `.cs-vacio`, `.grafico-vacio`, `.agentes-vacio`, `.tg-vacio`, `.state-msg`, `.similares-vacio`, `.no-source` | Crimson itálica | varios |
+| `.cargando` | **Sans** itálica | `global.scss:472` |
+
+### Botones y controles
+
+| Familia | Elementos | Reglas |
+|---|---|---|
+| **Sans** | `.btn-mapa-*` (5), `.btn-ver-casos-generico`, `.cs-pestaña`, `.cs-chip`, `.cs-restablecer`, `.cs-boton-mas`, `.cs-ver-casos`, `.cs-herramienta`, `.crimenes-tipo-donut-tab`, `.crimenes-tipo-fijados-*`, `.linaje-panel-boton`, `.linea-tiempo-casos-*__boton*`, `.linea-tiempo-casos-linea-reproducir`, `.back-link`, `.caso-nav-boton`, `.copiar-ref`, `.similares-tab`, `.tg-boton-buscar`, `.tg-check`, `.preguntas-tarjetas-pildora`, `.preguntas-tarjetas-chip` | `botones.scss`, `composicion.scss`, `crimenesPorTipo.scss`, `linaje.scss`, `lineaTiempoCasos.scss`, `caso.scss`, `tablaGeneral.scss`, `preguntasTarjetas.scss` |
+| **Crimson** (`font: inherit`) | `.cs-tarjeta`, `.cs-enlace` | `composicion.scss:250, 564` |
+| ⚠ **Fuente del navegador** | `.tg-limpiar`, `.tg-chip-quitar`, `.historia-flecha`, `.carrusel-flecha`, `.mapa-tarjeta-cerrar`, `.linea-tiempo-casos-panel-caso__cerrar` | `tablaGeneral.scss:426, 404`, `historiaMetodologia.scss:133`, `caso.scss:597`, `mapa.scss:166`, `lineaTiempoCasos.scss:362` |
+
+### Formularios (select / input)
+
+| Familia | Elementos | Reglas |
+|---|---|---|
+| **Crimson** | `.filtros-tabla select/input` (base-de-datos), `::picker(select)`, `option`, `.cs-select` | `global.scss:358, 380, 389`, `composicion.scss:123` |
+| **Sans** | `.filtro-select`, `.filtro-combo-input` (tiempo), `.linaje-selector-crimen` (about) | `paneles-filtro.scss:141, 82`, `linaje.scss:338` |
+
+Los selects salen en dos familias según la página.
+
+### Tablas y ficha de caso
+
+| Elemento | Familia | Regla |
+|---|---|---|
+| `.tabla-datos th` | **Mono** 12px versalitas 0.08em | `global.scss:418` |
+| `.tabla-datos td` | Crimson 15px | `global.scss:431` |
+| `.case-eyebrow`, `.meta-pill .label`, `[data-tooltip]::after`, `.crime-field-label`, `.sf-label`, `.similar-card-meta` | **Mono** 10–11px versalitas | `caso.scss:121, 168, 246, 285, 399, 563` |
+| `.tg-etiqueta`, `.tg-subtitulo`, `.tg-marca` | Sans 11–12px | `tablaGeneral.scss:104, 40, 358` |
+
+### Gráficas: etiquetas, ejes, leyendas y tooltips
+
+| Gráfica | Ejes | Etiquetas / valores | Leyenda | Tooltip |
+|---|---|---|---|---|
+| Composición social: barras, línea, red (`ComposicionBarras/Linea/Red.ts`) | `.cs-eje-texto` **Sans** 12px ✓ | `.cs-barras-etiqueta`, `.cs-red-etiqueta` heredan Sans de `.cs-svg` ✓ | `.cs-leyenda-cuadros/-lineas` (HTML) **Crimson** 13px | Sans 12px ✓ |
+| Sunburst (`DelitosSunburstGenero.ts`, `InstitucionesAtributo.ts`) | — | `.sunburst-etiqueta`, `-pct`, `-texto-central` heredan Sans ✓ | — | Sans ✓ |
+| Crímenes por tipo, spike (`CrimenesPorTipo.ts:335`) | ⚠ **sans-serif genérica** (ver §6) | `.crimenes-tipo-nombre` **Crimson** 11px 700; `.crimenes-tipo-numero` Sans 16px 800 | `.crimenes-tipo-leyenda-chip` Sans ✓ | Sans ✓ |
+| Crímenes por tipo, donut (`CrimenesPorTipo.ts:491`) | — | `-total-num` Sans 24px 800 ✓; `-total-label` **Crimson** 10px | — | Sans ✓ |
+| Mapa (`TiempoCrimenesMapa.ts:942`, `.mapa-svg`) | — | `.mapa-capsula-*` (5 clases) **Crimson** 10–13px | — | Sans ✓ |
+| Línea temporal del mapa (`.mapa-linea-svg`) | ⚠ **sans-serif genérica** | `.mapa-linea-titulo/-subtitulo/-etiqueta-serie` Sans ✓ | — | Sans ✓ |
+| Línea de tiempo de casos (`LineaTiempoCasos.ts:549`) | Sans **10px hardcodeado** ✓ familia | `-anio-numero`, `-anio-conteo`, `-guia-fecha__etiqueta` Sans | `-leyenda-item` Sans ✓ | Sans ✓ |
+| Linaje (`Linaje.ts`, nodos HTML) | — | `.linaje-nodo*` Sans ✓ | — | Sans 16px 600 (`--grande`) |
+| Ficha de lugar junto al mapa | — | `.lugar-ficha-dato-valor` **Fell** 18px; `.lugar-ficha-crimen-nombre` Sans | — | — |
+| Tarjetas y medidores de personas | — | `.cs-tarjeta-valor` **Fell** 44px; `.cs-medidor strong` **Fell** 24px | — | — |
+
+---
+
+## 3. Tamaños de fuente
+
+**Escala** (`_variables.scss:49-59`, raíz de 16px):
+
+| Token | rem | px | Usos |
+|---|---|---|---|
+| `--fs-3xs` | 0.625 | 10 | 15 |
+| `--fs-2xs` | 0.6875 | 11 | 31 |
+| `--fs-xs` | 0.75 | 12 | 40 |
+| `--fs-sm` | 0.8125 | 13 | 42 |
+| `--fs-md` | 0.9375 | 15 | 30 |
+| `--fs-base` | 1 | 16 | 7 |
+| `--fs-lg` | 1.125 | 18 | 8 |
+| `--fs-xl` | 1.5 | 24 | 9 (+1 en `clamp`) |
+| `--fs-2xl` | 2 | 32 | 3 (+1 en `clamp`) |
+| `--fs-3xl` | 2.75 | 44 | 3 |
+| `--fs-4xl` | 3.5 | 56 | **0** |
+
+**Valores fuera de la escala:** 4 en el repo (`10px`, `0.85rem`, `0.85em` y un `clamp`). Hay otros
+que vienen del navegador y de librerías:
+
+| Origen | Valor | Dónde |
+|---|---|---|
+| d3-axis (atributo SVG) | `font-size="10"` | todos los ejes. En los cuatro casos lo pisa una clase en el `<text>` |
+| `ol/ol.css` | `10px`, `12px` | atribución y controles de OpenLayers |
+| Navegador | `1em` en `h4`; `13.33px` en `button` | los `h4` de `caso.ts:248, 302` |
+
+### Detalle por valor
+
+| Valor | Equivale a | Usos | Dónde |
+|---|---|---|---|
+| `var(--fs-sm)` | 0.8125rem · 13px | 42 | `global.scss` 321, 505; `botones.scss` 34; `caso.scss` 53, 74, 93, 225, 443, 469, 517, 575, 592; `composicion.scss` 61, 85, 162, 199, 355, 379, 394, 418, 524, 560, 570, 728, 752; `linaje.scss` 365, 377; `lineaTiempoCasos.scss` 212, 438, 492, 517; `mapa.scss` 302, 390, 641, 802; `paneles-filtro.scss` 88, 121, 147; `preguntasTarjetas.scss` 51; `sunburst.scss` 40; `tablaGeneral.scss` 394, 431 |
+| `var(--fs-xs)` | 0.75rem · 12px | 40 | `global.scss` 422; `botones.scss` 12, 47, 63, 80, 115; `caso.scss` 159, 322, 396, 497, 586; `composicion.scss` 315, 596, 630, 649, 680, 787, 828; `crimenesPorTipo.scss` 245; `faq.scss` 15; `linaje.scss` 84, 345; `lineaTiempoCasos.scss` 25, 111, 383, 407, 418, 468; `mapa.scss` 413, 511, 530, 537, 789, 875; `paneles-filtro.scss` 153, 166; `preguntasTarjetas.scss` 122; `sunburst.scss` 24; `tablaGeneral.scss` 44; `tooltips.scss` 19 |
+| `var(--fs-2xs)` | 0.6875rem · 11px | 31 | `caso.scss` 126, 567; `composicion.scss` 37, 117, 224, 288, 546, 738; `crimenesPorTipo.scss` 34, 49, 71, 125, 156, 215, 273; `graficos.scss` 40, 50; `lineaTiempoCasos.scss` 148, 245, 282, 303; `mapa.scss` 287, 809, 864, 884, 897; `paneles-filtro.scss` 40, 130; `tablaGeneral.scss` 106, 363, 378 |
+| `var(--fs-md)` | 0.9375rem · 15px | 30 | `_typography.scss` 40; `global.scss` 204, 361, 384, 394, 433, 540; `caso.scss` 280, 367; `composicion.scss` 132, 645, 653, 723; `faq.scss` 46; `historiaMetodologia.scss` 89; `linaje.scss` 159, 254, 359; `mapa.scss` 279, 504, 776, 784, 858; `paneles-filtro.scss` 29; `preguntasTarjetas.scss` 134; `tablaGeneral.scss` 66, 157, 214, 241, 415 |
+| `var(--fs-3xs)` | 0.625rem · 10px | 15 | `caso.scss` 170, 257, 290, 401; `crimenesPorTipo.scss` 318; `linaje.scss` 260, 279; `mapa.scss` 372, 454, 796, 820, 869, 880; `paneles-filtro.scss` 47; `sunburst.scss` 29 |
+| `var(--fs-xl)` | 1.5rem · 24px | 9 | `_typography.scss` 29; `caso.scss` 273; `composicion.scss` 372, 519; `crimenesPorTipo.scss` 311; `linaje.scss` 330; `lineaTiempoCasos.scss` 368; `mapa.scss` 172; `tablaGeneral.scss` 60 |
+| `var(--fs-lg)` | 1.125rem · 18px | 8 | `global.scss` 289; `caso.scss` 179, 605; `composicion.scss` 485, 555; `historiaMetodologia.scss` 142; `mapa.scss` 381, 406 |
+| `var(--fs-base)` | 1rem · 16px | 7 | `_reset.scss` 15; `caso.scss` 23, 69; `crimenesPorTipo.scss` 147; `lineaTiempoCasos.scss` 230, 399; `tooltips.scss` 49 |
+| `var(--fs-2xl)` | 2rem · 32px | 3 | `_typography.scss` 15; `mapa.scss` 339; `tablaGeneral.scss` 533 |
+| `var(--fs-3xl)` | 2.75rem · 44px | 3 | `composicion.scss` 45, 350; `tablaGeneral.scss` 35 |
+| `0.85rem` | 13.6px | 1 | `CrimenesPorTipo.ts` 309 |
+| `0.85em` | relativo (≈10.2px en `th` de 12px) | 1 | `global.scss` 460 |
+| `clamp(var(--fs-xl), 3vw, var(--fs-2xl))` | 24px → 32px | 1 | `caso.scss` 134 |
+| `10px` | 10px (unidades del viewBox) | 1 | `lineaTiempoCasos.scss` 82 |
+
+---
+
+## 4. Pesos, estilos, interlineado, tracking y mayúsculas
+
+No hay tokens de peso ni de `letter-spacing`. Hay tokens de interlineado (`--lh-*`), pero también
+tres valores hardcodeados.
+
+#### `font-weight`
+
+| Valor | Usos | Dónde |
+|---|---|---|
+| `700` | 36 | `caso.scss` 272, 323, 444; `composicion.scss` 183, 289, 316, 547, 733, 831, 836; `crimenesPorTipo.scss` 35, 61, 126, 142; `linaje.scss` 85, 261; `lineaTiempoCasos.scss` 26, 112, 149, 213, 246, 384, 400, 493, 518; `mapa.scss` 280, 505, 642, 790, 816, 859; `paneles-filtro.scss` 30; `preguntasTarjetas.scss` 123; `tablaGeneral.scss` 61, 215, 242 |
+| `600` | 27 | `global.scss` 322, 506, 539; `botones.scss` 19, 41, 68, 85, 117; `caso.scss` 54, 94, 160, 361, 410, 587; `composicion.scss` 62, 788; `crimenesPorTipo.scss` 50, 274; `faq.scss` 17; `graficos.scss` 51; `linaje.scss` 304, 379; `mapa.scss` 898; `preguntasTarjetas.scss` 52; `tablaGeneral.scss` 158, 395; `tooltips.scss` 50 |
+| `400` | 8 | `_typography.scss` 10; `global.scss` 205; `composicion.scss` 520, 556; `lineaTiempoCasos.scss` 83; `mapa.scss` 340, 407, 812 |
+| `800` | 2 | `crimenesPorTipo.scss` 148, 312 |
+| `normal` | 1 | `caso.scss` 135 |
+
+Además del CSS, hay pesos que vienen del navegador o del HTML:
+
+- `th` es negrita por defecto (700). Pasa en `.tabla-datos th`, en Mono.
+- `<strong>` y `<b>` en los HTML generados por JS: tooltips, `caso.ts`, `ComposicionSocial.ts`.
+  En tooltips (Sans 700) y en la ficha de caso (Crimson 700) hay cara cargada.
+- `normal` (`caso.scss:135`) es 400 escrito con palabra clave.
+
+#### `font-style`
+
+| Valor | Usos | Dónde |
+|---|---|---|
+| `italic` | 22 | `global.scss` 201, 474, 566; `caso.scss` 136, 224, 499, 593, 621; `composicion.scss` 387; `crimenesPorTipo.scss` 157; `graficos.scss` 28, 34; `linaje.scss` 366; `lineaTiempoCasos.scss` 283, 419; `mapa.scss` 391, 538, 775, 803, 870; `paneles-filtro.scss` 131; `tablaGeneral.scss` 504 |
+
+Las 22 son `italic`. Ninguna regla pide itálica junto con un peso mayor que 400, y todas las
+itálicas tienen cara cargada.
+
+#### `line-height`
+
+| Valor | Equivale a | Usos | Dónde |
+|---|---|---|---|
+| `var(--lh-tight)` | 1 | 10 | `caso.scss` 274, 281, 288, 606; `composicion.scss` 46; `crimenesPorTipo.scss` 149; `historiaMetodologia.scss` 143; `lineaTiempoCasos.scss` 369; `mapa.scss` 341; `tablaGeneral.scss` 36 |
+| `var(--lh-snug)` | 1.25 | 7 | `caso.scss` 137; `composicion.scss` 373; `linaje.scss` 262, 280; `preguntasTarjetas.scss` 53, 124; `tablaGeneral.scss` 56 |
+| `var(--lh-relaxed)` | 1.7 | 6 | `_reset.scss` 16; `_typography.scss` 41; `caso.scss` 24; `historiaMetodologia.scss` 90; `linaje.scss` 360; `preguntasTarjetas.scss` 135 |
+| `var(--lh-normal)` | 1.5 | 6 | `caso.scss` 226, 576; `crimenesPorTipo.scss` 246; `lineaTiempoCasos.scss` 421, 450; `mapa.scss` 303 |
+| `1` |  | 3 | `crimenesPorTipo.scss` 62; `mapa.scss` 173; `tablaGeneral.scss` 416 |
+| `1.1` |  | 1 | `composicion.scss` 351 |
+| `1.2` |  | 1 | `composicion.scss` 515 |
+
+#### `letter-spacing`
+
+| Valor | Usos | Dónde |
+|---|---|---|
+| `0.14em` | 6 | `composicion.scss` 118, 290, 548; `mapa.scss` 373; `tablaGeneral.scss` 107, 379 |
+| `0.02em` | 5 | `_typography.scss` 20, 34; `global.scss` 541; `botones.scss` 42; `caso.scss` 184 |
+| `0.08em` | 5 | `global.scss` 424, 508; `caso.scss` 56, 326; `linaje.scss` 86 |
+| `0.1em` | 2 | `global.scss` 207; `caso.scss` 171 |
+| `0.06em` | 2 | `global.scss` 324; `caso.scss` 259 |
+| `0.09em` | 2 | `caso.scss` 292, 403 |
+| `0.2em` | 2 | `composicion.scss` 225; `tablaGeneral.scss` 45 |
+| `0.16em` | 1 | `caso.scss` 128 |
+| `0.04em` | 1 | `caso.scss` 161 |
+| `0.05em` | 1 | `caso.scss` 569 |
+| `0.22em` | 1 | `composicion.scss` 38 |
+| `0.01em` | 1 | `mapa.scss` 282 |
+| `0.03em` | 1 | `paneles-filtro.scss` 42 |
+
+13 valores para un rango de 0.01em a 0.22em. Casi todos acompañan a `uppercase`.
+
+#### `text-transform`
+
+| Valor | Usos | Dónde |
+|---|---|---|
+| `uppercase` | 23 | `global.scss` 206, 323, 423, 507; `caso.scss` 55, 127, 169, 258, 291, 325, 402, 568; `composicion.scss` 39, 119, 226, 291, 549; `linaje.scss` 87; `mapa.scss` 374; `paneles-filtro.scss` 43; `tablaGeneral.scss` 46, 108, 380 |
+
+#### `font`
+
+| Valor | Usos | Dónde |
+|---|---|---|
+| `inherit` | 2 | `composicion.scss` 262, 569 |
+
+---
+
+## 5. Variables CSS / SCSS de tipografía
+
+### Qué se usa y qué no
+
+| Grupo | Tokens definidos | Usados | Sin usar |
+|---|---|---|---|
+| Familias | `--font-display`, `--font-body`, `--font-ui`, `--font-mono`, `--mapa-font` | los 5 | — |
+| Tamaños | 11 (`--fs-3xs` … `--fs-4xl`) | 10 | `--fs-4xl` |
+| Interlineado | `--lh-tight`, `--lh-snug`, `--lh-normal`, `--lh-relaxed` | los 4 | — |
+| Peso | *ninguno* | — | — |
+| Tracking | *ninguno* | — | — |
+
+- Las variables SCSS `$font-*`, `$fs-*` y `$lh-*` no se usan directamente fuera de `abstracts/`.
+  Todo pasa por `var(--…)`.
+- El JS no lee ninguna custom property tipográfica: ni `getComputedStyle` ni `var(--font…)` en
+  `src/scripts/`. `verificarVariablesCss.ts` no cubre tipografía.
+
+### Valores hardcodeados que se saltan un token existente
+
+| Archivo:línea | Valor | Token que ya existe | Commit |
+|---|---|---|---|
+| `pages/lineaTiempoCasos.scss:82` | `font-size: 10px` | `--fs-3xs` (10px). El valor está en unidades del viewBox, así que puede ser intencional | `f804311` (9 oct) |
+| `scripts/charts/CrimenesPorTipo.ts:309` | `font-size: 0.85rem` (en `cssText`) | entre `--fs-sm` (13px) y `--fs-md` (15px) | `afcffb1` (8 oct) |
+| `global.scss:460` (`.orden-icono`) | `font-size: 0.85em` | relativo, sin token equivalente | `ae031c5` |
+| `pages/crimenesPorTipo.scss:62` | `line-height: 1` | `--lh-tight` (1) | `13ef907` |
+| `pages/mapa.scss:173` | `line-height: 1` | `--lh-tight` | `afcffb1` |
+| `pages/tablaGeneral.scss:416` | `line-height: 1` | `--lh-tight` | `758d0a9` |
+| `pages/composicion.scss:351` | `line-height: 1.1` | ninguno (entre `tight` y `snug`) | `758d0a9` |
+| `pages/composicion.scss:515` | `line-height: 1.2` | casi `--lh-snug` (1.25) | `758d0a9` |
+| `pages/caso.scss:135` | `font-weight: normal` | (no hay tokens de peso) | `e7f868f` |
+
+### Redefiniciones del mismo selector
+
+- `body`: `_reset.scss:11` y `pages/caso.scss:19` declaran los mismos tres valores. Como
+  `caso.scss` también se importa en `base-de-datos/index.astro:7`, la repetición llega a dos
+  páginas.
+- `.section-title`: `_typography.scss:27` (24px) y `pages/caso.scss:177` (18px). En las páginas
+  que cargan `caso.scss` (caso y base-de-datos) gana la de 18px.
+- `.tooltip-grafico--sans` y `.tooltip-grafico--neutro` (`tooltips.scss:31, 37`) fijan
+  `--font-ui`, que ya es la familia de `.tooltip-grafico` (`tooltips.scss:20`). Los modificadores
+  no cambian nada.
+
+### Cambios desde el último trabajo tipográfico (`da71fee`, 8 sep)
+
+Los **tokens** no cambiaron: `_variables.scss` y `_root.scss` solo recibieron colores. La carga de
+Google Fonts tampoco cambió. Lo que sí cambió es el uso. De las declaraciones actuales, **las
+siguientes entraron después de `da71fee`**:
+
+| Commit | Fecha | `font-family` añadidas | Otras | Valores nuevos fuera de la escala |
+|---|---|---|---|---|
+| `ae031c5` linea y tablas | 11 sep | 5 (4 Sans, **1 Mono**) | 10 tamaños, 5 pesos | `0.85em` |
+| `13ef907` crimenes y tarjetas | 12 sep | 3 Sans | 3 tamaños | `line-height: 1` |
+| `758d0a9` cambios generales | 18 sep | **38** (28 Sans, 7 Fell, 2 Crimson, **1 Mono**) | 64 tamaños, 21 pesos, 10 tracking | `line-height: 1`, `1.1`, `1.2`; `font: inherit` ×2 |
+| `afcffb1` cambios para coloquio | 8 oct | 0 | 2 tamaños | `0.85rem` en JS; `line-height: 1` |
+| `f804311` cambios para coloquio parte 2 | 9 oct | 2 Sans | 3 tamaños | `10px` |
+
+En total entraron **48 `font-family` nuevas**, 34 de ellas en Sans. Casi todas están en dos archivos
+nuevos, `composicion.scss` (882 líneas) y `tablaGeneral.scss` (553), y en la reescritura de
+`caso.scss`, `mapa.scss` y `lineaTiempoCasos.scss`. Ninguna introduce una familia nueva. Lo que
+crece es el uso de Sans fuera de las gráficas, y Mono entró en dos sitios más (`.case-eyebrow`,
+`.similar-card-meta`).
+
+---
+
+## 6. Inconsistencias
+
+### Tamaños casi duplicados
+
+- **10 / 11 / 12 / 13px** (`--fs-3xs`, `-2xs`, `-xs`, `-sm`) son cuatro pasos de 1px que suman 128
+  usos. A esos tamaños, 1px no se distingue. Además, `10px` hardcodeado y el `font-size="10"` de
+  d3 repiten `--fs-3xs`.
+- **15px contra 16px** (`--fs-md` y `--fs-base`): `body` es 16px, pero `p` es 15px
+  (`_typography.scss:40`). El texto corrido queda en 15px y el texto suelto sin `<p>`, en 16px.
+- **13px contra 13.6px**: `--fs-sm` y el `0.85rem` de `CrimenesPorTipo.ts:309`.
+- **Interlineado 1.2 contra 1.25**: `composicion.scss:515` y `--lh-snug`. También `1.1` contra `1`
+  y `1.25`.
+- **Tracking:** 0.08 / 0.09 / 0.1em; 0.14 / 0.16em; 0.2 / 0.22em; y 0.01 / 0.02 / 0.03 / 0.04 /
+  0.05 / 0.06em. Son 13 valores, y 7 se usan una sola vez.
+
+### Fuentes cargadas pero sin usar
+
+- **No hay ninguna cara cargada sin uso.** Cada peso y estilo pedido a Google Fonts aparece en el
+  CSS.
+- **Source Code Pro** se descarga (2 caras) para 7 reglas, casi todas en la ficha de caso, y no
+  forma parte del sistema previsto.
+- `--fs-4xl` está definido y no se usa.
+
+### Fuentes usadas pero no cargadas
+
+| Qué | Dónde | Efecto |
+|---|---|---|
+| **`sans-serif` genérica en ejes** | Línea temporal del mapa (`TiempoCrimenesMapa.ts:1558-1590`) y spike de crímenes por tipo (`CrimenesPorTipo.ts:338-343`) | d3-axis pone `font-family="sans-serif"` en el `<g>` del eje. Las clases `.mapa-linea-eje-x-texto` y `-y-texto` solo fijan tamaño (`mapa.scss:874, 883`), así que el texto hereda del `<g>` y sale en Helvetica/Arial, no en Source Sans 3. En la línea de tiempo de casos no pasa porque `lineaTiempoCasos.scss:79` fija `--font-ui` en esas mismas clases, y en Composición tampoco, gracias a `.cs-eje-texto`. |
+| **Fuente del navegador en 6 botones** | `.tg-limpiar`, `.tg-chip-quitar`, `.historia-flecha`, `.carrusel-flecha`, `.mapa-tarjeta-cerrar`, `.linea-tiempo-casos-panel-caso__cerrar` | `<button>` no hereda familia y no hay `button { font: inherit }` en `_reset.scss`. Salen en la fuente de sistema. Cuatro de ellos son glifos (×, ‹, ›), pero `.tg-limpiar` es texto. |
+| **Source Code Pro 700** | `.tabla-datos th` (`global.scss:418`) | `th` pide negrita (700). Solo hay 400 y 600 cargados, así que se ve en 600. |
+| **IM Fell en la atribución del mapa** | OpenLayers dentro de `#mapa-contenedor` | La atribución hereda Fell a 12px (tamaño de `ol.css`). Las cifras y nombres de fuente cartográfica salen en la tipografía de títulos. |
+| Respaldos `Georgia`, `system-ui`, `monospace` | pilas de `_variables.scss` | Son del sistema y solo se ven si falla Google Fonts. No son un problema. |
+
+### Reglas tipográficas muertas
+
+Son selectores con propiedades de fuente cuya clase ya no aparece en ningún `.astro` ni `.ts`. No
+afectan lo que se ve, pero inflan los conteos de arriba.
+
+`global.scss`: `.about-tab` (314), `a.card h3` (287), `.tabla-metadatos th/td` (418, 431, la mitad
+del selector), `.btn-descarga` (501), `.vista-toggle-btn` (532), `.vista-historia-placeholder` (564).
+`faq.scss`: `.btn-descargar-datos` (5), `--grande` (42). `graficos.scss`: `.grafico-eje-texto` (39),
+`.grafico-etiqueta-serie` (49). `mapa.scss`: `.mapa-linea-nota` (868). `paneles-filtro.scss`:
+`.filtro-label--chico` (46), `.filtro-select--compacto` (151).
+
+---
+
+## 7. Comparación con el sistema previsto
+
+**Sistema previsto:**
+
+- **IM Fell English** para títulos, nav y título de página en el nav.
+- **Crimson Pro** como serif de cuerpo.
+- **Una sans ya existente (Source Sans 3)**, solo para las gráficas D3.
+
+### Lo que cumple ✓
+
+- Todos los `h1`–`h6` están en IM Fell, peso 400, sin negrita falsa.
+- El nav (`.logo` y `.nav-links a`) está en IM Fell itálica.
+- `body` y el texto corrido están en Crimson Pro.
+- La mayoría del texto **dentro** de las gráficas (SVG de Composición, sunburst, spike, donut,
+  línea temporal, linaje y todos los tooltips) está en Source Sans 3. Son 20 declaraciones.
+- La sans es una familia que ya existía (Source Sans 3). No hay otra sans cargada.
+
+### Desviaciones
+
+**A. Source Sans 3 fuera de las gráficas.** Son 56 de sus 76 declaraciones.
+
+| Grupo | Declaraciones | Ejemplos |
+|---|---|---|
+| Controles y paneles junto a las gráficas (filtros, pestañas, botones de "ver casos", chips, fichas). **Zona gris**: hay que decidir si cuentan como "gráfica" | 37 | `botones.scss` (6 `.btn-mapa-*`), `.cs-pestaña`, `.cs-chip`, `.cs-tarjeta-nombre`, `.cs-rol-delito-titulo`, `.crimenes-tipo-donut-tab`, `.crimenes-tipo-fijados-*`, `.linaje-nivel-titulo`, `.linaje-selector-crimen`, `.linaje-panel-boton`, `.linea-tiempo-casos-*__boton*`, `.lugar-ficha-dato-etiqueta`, `.lugar-ficha-resumen`, `.lugar-ficha-crimen-*`, `.mapa-selector-vista`, `.filtro-select`, `.filtro-combo-input` |
+| Interfaz general sin relación con gráficas. **Desviación clara** | 19 (4 en reglas muertas) | `caso.scss`: `.back-link`, `.caso-posicion`, `.caso-nav-boton`, `.copiar-ref`, `.similares-tab`; `tablaGeneral.scss`: `.tg-subtitulo`, `.tg-etiqueta`, `.tg-check`, `.tg-boton-buscar`, `.tg-marca`, `.tg-activos-titulo`; `composicion.scss`: `.cs-eyebrow`; `preguntasTarjetas.scss`: `.preguntas-tarjetas-pildora`, `-chip`; `global.scss`: `.cargando` |
+
+**B. Una cuarta familia fuera del sistema: Source Code Pro.** Son 7 declaraciones: `global.scss:421`
+(`.tabla-datos th`) y `caso.scss:125, 173, 256, 289, 400, 566` (ceja, etiquetas de campo, pill,
+tooltip, tarjetas similares).
+
+**C. Texto de gráficas en serif, cuando debería ser sans.**
+
+| Familia | Elemento | Regla |
+|---|---|---|
+| Crimson | `.mapa-capsula-titulo`, `-subtitulo`, `-sin-casos`, `-fila-texto`, `-fila-conteo` (SVG del mapa) | `mapa.scss:788-821` |
+| Crimson | `.crimenes-tipo-donut-total-label` (SVG del donut) | `crimenesPorTipo.scss:316` |
+| Crimson | `.crimenes-tipo-nombre` (etiquetas de la lista de barras) | `crimenesPorTipo.scss:123` |
+| Crimson | `.cs-leyenda-cuadros`, `.cs-leyenda-lineas` (leyendas HTML de Composición) | `composicion.scss:414` |
+| Fell | `.cs-tarjeta-valor` (cifra de 44px), `.cs-medidor strong` (cifra de 24px) | `composicion.scss:348, 517` |
+| Fell | `.lugar-ficha-dato-valor` | `mapa.scss:378` |
+| Fell | Todo lo que hay dentro de `#mapa-contenedor` sin familia propia (atribución de OpenLayers) | `global.scss:350` |
+
+**D. Ejes en sans genérica, no en Source Sans 3.** Afecta a la línea temporal del mapa y al spike
+de crímenes por tipo (ver §6).
+
+**E. Títulos que no son `<h*>` y no están en IM Fell.**
+
+| Familia | Elementos |
+|---|---|
+| Crimson | `.mapa-tarjeta-titulo` (6 títulos de tarjeta en tiempo), `.panel-filtros-titulo`, `.crime-name` |
+| Sans | `.linaje-nivel-titulo`, `.cs-rol-delito-titulo`, `.tg-activos-titulo`, cejas `.tg-subtitulo`, `.cs-eyebrow` |
+| Mono | ceja `.case-eyebrow` |
+
+**F. Seis botones en la fuente del navegador** (ver §6). No están en ninguna de las tres familias.
+
+**G. Formularios en dos familias.** Los selects de base-de-datos y personas están en Crimson. Los de
+tiempo y about, en Sans.
+
+**H. Detalles menores**
+
+- `--mapa-font` es un nombre ajeno al sistema para lo que es `--font-body`.
+- `h2.cs-seccion-titulo` usa IM Fell a 11px en versalitas. Cumple la regla, pero a ese tamaño la
+  textura de IM Fell se pierde, y comparte estilo con cejas que están en Sans.
+- `h4` en `caso.ts` no tiene tamaño asignado (usa el del navegador).
