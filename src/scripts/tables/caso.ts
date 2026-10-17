@@ -217,7 +217,7 @@ function renderCase(caso: any, personas: Fila[], main: HTMLElement, casesMap: Ma
   if (caso.documentos.length > 1) {
     const secTitle = document.createElement('h2');
     secTitle.className = 'section-title';
-    secTitle.textContent = `crimenes registrados (${caso.documentos.length})`;
+    secTitle.textContent = `crímenes registrados (${caso.documentos.length})`;
     main.appendChild(secTitle);
   }
   const list = document.createElement('div');

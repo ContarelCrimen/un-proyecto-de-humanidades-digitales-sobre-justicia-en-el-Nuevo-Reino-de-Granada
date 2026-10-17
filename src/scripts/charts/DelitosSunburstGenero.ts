@@ -24,7 +24,7 @@ export function dibujarDelitosSunburstGenero(
     const vacio = document.createElement('p');
     vacio.className = 'grafico-vacio';
     vacio.textContent = hayCrimenFijado
-      ? `"${crimenSeleccionado}" no tiene subcrimenes registrados para los géneros activos.`
+      ? `"${crimenSeleccionado}" no tiene subcrímenes registrados para los géneros activos.`
       : 'No hay datos para los géneros activos.';
     contenedor.appendChild(vacio);
     return;

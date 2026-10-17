@@ -424,7 +424,7 @@ export async function inicializarDashboard() {
     const anioMax = Math.max(...todosLosAnios);
     const encabezado = crearElemento('div', 'lugar-ficha-encabezado');
     encabezado.append(
-      crearElemento('h4', 'lugar-ficha-subtitulo', 'crimenes documentados'),
+      crearElemento('h4', 'lugar-ficha-subtitulo', 'crímenes documentados'),
       crearElemento(
         'span',
         'lugar-ficha-resumen',
@@ -574,7 +574,7 @@ export async function inicializarDashboard() {
   columnaMapa.appendChild(
     envolverEnTarjeta(
       mapaContenedor,
-      'Distribución geográfica de los crimenes',
+      'Distribución geográfica de los crímenes',
       'Puedes hacer clic en un punto para fijarlo y compararlo',
     ),
   );
@@ -588,7 +588,7 @@ export async function inicializarDashboard() {
       envolverEnTarjeta(
         contenedorLineasEl,
         'Evolución en el tiempo',
-        'Crimenes ocurridos en el lugar seleccionado según el rango elegido. Puedes fijar varios lugares para compararlos.',
+        'Crímenes ocurridos en el lugar seleccionado según el rango elegido. Puedes fijar varios lugares para compararlos.',
       ),
     );
     contenedorInfoLugares = document.createElement('div');
@@ -798,7 +798,7 @@ export async function inicializarDashboard() {
     etiqueta: 'Subcrimen',
     opciones: subcrimenesParaCrimen(estado.crimen),
     valorInicial: estado.subcrimen,
-    notaVacia: 'Este crimen no tiene subcrimenes registrados.',
+    notaVacia: 'Este crimen no tiene subcrímenes registrados.',
     onChange: (valor: any) => {
       estado.subcrimen = valor;
       actualizarMapa();
@@ -909,7 +909,7 @@ export async function inicializarDashboard() {
   mapaContenedor.appendChild(botonVerCasosMapa.boton);
   const btnEscalarTamanio = document.createElement('button');
   btnEscalarTamanio.type = 'button';
-  btnEscalarTamanio.textContent = 'Aumentar según cantidad de crimenes';
+  btnEscalarTamanio.textContent = 'Aumentar según cantidad de crímenes';
   btnEscalarTamanio.className = 'btn-mapa-escalar';
   function actualizarEstiloBotonEscalar() {
     btnEscalarTamanio.classList.toggle('btn-mapa--activo', escalarPorCantidad);
@@ -1428,7 +1428,7 @@ export async function inicializarDashboard() {
     function buildSerieTotal() {
       const lista = decadasSeleccionadas();
       const filtrados = datosFiltradosBase();
-      const nombreSerie = estado.crimen === 'Todos' ? 'Todos los crimenes' : estado.crimen;
+      const nombreSerie = estado.crimen === 'Todos' ? 'Todos los crímenes' : estado.crimen;
       const puntos = lista.map((t) => {
         const set = new Set(
           filtrados
@@ -1597,7 +1597,7 @@ export async function inicializarDashboard() {
       (enModoComparacion
         ? `Comparando ${series.length} ${series.length === 1 ? 'lugar' : 'lugares'}`
         : estado.crimen === 'Todos'
-          ? 'Todos los crimenes'
+          ? 'Todos los crímenes'
           : estado.crimen) + sufijoProvincia;
       svgLine
         .append('text')

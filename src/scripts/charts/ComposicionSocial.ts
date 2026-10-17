@@ -16,7 +16,7 @@ import { dibujarRed } from './ComposicionRed.js';
 import { dibujarDelitosSunburstGenero } from './DelitosSunburstGenero.js';
 import { dibujarSunburst } from './InstitucionesAtributo.js';
 const TOP_BARRAS = 5;
-const TODOS_LOS_CRIMENES = 'Todos los crimenes';
+const TODOS_LOS_CRIMENES = 'Todos los crímenes';
 interface Estado {
   grupos: string[];
   crimen: string | null;
@@ -211,7 +211,7 @@ export async function crearComposicionSocial(modo: Modo) {
           <span class="cs-tarjeta-accion">${activa ? 'Ocultar rol' : 'Ver rol'}</span>
         </span>
         <span class="cs-tarjeta-valor">${fmt(agentes)}</span>
-        <span class="cs-tarjeta-sub">${fmt(casos)} casoss</span>
+        <span class="cs-tarjeta-sub">${fmt(casos)} casos</span>
       `;
       tarjeta.addEventListener('click', () => {
         alternarGrupo(g.clave);
@@ -370,7 +370,7 @@ export async function crearComposicionSocial(modo: Modo) {
       dibujarSunburst('csDonaGrafico', filasFiltradas, estado.crimen, opcionesDona);
     }
     const subtituloRedBase =
-      ' Puedes observar cuáles son los crimenes que más suceden en un mismo caso, puedes hacer clic en los nodos para ver su conexión.';
+      ' Puedes observar cuáles son los crímenes que más suceden en un mismo caso, puedes hacer clic en los nodos para ver su conexión.';
     redSubtitulo.textContent = !hayGrupos
       ? subtituloRedBase
       : `Con ${elegidos.map((g) => g.etiqueta).join(' y ')} elegido${elegidos.length > 1 ? 's' : ''}, el tamaño de cada nodo muestra en cuántos de sus casos aparece el delito — haz clic para filtrar y arrastra para mover`;

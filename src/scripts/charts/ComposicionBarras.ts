@@ -113,7 +113,7 @@ export function dibujarBarras({
     .attr('role', 'img')
     .attr(
       'aria-label',
-      `Crimenes más registrados: ${ladoIzq.etiqueta} frente a ${ladoDer.etiqueta}`,
+      `Crímenes más registrados: ${ladoIzq.etiqueta} frente a ${ladoDer.etiqueta}`,
     );
   const ladoAtenuado = (lado: { claves: string[] }) =>
     gruposActivos.length > 0 && !lado.claves.some((c) => gruposActivos.includes(c));

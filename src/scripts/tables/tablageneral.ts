@@ -165,7 +165,7 @@ export async function crearTabla() {
     poblarSelector(
       filtroCrimen,
       [...new Set(datosBase.map((d) => d.crimen))].filter(Boolean).sort(),
-      'Todos los crimenes',
+      'Todos los crímenes',
     );
   }
   poblarSelectores();
@@ -231,7 +231,7 @@ export async function crearTabla() {
       lista.push({ texto, titulo, quitar: () => quitarOrigen(claves) });
     if (origen.casos) {
       const n = origen.casos.split(',').filter((s) => s.trim()).length;
-      conOrigen(['casos'], `${fmt(n)} casos en común`, 'Coincidencia de crimenes');
+      conOrigen(['casos'], `${fmt(n)} casos en común`, 'Coincidencia de crímenes');
     }
     if (origen.genero) conOrigen(['genero'], `Género: ${origen.genero}`, 'Género');
     if (origen.atributo) conOrigen(['atributo'], `Atributo: ${origen.atributo}`, 'Atributo');
