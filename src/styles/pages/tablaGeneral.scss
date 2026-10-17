@@ -32,7 +32,7 @@ main.container.tg-pagina {
 
 .tg-titulo {
   margin: 0;
-  font-size: var(--fs-3xl);
+  font-size: var(--fs-title);
   line-height: var(--lh-tight);
   color: var(--crema);
 }
@@ -529,10 +529,6 @@ main.container.tg-pagina {
 }
 
 @media (max-width: $bp-movil) {
-  .tg-titulo {
-    font-size: var(--fs-2xl);
-  }
-
   .tg-conteo {
     align-items: flex-start;
   }
