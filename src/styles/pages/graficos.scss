@@ -36,19 +36,9 @@
   text-align: center;
 }
 
-.grafico-eje-texto {
-  font-size: var(--fs-ui-xs);
-  fill: #555;
-}
-
 .grafico-serie-linea {
   fill: none;
   stroke-width: 2;
-}
-
-.grafico-etiqueta-serie {
-  font-size: var(--fs-ui-xs);
-  font-weight: var(--fw-semibold);
 }
 
 .grafico-linea-guia {

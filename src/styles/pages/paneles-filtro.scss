@@ -43,10 +43,6 @@
   text-transform: uppercase;
 }
 
-.filtro-label--chico {
-  font-size: var(--fs-ui-xs);
-}
-
 .filtro-wrap {
   display: flex;
   flex-direction: column;
@@ -146,11 +142,6 @@
   color: var(--mapa-tinta-oscura);
   font-size: var(--fs-ui-sm);
   font-family: var(--font-ui);
-}
-
-.filtro-select--compacto {
-  padding: 5px 8px;
-  font-size: var(--fs-ui-sm);
 }
 
 .filtro-aviso-sin-datos {

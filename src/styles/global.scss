@@ -274,25 +274,6 @@ body.nav-abierto {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
 }
 
-a.card {
-  display: block;
-  text-align: left;
-  color: inherit;
-  text-decoration: none;
-}
-
-a.card h3 {
-  font-family: var(--font-display);
-  font-size: var(--fs-h3);
-  color: var(--accent);
-  margin-bottom: 0.5rem;
-}
-
-a.card p {
-  margin: 0;
-  max-width: none;
-}
-
 /* =====================================================
    PESTAÑAS DE "SOBRE EL PROYECTO" (AboutTabs.astro)
    Barra de 3 botones (Fuentes / Delitos / Documentación técnica) que
@@ -306,34 +287,6 @@ a.card p {
   justify-content: center;
   gap: 10px;
   margin-bottom: 2.5rem;
-}
-
-.about-tab {
-  padding: 10px 22px;
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  background: #ffffff;
-  color: var(--ink);
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-semibold);
-  text-transform: uppercase;
-  text-decoration: none;
-  transition:
-    background 0.15s,
-    color 0.15s,
-    border-color 0.15s;
-}
-
-.about-tab:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.about-tab[aria-current='page'] {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
 }
 
 .chart-linaje,
@@ -494,26 +447,6 @@ a.card p {
   margin-top: 1rem;
 }
 
-.btn-descarga {
-  background: var(--accent);
-  color: var(--parchment);
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-semibold);
-  text-transform: uppercase;
-  padding: 0.9rem 1.5rem;
-  text-decoration: none;
-  border-radius: 2px;
-  border: 1px solid transparent;
-  transition: all 0.2s;
-}
-
-.btn-descarga:hover {
-  background: var(--parchment-dark);
-  color: var(--accent);
-  border-color: var(--rule);
-}
-
 /* =====================================================
    TOGGLE DASHBOARD / HISTORIA
 ===================================================== */
@@ -524,41 +457,10 @@ a.card p {
   margin: 0 0 2rem;
 }
 
-.vista-toggle-btn {
-  padding: 0.55rem 1.5rem;
-  border-radius: 999px;
-  border: 1px solid var(--accent);
-  background: #ffffff;
-  color: var(--accent);
-  font-family: var(--font-ui);
-  font-weight: var(--fw-semibold);
-  font-size: var(--fs-ui-md);
-  cursor: pointer;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-}
-
-.vista-toggle-btn:hover {
-  background: rgba(122, 59, 30, 0.08);
-}
-
-.vista-toggle-btn--activo,
-.vista-toggle-btn--activo:hover {
-  background: var(--accent);
-  color: #ffffff;
-}
-
 .vista-historia {
   max-width: 750px;
   margin: 0 auto;
   text-align: center;
-}
-
-.vista-historia-placeholder {
-  color: var(--accent-dim);
-  font-style: italic;
-  padding: 3rem 0;
 }
 
 /* =====================================================
