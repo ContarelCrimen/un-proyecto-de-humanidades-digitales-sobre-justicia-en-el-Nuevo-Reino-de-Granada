@@ -132,6 +132,53 @@ $atributo-victima: #2e496f;
 $atributo-perpetrador: #e33950;
 $atributo-complice: #406706;
 
+$panel-bg: #431a2c;
+$panel-border: rgba($dorado, 0.35);
+$panel-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+$on-panel: $crema;
+$on-panel-label: $dorado;
+$on-panel-muted: $rosado;
+
+$surface: #faf5e9;
+$surface-sunken: #f2e9d3;
+$surface-border: #e4d8bd;
+$surface-table-head: #e2d5b0;
+$surface-table-alt: #ebe2c9;
+$on-surface: #2a1a12;
+$on-surface-muted: #7a6049;
+$chart-grid: #e8dfc8;
+
+$radius-pill: 999px;
+$radius-panel: 6px;
+
+$space-1: 0.25rem;
+$space-2: 0.5rem;
+$space-3: 0.75rem;
+$space-4: 1rem;
+$space-5: 1.5rem;
+$space-6: 2rem;
+$space-7: 3rem;
+$space-8: 4rem;
+
+$border-width: 1px;
+$border-width-strong: 2px;
+$border-strong: $dorado;
+
+$state-hover-on-panel: rgba($dorado, 0.15);
+$state-hover-on-surface: rgba($vinotinto, 0.08);
+$state-selected-bg: $dorado;
+$state-selected-fg: $vinotinto;
+$state-selected-border: $dorado;
+$state-disabled-opacity: 0.4;
+
+$focus-ring-width: 2px;
+$focus-ring-offset: 2px;
+$focus-ring-on-panel: $dorado;
+$focus-ring-on-surface: $vinotinto;
+
+$tracking: 0;
+$duration-fast: 0.15s;
+
 // ── Breakpoints ──────────────────────────────────────────
 // Sin lector en JS: son variables SCSS de tiempo de compilación y no se emiten
 // como custom properties. Los cinco valores que usa el proyecto, con lo que

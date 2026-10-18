@@ -5,13 +5,13 @@
 
 // Tonos propios del tablero: el vino oscuro de la barra de filtros y el
 // crema de las tarjetas. Los demás salen de los tokens de identidad.
-$cs-filtros-fondo: #431a2c;
-$cs-tarjeta: #faf5e9;
-$cs-tarjeta-realce: #f2e9d3;
-$cs-borde: #e4d8bd;
-$cs-texto: #2a1a12;
-$cs-texto-suave: #8a6f55;
-$cs-grilla: #e8dfc8;
+$cs-filtros-fondo: $panel-bg;
+$cs-tarjeta: $surface;
+$cs-tarjeta-realce: $surface-sunken;
+$cs-borde: $surface-border;
+$cs-texto: $on-surface;
+$cs-texto-suave: $on-surface-muted;
+$cs-grilla: $chart-grid;
 
 main.container.cs-pagina {
   --espacio-bloques: 1.25rem;

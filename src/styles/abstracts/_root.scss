@@ -109,4 +109,51 @@
   --atributo-victima: #{v.$atributo-victima};
   --atributo-perpetrador: #{v.$atributo-perpetrador};
   --atributo-complice: #{v.$atributo-complice};
+
+  --panel-bg: #{v.$panel-bg};
+  --panel-border: #{v.$panel-border};
+  --panel-shadow: #{v.$panel-shadow};
+  --on-panel: #{v.$on-panel};
+  --on-panel-label: #{v.$on-panel-label};
+  --on-panel-muted: #{v.$on-panel-muted};
+
+  --surface: #{v.$surface};
+  --surface-sunken: #{v.$surface-sunken};
+  --surface-border: #{v.$surface-border};
+  --surface-table-head: #{v.$surface-table-head};
+  --surface-table-alt: #{v.$surface-table-alt};
+  --on-surface: #{v.$on-surface};
+  --on-surface-muted: #{v.$on-surface-muted};
+  --chart-grid: #{v.$chart-grid};
+
+  --radius-pill: #{v.$radius-pill};
+  --radius-panel: #{v.$radius-panel};
+
+  --space-1: #{v.$space-1};
+  --space-2: #{v.$space-2};
+  --space-3: #{v.$space-3};
+  --space-4: #{v.$space-4};
+  --space-5: #{v.$space-5};
+  --space-6: #{v.$space-6};
+  --space-7: #{v.$space-7};
+  --space-8: #{v.$space-8};
+
+  --border-width: #{v.$border-width};
+  --border-width-strong: #{v.$border-width-strong};
+  --border-strong: #{v.$border-strong};
+
+  --state-hover-on-panel: #{v.$state-hover-on-panel};
+  --state-hover-on-surface: #{v.$state-hover-on-surface};
+  --state-selected-bg: #{v.$state-selected-bg};
+  --state-selected-fg: #{v.$state-selected-fg};
+  --state-selected-border: #{v.$state-selected-border};
+  --state-disabled-opacity: #{v.$state-disabled-opacity};
+
+  --focus-ring-width: #{v.$focus-ring-width};
+  --focus-ring-offset: #{v.$focus-ring-offset};
+  --focus-ring-on-panel: #{v.$focus-ring-on-panel};
+  --focus-ring-on-surface: #{v.$focus-ring-on-surface};
+
+  --tracking: #{v.$tracking};
+  --duration-fast: #{v.$duration-fast};
 }

@@ -3,11 +3,11 @@
 // en mono, y etiquetas/botones en ui. Los tokens llegan por la inyección de
 // astro.config.mjs; el bloque :root lo emite solo abstracts/_root.scss.
 
-$tg-panel: #431a2c;
-$tg-linea: rgba(209, 166, 119, 0.35);
-$tg-fila: #f3ebd4;
-$tg-fila-alterna: #ebe2c9;
-$tg-encabezado-tabla: #e2d5b0;
+$tg-panel: $panel-bg;
+$tg-linea: $panel-border;
+$tg-fila: $crema;
+$tg-fila-alterna: $surface-table-alt;
+$tg-encabezado-tabla: $surface-table-head;
 
 main.container.tg-pagina {
   --espacio-bloques: 1.5rem;
