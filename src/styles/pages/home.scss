@@ -81,6 +81,7 @@ body.home main {
   // own centring rule while the paragraph goes left, which reads as a mistake.
   // Both are pinned left here, inside the hero only.
   .section-mainTitle {
+    font-size: var(--fs-title-home);
     text-align: left;
   }
 
@@ -132,6 +133,10 @@ body.home main {
 
   .hero-texto {
     padding: 2rem 1.25rem;
+
+    .section-mainTitle {
+      font-size: var(--fs-title);
+    }
   }
 
   // Text first, image second comes from source order, so no `order` is needed.
