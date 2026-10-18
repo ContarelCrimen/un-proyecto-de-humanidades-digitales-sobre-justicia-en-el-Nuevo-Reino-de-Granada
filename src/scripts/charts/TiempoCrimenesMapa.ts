@@ -961,7 +961,7 @@ export async function inicializarDashboard() {
   const gZoom = svgMapa.append('g').attr('class', 'capa-zoom');
   const gMapaBase = gZoom.append('g').attr('class', 'capa-mapa');
   const tooltipProvincia = document.createElement('div');
-  tooltipProvincia.className = 'tooltip-grafico tooltip-grafico--sans';
+  tooltipProvincia.className = 'tooltip-grafico';
   mapaContenedor.appendChild(tooltipProvincia);
   gMapaBase
     .selectAll('path')
@@ -1397,7 +1397,7 @@ export async function inicializarDashboard() {
     let serieResaltada: string | null = null;
     let lineGroupsPorSerie = new Map();
     const tooltipLineas = document.createElement('div');
-    tooltipLineas.className = 'tooltip-grafico tooltip-grafico--sans';
+    tooltipLineas.className = 'tooltip-grafico';
     const MARGIN = { top: 60, right: 170, bottom: 50, left: 55 };
     const WIDTH = 700,
       HEIGHT = 300;

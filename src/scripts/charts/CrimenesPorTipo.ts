@@ -306,7 +306,7 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
     if (foco) {
       const banner = document.createElement('div');
       banner.style.cssText =
-        'display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-size:0.85rem;';
+        'display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-family:var(--font-ui);font-size:var(--fs-ui-sm);';
       const texto = document.createElement('span');
       texto.textContent = `Subcrimen: ${foco.sub} (dentro de ${foco.crimen})`;
       const volver = document.createElement('button');
@@ -360,7 +360,7 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       .y((v: number) => y(v))
       .curve(d3.curveMonotoneX);
     const tooltip = document.createElement('div');
-    tooltip.className = 'tooltip-grafico tooltip-grafico--sans';
+    tooltip.className = 'tooltip-grafico';
     contenedorSpike.appendChild(tooltip);
     seleccion.forEach((serie) => {
       const color = colorDe.get(serie.nombre)!;
@@ -499,7 +499,7 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       .innerRadius(RADIO * 0.55)
       .outerRadius(RADIO * 0.95);
     const tooltip = document.createElement('div');
-    tooltip.className = 'tooltip-grafico tooltip-grafico--sans';
+    tooltip.className = 'tooltip-grafico';
     contenedorDonut.appendChild(tooltip);
     const marcarPorciones = () => {
       g.selectAll('path')

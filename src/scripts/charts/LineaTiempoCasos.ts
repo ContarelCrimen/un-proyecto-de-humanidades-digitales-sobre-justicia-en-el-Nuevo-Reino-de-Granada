@@ -610,7 +610,7 @@ export async function crearLineaTiempoCasos(containerId: string) {
       g.append('circle').attr('r', 4).attr('fill', s.color).style('display', 'none'),
     );
     const tooltip = document.createElement('div');
-    tooltip.className = 'tooltip-grafico tooltip-grafico--sans';
+    tooltip.className = 'tooltip-grafico';
     contenedorLinea.appendChild(tooltip);
     function moverFocoA(anioBruto: number) {
       const anio = Math.min(anioHasta, Math.max(anioDesde, Math.round(anioBruto)));

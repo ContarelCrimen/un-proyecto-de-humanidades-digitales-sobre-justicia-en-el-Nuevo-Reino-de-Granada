@@ -210,7 +210,7 @@ export async function crearLinaje(containerId: string, esCriminal: boolean) {
     selectorCrimen.value = d.depth === 1 ? d.data.Path : d.parent.data.Path;
   }
   hubElemento.querySelector('.linaje-panel-titulo')?.insertAdjacentElement('afterend', selectorCrimen);
-  const tituloNivel2 = document.createElement('h4');
+  const tituloNivel2 = document.createElement('p');
   tituloNivel2.className = 'linaje-nivel-titulo';
   tituloNivel2.textContent = 'Nivel 2';
   const subruedaContenedor = document.createElement('div');
@@ -372,7 +372,7 @@ export async function crearLinaje(containerId: string, esCriminal: boolean) {
     categorias.find((categoria: NodoMutable) => categoria.data.Nombre === NOMBRE_CATEGORIA_INICIAL) ??
     categorias[0];
   activarCategoria(categoriaInicial);
-  const tituloNivel1 = document.createElement('h4');
+  const tituloNivel1 = document.createElement('p');
   tituloNivel1.className = 'linaje-nivel-titulo';
   tituloNivel1.textContent = 'Nivel 1';
   const columnaRueda = document.createElement('div');

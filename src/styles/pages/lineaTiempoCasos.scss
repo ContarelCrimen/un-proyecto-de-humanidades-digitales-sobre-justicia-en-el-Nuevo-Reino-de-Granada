@@ -22,8 +22,8 @@
   background: var(--mapa-tarjeta-fondo);
   color: var(--mapa-tinta-oscura);
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
-  font-weight: 700;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   cursor: pointer;
   transition:
     background 0.15s ease,
@@ -79,8 +79,8 @@
   .mapa-linea-eje-x-texto {
     fill: var(--mapa-borde);
     font-family: var(--font-ui);
-    font-size: 10px;
-    font-weight: 400;
+    font-size: var(--fs-ui-xs);
+    font-weight: var(--fw-regular);
   }
 }
 
@@ -108,8 +108,8 @@
   background: var(--mapa-tarjeta-fondo);
   color: var(--mapa-tinta-oscura);
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
-  font-weight: 700;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   cursor: pointer;
   transition:
     background 0.15s ease,
@@ -145,8 +145,8 @@
 .linea-tiempo-casos-guia-fecha__etiqueta {
   margin-top: 2px;
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
-  font-weight: 700;
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-bold);
   color: var(--mapa-borde);
   text-align: center;
 }
@@ -209,8 +209,8 @@
   background: var(--mapa-panel);
   border: 1px solid var(--mapa-borde);
   font-family: var(--font-ui);
-  font-size: var(--fs-sm);
-  font-weight: 700;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   color: var(--mapa-tinta-oscura);
   white-space: nowrap;
   cursor: pointer;
@@ -227,7 +227,7 @@
   background: var(--mapa-acento-linea);
   border-color: var(--mapa-acento-linea);
   color: #fff;
-  font-size: var(--fs-base);
+  font-size: var(--fs-ui-md);
   padding: 7px 16px;
 }
 
@@ -242,8 +242,8 @@
 .linea-tiempo-casos-anio-conteo {
   flex: none;
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
-  font-weight: 700;
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-bold);
   color: var(--mapa-borde);
 }
 
@@ -279,9 +279,9 @@
 }
 
 .linea-tiempo-casos-nota {
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-sm);
   font-style: italic;
-  font-family: var(--mapa-font);
+  font-family: var(--font-body);
   color: var(--mapa-borde);
   opacity: 0.85;
   margin-top: 10px;
@@ -300,7 +300,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-ui-xs);
   font-family: var(--font-ui);
   color: var(--mapa-borde);
 }
@@ -341,7 +341,7 @@
   border: 1px solid var(--mapa-borde);
   border-radius: 6px;
   padding: 0;
-  font-family: var(--mapa-font);
+  font-family: var(--font-ui);
   text-align: left;
   transition:
     width 0.25s ease,
@@ -365,7 +365,7 @@
   right: 12px;
   border: none;
   background: none;
-  font-size: var(--fs-xl);
+  font-size: var(--fs-ui-lg);
   line-height: var(--lh-tight);
   color: var(--mapa-borde);
   cursor: pointer;
@@ -380,8 +380,8 @@
   border: none;
   background: none;
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
-  font-weight: 700;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   color: var(--mapa-borde);
   cursor: pointer;
 
@@ -396,15 +396,15 @@
 }
 
 .linea-tiempo-casos-panel-caso__fecha {
-  font-size: var(--fs-base);
-  font-weight: 700;
+  font-size: var(--fs-ui-md);
+  font-weight: var(--fw-bold);
   color: var(--mapa-tinta-oscura);
   padding-right: 24px;
   white-space: nowrap;
 }
 
 .linea-tiempo-casos-panel-caso__lugar {
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   color: var(--mapa-borde);
   margin-top: 2px;
   margin-bottom: 12px;
@@ -415,7 +415,8 @@
 // ilustrar de qué se trata sin abrir "Ver caso" — oculta si esa fila no
 // trae descripción (elDescripcion.hidden en el .ts).
 .linea-tiempo-casos-panel-caso__descripcion {
-  font-size: var(--fs-xs);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
   font-style: italic;
   color: var(--mapa-tinta-oscura);
   line-height: var(--lh-normal);
@@ -435,7 +436,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   color: var(--mapa-tinta-oscura);
   padding: 6px 10px;
   background: var(--mapa-panel);
@@ -465,7 +466,7 @@
 
   small {
     color: var(--mapa-borde);
-    font-size: var(--fs-xs);
+    font-size: var(--fs-ui-sm);
   }
 
   .linea-tiempo-casos-panel-caso__lista-color {
@@ -489,8 +490,8 @@
   background: var(--mapa-acento-linea);
   color: #fff;
   font-family: var(--font-ui);
-  font-size: var(--fs-sm);
-  font-weight: 700;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   cursor: pointer;
   white-space: nowrap;
 }
@@ -514,8 +515,8 @@
   background: transparent;
   color: var(--mapa-tinta-oscura);
   font-family: var(--font-ui);
-  font-size: var(--fs-sm);
-  font-weight: 700;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   cursor: pointer;
   white-space: nowrap;
 }

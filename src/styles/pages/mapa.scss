@@ -35,6 +35,24 @@
   justify-self: end;
 }
 
+@media (max-width: v.$bp-movil) {
+  .mapa-selector-vista {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 8px;
+  }
+
+  .mapa-selector-vista-instrucciones {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .mapa-selector-vista-grupo {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    flex-wrap: wrap;
+  }
+}
+
 .mapa-vista-crimenes {
   display: flex;
   flex-direction: row;
@@ -169,8 +187,8 @@
   right: 12px;
   border: none;
   background: none;
-  font-size: var(--fs-xl);
-  line-height: 1;
+  font-size: var(--fs-ui-lg);
+  line-height: var(--lh-tight);
   color: var(--mapa-borde);
   cursor: pointer;
 }
@@ -185,8 +203,8 @@
 }
 
 .mapa-main-ancho {
-  max-width: 1700px;
-  width: 96%;
+  width: calc(100% - 2 * var(--margen-pagina));
+  max-width: var(--ancho-visualizacion);
   align-items: stretch;
 }
 
@@ -275,16 +293,15 @@
 }
 
 .mapa-tarjeta-titulo {
-  font-family: var(--mapa-font);
-  font-size: var(--fs-md);
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-regular);
   color: var(--mapa-tinta-oscura);
-  letter-spacing: 0.01em;
 }
 
 .mapa-tarjeta-subtitulo {
-  font-family: var(--mapa-font);
-  font-size: var(--fs-2xs);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-xs);
   color: var(--mapa-borde);
   opacity: 0.85;
 }
@@ -298,7 +315,7 @@
 // Cuerpo de texto de los paneles "Instrucciones" e "Información" (ver
 // tiempo/index.astro): mismo estilo que el resto de las tarjetas.
 .mapa-tarjeta-parrafo {
-  font-family: var(--mapa-font);
+  font-family: var(--font-body);
   font-size: var(--fs-sm);
   line-height: var(--lh-normal);
   color: var(--mapa-tinta-oscura);
@@ -336,8 +353,8 @@
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(107, 79, 42, 0.25);
   font-family: var(--font-display);
-  font-size: var(--fs-2xl);
-  font-weight: 400;
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-regular);
   line-height: var(--lh-tight);
   text-align: center;
   color: var(--mapa-tinta-oscura);
@@ -369,16 +386,15 @@
 .lugar-ficha-dato-etiqueta {
   margin: 0;
   font-family: var(--font-ui);
-  font-size: var(--fs-3xs);
-  letter-spacing: 0.14em;
+  font-size: var(--fs-ui-xs);
   text-transform: uppercase;
   color: var(--mapa-borde);
 }
 
 .lugar-ficha-dato-valor {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--fs-lg);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-lg);
   color: var(--verde);
 }
 
@@ -403,14 +419,14 @@
 .lugar-ficha-subtitulo {
   margin: 0;
   font-family: var(--font-display);
-  font-size: var(--fs-lg);
-  font-weight: 400;
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-regular);
   color: var(--mapa-tinta-oscura);
 }
 
 .lugar-ficha-resumen {
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   color: var(--mapa-borde);
 }
 
@@ -451,7 +467,7 @@
   display: flex;
   justify-content: space-between;
   font-family: var(--font-ui);
-  font-size: var(--fs-3xs);
+  font-size: var(--fs-ui-xs);
   color: var(--mapa-borde);
 }
 
@@ -501,14 +517,14 @@
   align-items: center;
   gap: 0.6rem;
   font-family: var(--font-ui);
-  font-size: var(--fs-md);
-  font-weight: 700;
+  font-size: var(--fs-ui-md);
+  font-weight: var(--fw-bold);
   color: var(--mapa-tinta-oscura);
 }
 
 .lugar-ficha-crimen-casos {
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   color: var(--mapa-borde);
   white-space: nowrap;
 }
@@ -527,14 +543,14 @@
   background: color-mix(in srgb, var(--mapa-punto-color) 14%, transparent);
   color: color-mix(in srgb, var(--mapa-punto-color) 70%, #2a1a12);
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
 }
 
 // Aviso "sin datos" en cursiva. Lo usa también CrimenesPorTipo.ts (definición
 // de un crimen sin explicación), por eso se conserva con su nombre original.
 .mapa-info-lugar-vacio {
-  font-family: var(--mapa-font);
-  font-size: var(--fs-xs);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
   font-style: italic;
   color: var(--mapa-borde);
 }
@@ -638,8 +654,8 @@
 
 .mapa-etiqueta-tiempo {
   text-align: center;
-  font-size: var(--fs-sm);
-  font-weight: 700;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   color: var(--mapa-tinta-oscura);
 }
 
@@ -771,9 +787,9 @@
   justify-content: center;
   height: 300px;
   color: var(--mapa-borde);
-  font-family: var(--mapa-font);
+  font-family: var(--font-body);
   font-style: italic;
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
   border: 1px dashed var(--mapa-borde);
   border-radius: 6px;
   background: var(--mapa-fondo-pergamino);
@@ -781,44 +797,39 @@
 
 .mapa-aviso-vacio--compacto {
   height: 220px;
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
 }
 
 /* Cápsula de información del mapa (dibujada en SVG) */
 .mapa-capsula-titulo {
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  font-family: var(--mapa-font);
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   fill: var(--mapa-fondo-pergamino);
 }
 
 .mapa-capsula-subtitulo {
-  font-size: var(--fs-3xs);
-  font-family: var(--mapa-font);
+  font-size: var(--fs-ui-xs);
   fill: var(--mapa-acento-secundario);
 }
 
 .mapa-capsula-sin-casos {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   font-style: italic;
-  font-family: var(--mapa-font);
   fill: var(--mapa-fondo-pergamino);
 }
 
 .mapa-capsula-fila-texto {
-  font-size: var(--fs-2xs);
-  font-family: var(--mapa-font);
+  font-size: var(--fs-ui-xs);
   fill: var(--mapa-fondo-pergamino);
-  font-weight: 400;
+  font-weight: var(--fw-regular);
 }
 
 .mapa-capsula-fila-texto--activa {
-  font-weight: 700;
+  font-weight: var(--fw-bold);
 }
 
 .mapa-capsula-fila-conteo {
-  font-size: var(--fs-3xs);
-  font-family: var(--mapa-font);
+  font-size: var(--fs-ui-xs);
   fill: var(--mapa-fondo-pergamino);
 }
 
@@ -855,33 +866,33 @@
 
 /* Gráfico de líneas "Evolución en el tiempo" (SVG) */
 .mapa-linea-titulo {
-  font-size: var(--fs-md);
-  font-weight: 700;
+  font-size: var(--fs-ui-md);
+  font-weight: var(--fw-bold);
   fill: #222;
 }
 
 .mapa-linea-subtitulo {
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-ui-xs);
   fill: #999;
 }
 
 .mapa-linea-nota {
-  font-size: var(--fs-3xs);
+  font-size: var(--fs-ui-xs);
   font-style: italic;
   fill: #999;
 }
 
 .mapa-linea-eje-x-texto {
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   fill: #555;
 }
 
 .mapa-linea-eje-x-texto--compacto {
-  font-size: var(--fs-3xs);
+  font-size: var(--fs-ui-xs);
 }
 
 .mapa-linea-eje-y-texto {
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-ui-xs);
   fill: #666;
 }
 
@@ -894,8 +905,8 @@
 }
 
 .mapa-linea-etiqueta-serie {
-  font-size: var(--fs-2xs);
-  font-weight: 600;
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-semibold);
   cursor: pointer;
 }
 

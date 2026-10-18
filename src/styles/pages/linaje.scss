@@ -4,9 +4,12 @@
    .mapa-main-ancho / .personas-main-ancho): la rueda + el abanico + la
    tarjeta necesitan mucho más ancho que la columna de lectura de 900px. */
 .linaje-main-ancho {
-  max-width: 1700px;
-  width: 96%;
   align-items: stretch;
+}
+
+.chart-linaje {
+  width: min(var(--ancho-visualizacion), 100vw - 2 * var(--margen-pagina));
+  margin-inline: calc(50% - min(var(--ancho-visualizacion), 100vw - 2 * var(--margen-pagina)) / 2);
 }
 
 /* style.css define `section { max-width: 750px; }` para toda sección del
@@ -79,11 +82,11 @@
 // Linaje.csv dibuja cada visualización. tituloNivel2 se oculta a mano junto
 // con la subrueda cuando la categoría activa no tiene subcrimenes.
 .linaje-nivel-titulo {
+  max-width: none;
   margin: 0;
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   text-transform: uppercase;
   color: var(--crema);
 }
@@ -156,7 +159,7 @@
 }
 
 .linaje-subrueda-centro .linaje-nodo-circulo-texto {
-  font-size: var(--fs-md);
+  font-size: var(--fs-ui-md);
   -webkit-line-clamp: 4;
 }
 
@@ -251,14 +254,14 @@
 }
 
 .linaje-nodo-circulo--agrandada .linaje-nodo-circulo-texto {
-  font-size: var(--fs-md);
+  font-size: var(--fs-ui-md);
   -webkit-line-clamp: 4;
 }
 
 .linaje-nodo-circulo-texto {
   font-family: var(--font-ui);
-  font-size: var(--fs-3xs);
-  font-weight: 700;
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-bold);
   line-height: var(--lh-snug);
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -276,7 +279,7 @@
   border: 1.5px solid var(--categoria-color);
   background: var(--parchment, #f7f2e8);
   color: var(--ink, #1a1410);
-  font-size: var(--fs-3xs);
+  font-size: var(--fs-ui-xs);
   line-height: var(--lh-snug);
   padding: 3px 8px;
   overflow-wrap: anywhere;
@@ -301,7 +304,7 @@
   background: var(--categoria-color);
   color: var(--categoria-color-texto);
   border-color: var(--categoria-color);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 
 /* Hub: tarjeta grande y fija a la derecha de la rueda (ver .linaje-hub-col).
@@ -327,7 +330,7 @@
 
 .linaje-panel-titulo {
   font-family: var(--font-display);
-  font-size: var(--fs-xl);
+  font-size: var(--fs-h3);
   color: var(--categoria-color, var(--accent));
   margin: 0 0 16px;
 }
@@ -342,7 +345,7 @@
   margin: 0 0 18px;
   padding: 5px 8px;
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   color: var(--ink-light, #4a3f35);
   background: transparent;
   border: 1px solid var(--rule, #c8b89a);
@@ -356,7 +359,7 @@
 }
 
 .linaje-panel-definicion {
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
   line-height: var(--lh-relaxed);
   margin: 0 0 16px;
 }
@@ -374,9 +377,9 @@
   border: 1px solid var(--categoria-color, var(--accent));
   background: var(--categoria-color, var(--accent));
   color: var(--categoria-color-texto, #fff);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   font-family: var(--font-ui);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   cursor: pointer;
 }
 

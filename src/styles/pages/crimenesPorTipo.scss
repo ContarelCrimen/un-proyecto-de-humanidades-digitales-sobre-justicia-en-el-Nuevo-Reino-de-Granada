@@ -31,8 +31,8 @@
 
 .crimenes-tipo-fijados-etiqueta {
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
-  font-weight: 700;
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-bold);
   color: var(--mapa-tinta-oscura);
 }
 
@@ -46,8 +46,8 @@
   background: var(--mapa-panel);
   color: var(--mapa-tinta-oscura);
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
-  font-weight: 600;
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-semibold);
   cursor: pointer;
 }
 
@@ -58,8 +58,8 @@
 }
 
 .crimenes-tipo-fijados-chip-quitar {
-  font-weight: 700;
-  line-height: 1;
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
 }
 
 .crimenes-tipo-fijados-limpiar {
@@ -68,7 +68,7 @@
   background: none;
   padding: 0;
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-ui-xs);
   color: var(--mapa-borde);
   text-decoration: underline;
   cursor: pointer;
@@ -121,9 +121,9 @@
 }
 
 .crimenes-tipo-nombre {
-  font-family: var(--mapa-font);
-  font-size: var(--fs-2xs);
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-bold);
   color: var(--mapa-tinta-oscura);
   white-space: nowrap;
   overflow: hidden;
@@ -139,13 +139,13 @@
 
 .crimenes-tipo-fila--seleccionada .crimenes-tipo-marca::before {
   content: '✓';
-  font-weight: 700;
+  font-weight: var(--fw-bold);
 }
 
 .crimenes-tipo-numero {
   font-family: var(--font-ui);
-  font-size: var(--fs-base);
-  font-weight: 800;
+  font-size: var(--fs-ui-md);
+  font-weight: var(--fw-bold);
   line-height: var(--lh-tight);
   color: var(--mapa-tinta-oscura);
   white-space: nowrap;
@@ -153,9 +153,9 @@
 }
 
 .crimenes-tipo-nota {
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-sm);
   font-style: italic;
-  font-family: var(--mapa-font);
+  font-family: var(--font-body);
   color: var(--mapa-borde);
   opacity: 0.85;
   margin-top: 8px;
@@ -212,7 +212,7 @@
   background: none;
   padding: 0;
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-ui-xs);
   color: var(--mapa-tinta-oscura);
   cursor: pointer;
 }
@@ -241,8 +241,8 @@
 /* Texto de la columna Explicación de Linaje.csv, en el panel inline de cada
    delito (ver .crimenes-tipo-definicion arriba). */
 .crimenes-tipo-definicion-texto {
-  font-family: var(--mapa-font);
-  font-size: var(--fs-xs);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
   line-height: var(--lh-normal);
   color: var(--mapa-tinta-oscura);
   margin: 0 0 10px;
@@ -270,8 +270,8 @@
   background: var(--mapa-fondo-pergamino);
   color: var(--mapa-tinta-oscura);
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
-  font-weight: 600;
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-semibold);
   cursor: pointer;
 }
 
@@ -308,13 +308,12 @@
 
 .crimenes-tipo-donut-total-num {
   font-family: var(--font-ui);
-  font-size: var(--fs-xl);
-  font-weight: 800;
+  font-size: var(--fs-ui-lg);
+  font-weight: var(--fw-bold);
   fill: var(--mapa-tinta-oscura);
 }
 
 .crimenes-tipo-donut-total-label {
-  font-family: var(--mapa-font);
-  font-size: var(--fs-3xs);
+  font-size: var(--fs-ui-xs);
   fill: var(--mapa-borde);
 }
