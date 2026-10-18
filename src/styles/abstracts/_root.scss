@@ -62,6 +62,9 @@
   --fs-2xl: #{v.$fs-2xl};
   --fs-3xl: #{v.$fs-3xl};
   --fs-title: #{v.$fs-title};
+  --fs-h2: #{v.$fs-h2};
+  --fs-h3: #{v.$fs-h3};
+  --fs-h4: #{v.$fs-h4};
   --fs-lead: #{v.$fs-lead};
 
   --fs-ui-xs: #{v.$fs-ui-xs};
@@ -78,6 +81,10 @@
   --lh-snug: #{v.$lh-snug};
   --lh-normal: #{v.$lh-normal};
   --lh-relaxed: #{v.$lh-relaxed};
+
+  --ancho-pagina: #{v.$ancho-pagina};
+  --ancho-visualizacion: #{v.$ancho-visualizacion};
+  --margen-pagina: #{v.$margen-pagina};
 
   --mapa-fondo-pergamino: #{v.$mapa-fondo-pergamino};
   --mapa-panel: #{v.$mapa-panel};
