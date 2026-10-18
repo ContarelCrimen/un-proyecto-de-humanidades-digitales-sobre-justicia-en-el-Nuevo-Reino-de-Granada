@@ -48,19 +48,9 @@
   --font-display: #{meta.inspect(v.$font-display)};
   --font-body: #{meta.inspect(v.$font-body)};
   --font-ui: #{meta.inspect(v.$font-ui)};
-  --font-mono: #{meta.inspect(v.$font-mono)};
-  --mapa-font: var(--font-body);
 
-  --fs-3xs: #{v.$fs-3xs};
-  --fs-2xs: #{v.$fs-2xs};
-  --fs-xs: #{v.$fs-xs};
   --fs-sm: #{v.$fs-sm};
-  --fs-md: #{v.$fs-md};
   --fs-base: #{v.$fs-base};
-  --fs-lg: #{v.$fs-lg};
-  --fs-xl: #{v.$fs-xl};
-  --fs-2xl: #{v.$fs-2xl};
-  --fs-3xl: #{v.$fs-3xl};
   --fs-title: #{v.$fs-title};
   --fs-h2: #{v.$fs-h2};
   --fs-h3: #{v.$fs-h3};

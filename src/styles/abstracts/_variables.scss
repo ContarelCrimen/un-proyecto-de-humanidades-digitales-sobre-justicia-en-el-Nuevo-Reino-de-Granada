@@ -43,19 +43,10 @@ $verde: #535844;
 $font-display: 'IM Fell English', Georgia, serif;
 $font-body: 'Crimson Pro', Georgia, serif;
 $font-ui: 'Source Code Pro', ui-monospace, monospace;
-$font-mono: 'Source Code Pro', monospace;
 
 // ── Escala tipográfica ───────────────────────────────────
-$fs-3xs: 0.625rem;
-$fs-2xs: 0.6875rem;
-$fs-xs: 0.75rem;
 $fs-sm: 1rem;
-$fs-md: 0.9375rem;
 $fs-base: 1.1875rem;
-$fs-lg: 1.125rem;
-$fs-xl: 1.5rem;
-$fs-2xl: 2rem;
-$fs-3xl: 2.75rem;
 $fs-title: clamp(1.375rem, 1rem + 1vw, 1.75rem);
 $fs-h2: 1.5rem;
 $fs-h3: 1.25rem;
