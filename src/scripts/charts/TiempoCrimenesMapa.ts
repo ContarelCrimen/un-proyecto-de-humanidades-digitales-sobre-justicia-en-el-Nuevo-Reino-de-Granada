@@ -531,10 +531,6 @@ export async function inicializarDashboard() {
   if (!mapaContenedor) return;
   const contenedorLineasEl = document.getElementById('crimenesChart');
   const dashboardWrap = mapaContenedor.parentElement;
-  const mainContenedor = document.querySelector('main.container');
-  if (mainContenedor) {
-    mainContenedor.classList.add('mapa-main-ancho');
-  }
   function envolverEnTarjeta(el: HTMLElement, titulo: string, subtitulo?: string) {
     const tarjeta = document.createElement('div');
     tarjeta.className = 'mapa-tarjeta ui-clara';

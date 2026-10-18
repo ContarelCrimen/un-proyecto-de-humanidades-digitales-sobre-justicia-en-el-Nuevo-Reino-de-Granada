@@ -1,0 +1,11 @@
+.container.pagina-dashboard {
+  --espacio-bloques: var(--space-5);
+  align-items: stretch;
+  gap: var(--espacio-bloques);
+  text-align: left;
+
+  > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+}

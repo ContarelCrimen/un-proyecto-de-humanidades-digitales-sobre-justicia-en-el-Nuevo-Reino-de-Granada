@@ -194,16 +194,16 @@ export async function crearLineaTiempoCasos(containerId: string) {
   const guiaFecha = document.createElement('div');
   guiaFecha.className = 'linea-tiempo-casos-guia-fecha';
   guiaFecha.innerHTML = `
-    <div class="mapa-slider-rango">
-      <div class="mapa-slider-track"></div>
-      <div class="mapa-slider-progreso"></div>
-      <input type="range" class="mapa-slider" aria-label="Desplazarse en el tiempo" />
+    <div class="ui-range ui-range--simple">
+      <span class="ui-range-pista" aria-hidden="true"></span>
+      <span class="ui-range-relleno" aria-hidden="true"></span>
+      <input type="range" class="ui-range-input" aria-label="Desplazarse en el tiempo" />
     </div>
-    <div class="linea-tiempo-casos-guia-fecha__etiqueta"></div>
+    <output class="ui-range-valor linea-tiempo-casos-guia-fecha__etiqueta"></output>
   `;
   columnaIzq.appendChild(guiaFecha);
-  const guiaProgreso = guiaFecha.querySelector<HTMLElement>('.mapa-slider-progreso')!;
-  const guiaPos = guiaFecha.querySelector<HTMLInputElement>('.mapa-slider')!;
+  const guiaRango = guiaFecha.querySelector<HTMLElement>('.ui-range')!;
+  const guiaPos = guiaFecha.querySelector<HTMLInputElement>('.ui-range-input')!;
   const guiaEtiqueta = guiaFecha.querySelector<HTMLElement>('.linea-tiempo-casos-guia-fecha__etiqueta')!;
   const contenido = document.createElement('div');
   contenido.className = 'linea-tiempo-casos-lista-contenido';
@@ -335,8 +335,8 @@ export async function crearLineaTiempoCasos(containerId: string) {
     const rango = Math.max(1, anioMaxActual - anioMinActual);
     const pctDesde = ((desdeClamp - anioMinActual) / rango) * 100;
     const pctHasta = ((hastaClamp - anioMinActual) / rango) * 100;
-    guiaProgreso.style.left = `${pctDesde}%`;
-    guiaProgreso.style.width = `${Math.max(0, pctHasta - pctDesde)}%`;
+    guiaRango.style.setProperty('--ui-range-desde', String(pctDesde));
+    guiaRango.style.setProperty('--ui-range-hasta', String(Math.max(pctDesde, pctHasta)));
     guiaEtiqueta.textContent = `${desdeClamp} – ${hastaClamp}`;
   }
   guiaPos.addEventListener('input', () => irAAnio(+guiaPos.value));

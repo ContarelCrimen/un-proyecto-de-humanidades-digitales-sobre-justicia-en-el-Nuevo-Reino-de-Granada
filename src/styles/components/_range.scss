@@ -118,6 +118,10 @@
   z-index: 3;
 }
 
+.ui-range--simple .ui-range-input {
+  pointer-events: auto;
+}
+
 .ui-range-marcas {
   position: relative;
   height: 1rem;

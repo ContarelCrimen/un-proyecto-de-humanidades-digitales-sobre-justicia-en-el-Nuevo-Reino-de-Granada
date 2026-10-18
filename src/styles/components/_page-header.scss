@@ -89,6 +89,8 @@
   }
 
   .page-header-subtitulo {
+    font-family: var(--font-body);
+    font-size: var(--fs-sm);
     color: var(--ui-fg-suave);
   }
 }

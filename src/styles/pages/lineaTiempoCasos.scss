@@ -78,7 +78,7 @@
 }
 
 // Guía de fecha / time slider: mismo patrón visual que el filtro de década
-// (.mapa-slider-rango y compañía, en mapa.scss) — un <input type="range">
+// (RangeSlider en modo simple, .ui-range--simple) — un <input type="range">
 // que muestra y controla qué ventana de años se ve en la rueda (ver
 // contenidoXDeAnio/irAAnio/sincronizarGuia en el .ts). Va debajo de la
 // rueda (después de .linea-tiempo-casos-lista en el DOM — ver el .ts),
@@ -88,11 +88,8 @@
 }
 
 .linea-tiempo-casos-guia-fecha__etiqueta {
-  margin-top: 2px;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-xs);
-  font-weight: var(--fw-bold);
-  color: var(--mapa-borde);
+  display: block;
+  margin-top: var(--space-1);
   text-align: center;
 }
 
