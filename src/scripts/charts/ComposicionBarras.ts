@@ -231,7 +231,7 @@ export function dibujarBarras({
   if (crimenes.length > limite) {
     const boton = document.createElement('button');
     boton.type = 'button';
-    boton.className = 'cs-boton-mas';
+    boton.className = 'ui-btn ui-btn--sm cs-boton-mas';
     boton.setAttribute('aria-expanded', String(expandido));
     boton.textContent = expandido
       ? 'Mostrar menos'

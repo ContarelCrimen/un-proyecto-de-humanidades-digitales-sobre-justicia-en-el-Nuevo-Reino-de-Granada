@@ -86,12 +86,12 @@ export async function crearComposicionSocial(modo: Modo) {
   const inicial = { ...estado };
   const crimenesOrdenados = crimenesPorFrecuencia(todas).map(([nombre]) => nombre);
   const selCrimen = document.createElement('select');
-  selCrimen.className = 'cs-select';
+  selCrimen.className = 'ui-select cs-select-crimen';
   selCrimen.appendChild(crearOpcion('', TODOS_LOS_CRIMENES));
   crimenesOrdenados.forEach((c) => selCrimen.appendChild(crearOpcion(c, c)));
   const crearSelectorAño = (campo: 'desde' | 'hasta') => {
     const sel = document.createElement('select');
-    sel.className = 'cs-select';
+    sel.className = 'ui-select';
     años.forEach((a) => sel.appendChild(crearOpcion(String(a), String(a))));
     sel.addEventListener('change', () => {
       const valor = +sel.value;
@@ -114,20 +114,23 @@ export async function crearComposicionSocial(modo: Modo) {
   });
   const campo = (titulo: string, control: HTMLElement) => {
     const wrap = document.createElement('label');
-    wrap.className = 'cs-campo';
+    wrap.className = 'ui-field';
     const t = document.createElement('span');
-    t.className = 'cs-campo-titulo';
+    t.className = 'ui-field-label';
     t.textContent = titulo;
     wrap.append(t, control);
     return wrap;
   };
   const bloqueGrupo = document.createElement('div');
-  bloqueGrupo.className = 'cs-campo cs-campo--grupo';
+  bloqueGrupo.className = 'ui-field';
+  bloqueGrupo.setAttribute('role', 'group');
   const tituloGrupo = document.createElement('span');
-  tituloGrupo.className = 'cs-campo-titulo';
+  tituloGrupo.className = 'ui-field-label';
+  tituloGrupo.id = 'csFiltroGrupoTitulo';
   tituloGrupo.textContent = `${config.etiquetaFiltro} · elige uno o varios para compararlos`;
+  bloqueGrupo.setAttribute('aria-labelledby', tituloGrupo.id);
   const chips = document.createElement('div');
-  chips.className = 'cs-chips';
+  chips.className = 'ui-chip-group';
   bloqueGrupo.append(tituloGrupo, chips);
   const chipsPorClave = new Map<string | null, HTMLButtonElement>();
   const alternarGrupo = (clave: string) => {
@@ -138,12 +141,12 @@ export async function crearComposicionSocial(modo: Modo) {
   const crearChip = (clave: string | null, grupo?: Grupo) => {
     const chip = document.createElement('button');
     chip.type = 'button';
-    chip.className = 'cs-chip';
+    chip.className = 'ui-chip';
     if (grupo) {
-      chip.style.setProperty('--cs-color', grupo.color);
-      chip.innerHTML = `<i></i>${grupo.etiqueta}`;
+      chip.style.setProperty('--chip-dot', grupo.color);
+      chip.innerHTML = `<span class="ui-chip-punto" aria-hidden="true"></span><span class="ui-chip-texto">${grupo.etiqueta}</span>`;
     } else {
-      chip.textContent = 'Todos';
+      chip.innerHTML = `<span class="ui-chip-texto">Todos</span>`;
     }
     chip.addEventListener('click', () => {
       if (clave === null) estado.grupos = [];
@@ -156,22 +159,29 @@ export async function crearComposicionSocial(modo: Modo) {
   crearChip(null);
   config.grupos.forEach((g) => crearChip(g.clave, g));
   const separador = document.createElement('div');
-  separador.className = 'cs-filtros-separador';
+  separador.className = 'ui-filter-separator';
+  separador.setAttribute('aria-hidden', 'true');
   const botonRestablecer = document.createElement('button');
   botonRestablecer.type = 'button';
-  botonRestablecer.className = 'cs-restablecer';
+  botonRestablecer.className = 'ui-btn';
   botonRestablecer.textContent = 'Restablecer filtros';
   botonRestablecer.addEventListener('click', () => {
     Object.assign(estado, inicial);
     actualizar();
   });
+  const acciones = document.createElement('div');
+  acciones.className = 'ui-filter-actions';
+  acciones.appendChild(botonRestablecer);
+  filtros.classList.add('ui-filter-panel', 'ui-filter-panel--fijo');
+  filtros.setAttribute('role', 'group');
+  filtros.setAttribute('aria-label', 'Filtros');
   filtros.replaceChildren(
     campo('Crimen', selCrimen),
     campo('Desde', selDesde),
     campo('Hasta', selHasta),
     separador,
     bloqueGrupo,
-    botonRestablecer,
+    acciones,
   );
   const enRango = (f: Fila) => f.año >= estado.desde && f.año <= estado.hasta;
   const gruposElegidos = () => config.grupos.filter((g) => estado.grupos.includes(g.clave));
@@ -202,16 +212,16 @@ export async function crearComposicionSocial(modo: Modo) {
       const activa = estado.grupos.includes(g.clave);
       const tarjeta = document.createElement('button');
       tarjeta.type = 'button';
-      tarjeta.className = `cs-tarjeta${activa ? ' cs-tarjeta--activa' : ''}`;
+      tarjeta.className = 'ui-stat';
       tarjeta.setAttribute('aria-pressed', String(activa));
-      tarjeta.style.setProperty('--cs-color', g.color);
+      tarjeta.style.setProperty('--ui-stat-color', g.color);
       tarjeta.innerHTML = `
-        <span class="cs-tarjeta-cabecera">
-          <span class="cs-tarjeta-nombre"><i></i>${g.etiqueta}</span>
-          <span class="cs-tarjeta-accion">${activa ? 'Ocultar rol' : 'Ver rol'}</span>
+        <span class="ui-stat-cabecera">
+          <span class="ui-stat-etiqueta"><span class="ui-stat-punto" aria-hidden="true"></span>${g.etiqueta}</span>
+          <span class="ui-stat-accion">${activa ? 'Ocultar rol' : 'Ver rol'}</span>
         </span>
-        <span class="cs-tarjeta-valor">${fmt(agentes)}</span>
-        <span class="cs-tarjeta-sub">${fmt(casos)} casos</span>
+        <span class="ui-stat-valor">${fmt(agentes)}</span>
+        <span class="ui-stat-sub">${fmt(casos)} casos</span>
       `;
       tarjeta.addEventListener('click', () => {
         alternarGrupo(g.clave);
@@ -263,7 +273,7 @@ export async function crearComposicionSocial(modo: Modo) {
       `;
       const enlace = document.createElement('button');
       enlace.type = 'button';
-      enlace.className = 'cs-enlace';
+      enlace.className = 'ui-btn ui-btn--fantasma ui-btn--sm cs-rol-enlace';
       enlace.textContent = 'Ver casos en la tabla →';
       enlace.addEventListener('click', () =>
         irATablasFiltradas({ ...config.paramsTabla(g.clave), codigo: nombre }),
@@ -313,7 +323,6 @@ export async function crearComposicionSocial(modo: Modo) {
       estado.donaGrande === inicial.donaGrande;
     chipsPorClave.forEach((chip, clave) => {
       const activo = clave === null ? estado.grupos.length === 0 : estado.grupos.includes(clave);
-      chip.classList.toggle('cs-chip--activo', activo);
       chip.setAttribute('aria-pressed', String(activo));
     });
     const filasRango = todas.filter(enRango);
@@ -370,7 +379,7 @@ export async function crearComposicionSocial(modo: Modo) {
       dibujarSunburst('csDonaGrafico', filasFiltradas, estado.crimen, opcionesDona);
     }
     const subtituloRedBase =
-      ' Puedes observar cuáles son los crímenes que más suceden en un mismo caso, puedes hacer clic en los nodos para ver su conexión.';
+      'Puedes observar cuáles son los crímenes que más suceden en un mismo caso, puedes hacer clic en los nodos para ver su conexión.';
     redSubtitulo.textContent = !hayGrupos
       ? subtituloRedBase
       : `Con ${elegidos.map((g) => g.etiqueta).join(' y ')} elegido${elegidos.length > 1 ? 's' : ''}, el tamaño de cada nodo muestra en cuántos de sus casos aparece el delito — haz clic para filtrar y arrastra para mover`;

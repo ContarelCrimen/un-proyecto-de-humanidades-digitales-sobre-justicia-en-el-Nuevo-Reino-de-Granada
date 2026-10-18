@@ -13,333 +13,15 @@ $cs-texto: $on-surface;
 $cs-texto-suave: $on-surface-muted;
 $cs-grilla: $chart-grid;
 
-main.container.cs-pagina {
-  --espacio-bloques: 1.25rem;
-  align-items: stretch;
-  text-align: left;
-  gap: var(--espacio-bloques);
-}
-
-// ── Encabezado y pestañas ────────────────────────────────
-.cs-pestañas {
-  display: inline-flex;
-  align-self: flex-start;
-  border: 1px solid var(--dorado);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.cs-pestaña {
-  padding: 0.5rem 1.6rem;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-semibold);
-  color: var(--dorado);
-  text-decoration: none;
-  transition: background 0.15s;
-
-  &:hover {
-    background: rgba(209, 166, 119, 0.15);
-  }
-
-  &--activa {
-    background: var(--dorado);
-    color: $cs-texto;
-    cursor: default;
-
-    &:hover {
-      background: var(--dorado);
-    }
-  }
-}
-
-// ── Filtros ──────────────────────────────────────────────
-.cs-filtros {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 1rem 1.5rem;
-  padding: 1.1rem 1.4rem;
-  background: $cs-filtros-fondo;
-  border: 1px solid rgba(209, 166, 119, 0.35);
-  border-radius: 6px;
-
-  // Fija bajo el menú superior (que mide unos 67px) mientras se recorre la
-  // página. El fondo es opaco para que no se transparente el contenido.
-  position: sticky;
-  top: 4.5rem;
-  z-index: $z-panel-filtros;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
-}
-
-.cs-campo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  min-width: 0;
-}
-
-.cs-campo-titulo {
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-xs);
-  text-transform: uppercase;
-  color: var(--dorado);
-}
-
-.cs-select {
-  min-width: 6.5rem;
-  max-width: 100%;
-  padding: 0.55rem 0.75rem;
-  background: $cs-tarjeta-realce;
-  color: $cs-texto;
-  border: 1px solid $cs-borde;
-  border-radius: 4px;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-md);
-}
-
-.cs-campo:first-child .cs-select {
-  min-width: 13rem;
-}
-
-.cs-filtros-separador {
-  align-self: stretch;
-  width: 1px;
-  background: rgba(209, 166, 119, 0.35);
-}
-
-.cs-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.cs-chip {
-  --cs-color: var(--dorado);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 1rem;
-  background: transparent;
-  color: var(--crema);
-  border: 1px solid rgba(209, 166, 119, 0.4);
-  border-radius: 999px;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  cursor: pointer;
-  transition:
-    background 0.15s,
-    border-color 0.15s;
-
-  i {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--cs-color);
-  }
-
-  &:hover {
-    border-color: var(--dorado);
-  }
-
-  &--activo {
-    background: var(--cs-color);
-    border-color: var(--cs-color);
-    color: $cs-texto;
-    font-weight: var(--fw-bold);
-
-    i {
-      background: $cs-texto;
-    }
-  }
-}
-
-.cs-restablecer {
-  margin-left: auto;
-  padding: 0.5rem 1.1rem;
-  background: transparent;
-  color: var(--crema);
-  border: 1px solid var(--dorado);
-  border-radius: 999px;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  cursor: pointer;
-  transition:
-    background 0.15s,
-    opacity 0.15s;
-
-  &:hover:not(:disabled) {
-    background: rgba(209, 166, 119, 0.18);
-  }
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: default;
-  }
-}
-
-// ── Títulos de sección ───────────────────────────────────
-h2.cs-seccion-titulo {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 0.75rem 0 0;
-  padding: 0;
-  border: 0;
-  font-family: var(--font-display);
-  font-size: var(--fs-h2);
-  color: var(--dorado);
-  text-align: center;
-
-  &::before,
-  &::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(209, 166, 119, 0.55));
-  }
-
-  &::after {
-    background: linear-gradient(to left, transparent, rgba(209, 166, 119, 0.55));
-  }
-}
-
-// ── Tarjetas de grupo ────────────────────────────────────
-.cs-tarjetas {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  gap: 1rem;
-}
-
-.cs-tarjeta {
-  --cs-color: var(--dorado);
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  padding: 1rem 1.25rem 1.1rem;
-  background: $cs-tarjeta;
-  color: $cs-texto;
-  border: 2px solid transparent;
-  border-radius: 4px;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    border-color 0.15s,
-    transform 0.15s;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
-
-  &--activa {
-    border-color: var(--cs-color);
-  }
-}
-
-.cs-tarjeta-cabecera {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.cs-tarjeta-nombre {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-xs);
-  font-weight: var(--fw-bold);
-  text-transform: uppercase;
-  color: $cs-texto-suave;
-
-  i {
-    width: 0.6rem;
-    height: 0.6rem;
-    border-radius: 50%;
-    background: var(--cs-color);
-  }
-}
-
-// "Ver rol" / "Ocultar rol": una píldora rellena con el color de acento para
-// que se note que la tarjeta se puede abrir. Al abrirla se invierte (solo
-// borde) para indicar el estado sin dejar de verse.
-.cs-tarjeta-accion {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.25rem 0.8rem;
-  background: var(--accent);
-  color: #fff;
-  border: 1px solid var(--accent);
-  border-radius: 999px;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-bold);
-  white-space: nowrap;
-  box-shadow: 0 1px 4px rgba(122, 59, 30, 0.35);
-  transition:
-    background 0.15s,
-    color 0.15s;
-
-  &::after {
-    content: '▸';
-  }
-}
-
-.cs-tarjeta:hover .cs-tarjeta-accion {
-  background: var(--accent-dim);
-  border-color: var(--accent-dim);
-}
-
-.cs-tarjeta--activa .cs-tarjeta-accion {
-  background: transparent;
-  color: var(--accent);
-  box-shadow: none;
-
-  &::after {
-    content: '▾';
-  }
-}
-
-.cs-tarjeta--activa:hover .cs-tarjeta-accion {
-  background: rgba(122, 59, 30, 0.1);
-  border-color: var(--accent);
-}
-
-.cs-tarjeta-valor {
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-xl);
-  line-height: var(--lh-tight);
-}
-
-.cs-tarjeta-sub {
-  font-size: var(--fs-ui-sm);
-  color: $cs-texto-suave;
-}
-
 // ── Paneles crema ────────────────────────────────────────
 .cs-panel {
   max-width: none;
   margin: 0;
-  padding: 1.5rem 1.75rem;
-  background: $cs-tarjeta;
-  color: $cs-texto;
-  border-radius: 4px;
+  padding: var(--space-5) var(--space-6);
+  background: var(--surface);
+  color: var(--on-surface);
+  border-radius: var(--radius-panel);
   min-width: 0;
-}
-
-.cs-panel-titulo {
-  margin: 0;
-  font-size: var(--fs-h3);
-  line-height: var(--lh-snug);
-}
-
-.cs-panel-subtitulo {
-  max-width: none;
-  margin: 0.3rem 0 1rem;
-  font-size: var(--fs-sm);
-  color: $cs-texto-suave;
 }
 
 .cs-vacio {
@@ -524,6 +206,10 @@ h2.cs-seccion-titulo {
   color: $cs-texto-suave;
 }
 
+.cs-rol-enlace {
+  margin-top: var(--space-1);
+}
+
 .cs-enlace {
   margin-top: 0.4rem;
   padding: 0;
@@ -569,6 +255,10 @@ h2.cs-seccion-titulo {
   stroke: $cs-tarjeta;
   stroke-width: 1.5;
   cursor: default;
+}
+
+.cs-select-crimen {
+  min-width: 13rem;
 }
 
 // ── Rejilla barras + dona ────────────────────────────────
@@ -628,29 +318,8 @@ h2.cs-seccion-titulo {
 .cs-herramientas {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.cs-herramienta {
-  padding: 0.35rem 0.9rem;
-  background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  border-radius: 999px;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  cursor: pointer;
-  transition: background 0.15s;
-
-  &:hover {
-    background: rgba(169, 87, 59, 0.1);
-  }
-
-  &[aria-pressed='true'] {
-    background: var(--accent);
-    color: #fff;
-  }
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
 }
 
 // ── Barra doble ──────────────────────────────────────────
@@ -703,20 +372,9 @@ h2.cs-seccion-titulo {
 }
 
 .cs-boton-mas {
-  display: block;
-  margin: 0.75rem auto 0;
-  padding: 0.45rem 1.2rem;
-  background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  border-radius: 999px;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  cursor: pointer;
-
-  &:hover {
-    background: rgba(169, 87, 59, 0.1);
-  }
+  display: flex;
+  width: fit-content;
+  margin: var(--space-3) auto 0;
 }
 
 // ── Red ──────────────────────────────────────────────────
@@ -739,24 +397,10 @@ h2.cs-seccion-titulo {
 .cs-ver-casos {
   display: none;
   align-self: flex-start;
-  margin-bottom: 0.75rem;
-  padding: 0.45rem 1.1rem;
-  background: var(--accent);
-  color: #fff;
-  border: 1px solid var(--accent);
-  border-radius: 6px;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-semibold);
-  cursor: pointer;
+  margin-bottom: var(--space-3);
 
   &--visible {
-    display: inline-block;
-  }
-
-  &:hover {
-    background: var(--accent-dim);
-    border-color: var(--accent-dim);
+    display: inline-flex;
   }
 }
 
@@ -812,19 +456,14 @@ h2.cs-seccion-titulo {
 }
 
 @media (max-width: $bp-filtros) {
-  // En pantallas angostas la barra ocupa media pantalla: no se fija.
-  .cs-filtros {
+  .cs-filtros.ui-filter-panel--fijo {
     position: static;
   }
 
-  .cs-filtros-separador {
-    display: none;
-  }
-
-  .cs-campo:first-child {
+  .cs-filtros > .ui-field:first-child {
     flex: 1 1 100%;
 
-    .cs-select {
+    .ui-select {
       width: 100%;
     }
   }

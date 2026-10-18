@@ -8,4 +8,8 @@
     min-width: 0;
     max-width: 100%;
   }
+
+  > .page-header--seccion {
+    margin: calc(var(--space-6) - var(--espacio-bloques)) 0 0;
+  }
 }
