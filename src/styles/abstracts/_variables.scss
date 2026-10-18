@@ -136,6 +136,7 @@ $atributo-complice: #406706;
 $panel-bg: #431a2c;
 $panel-border: rgba($dorado, 0.35);
 $panel-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+$control-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 $on-panel: $crema;
 $on-panel-label: $dorado;
 $on-panel-muted: $rosado;
@@ -151,6 +152,8 @@ $chart-grid: #e8dfc8;
 
 $radius-pill: 999px;
 $radius-panel: 6px;
+$radius-control: 4px;
+$radius-circle: 50%;
 
 $space-1: 0.25rem;
 $space-2: 0.5rem;

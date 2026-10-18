@@ -1,0 +1,454 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Button from '../components/ui/Button.astro';
+import Tabs from '../components/ui/Tabs.astro';
+import Chip from '../components/ui/Chip.astro';
+import FilterPanel from '../components/ui/FilterPanel.astro';
+import Select from '../components/ui/Select.astro';
+import RangeSlider from '../components/ui/RangeSlider.astro';
+import StatCard from '../components/ui/StatCard.astro';
+import Accordion from '../components/ui/Accordion.astro';
+
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { ui: 'ui' } }] : [];
+}
+
+const crimenes = [
+  { valor: '', texto: 'Todos los crímenes', seleccionada: true },
+  { valor: 'homicidio', texto: 'Homicidio' },
+  { valor: 'hurto', texto: 'Hurto' },
+  { valor: 'injurias', texto: 'Injurias' },
+];
+const rol = [
+  { valor: '', texto: 'Todos', seleccionada: true },
+  { valor: 'victima', texto: 'Víctima' },
+  { valor: 'perpetrador', texto: 'Perpetrador' },
+];
+const preguntas = [
+  {
+    pregunta: '¿De dónde salen los casos?',
+    respuesta: [
+      'De los expedientes judiciales del Archivo General de la Nación, sección Colonia.',
+      'Cada registro corresponde a un expediente y puede tener varios crímenes.',
+    ],
+    abierto: true,
+  },
+  {
+    pregunta: '¿Por qué hay casos sin año?',
+    respuesta: 'Algunos expedientes no conservan la fecha o está ilegible.',
+  },
+  {
+    pregunta: '¿Qué significa «sin información» en el género?',
+    respuesta: 'El documento no permite saber el género de la persona registrada.',
+  },
+];
+---
+
+<BaseLayout title="Componentes UI">
+  <main class="container ui-pagina">
+    <PageHeader
+      ceja="Sistema de componentes"
+      titulo="Componentes UI"
+      subtitulo="Página temporal para revisar cada componente y sus estados. Recórrela también con Tab para ver el foco."
+    />
+
+    <section class="ui-demo-seccion" aria-labelledby="demo-encabezados">
+      <PageHeader
+        nivel="seccion"
+        idTitulo="demo-encabezados"
+        titulo="Encabezados"
+        ceja="PageHeader"
+      />
+      <div class="ui-demo-caja">
+        <PageHeader
+          nivel="seccion"
+          ceja="Nivel sección"
+          titulo="¿Quién? Selecciona para mayor información"
+          subtitulo="h2 con ceja y subtítulo opcionales, sin líneas decorativas"
+        />
+        <PageHeader
+          nivel="subseccion"
+          titulo="Distribución por crímenes"
+          subtitulo="h3 para títulos de panel"
+        />
+      </div>
+      <div class="ui-demo-caja ui-demo-caja--clara ui-clara">
+        <PageHeader
+          nivel="subseccion"
+          titulo="Recorrido por rol y género"
+          subtitulo="Subsección sobre superficie crema"
+        />
+      </div>
+    </section>
+
+    <section class="ui-demo-seccion" aria-labelledby="demo-botones">
+      <PageHeader nivel="seccion" idTitulo="demo-botones" titulo="Botones" ceja="Button" />
+      <div class="ui-demo-caja">
+        <div class="ui-demo-fila">
+          <Button variante="primario">Buscar</Button>
+          <Button>Restablecer</Button>
+          <Button variante="fantasma">Limpiar</Button>
+          <Button variante="primario" tamano="sm">Ver casos</Button>
+          <Button tamano="sm">Quitar selección</Button>
+          <Button icono etiquetaAria="Anterior"><span aria-hidden="true">‹</span></Button>
+          <Button icono tamano="sm" etiquetaAria="Cerrar"><span aria-hidden="true">×</span></Button>
+        </div>
+        <div class="ui-demo-fila">
+          <Button presionado={false} clase="ui-demo-alternar">Escalar puntos</Button>
+          <Button presionado clase="ui-demo-alternar">Base topográfica</Button>
+          <Button expandido={false} controla="demo-info" clase="ui-demo-expandir"
+            >Información</Button
+          >
+          <Button href="#demo-botones">Enlace como botón</Button>
+          <Button deshabilitado>Deshabilitado</Button>
+          <Button variante="primario" deshabilitado>Deshabilitado</Button>
+        </div>
+        <p class="ui-demo-nota" id="demo-info" hidden>
+          Contenido que abre el botón con aria-expanded.
+        </p>
+      </div>
+      <div class="ui-demo-caja ui-demo-caja--clara ui-clara">
+        <div class="ui-demo-fila">
+          <Button variante="primario">Ver en el mapa</Button>
+          <Button>Copiar referencia</Button>
+          <Button variante="fantasma">Volver</Button>
+          <Button presionado clase="ui-demo-alternar">Alternar</Button>
+          <Button icono etiquetaAria="Siguiente"><span aria-hidden="true">›</span></Button>
+          <Button deshabilitado>Deshabilitado</Button>
+        </div>
+      </div>
+    </section>
+
+    <section class="ui-demo-seccion" aria-labelledby="demo-tabs">
+      <PageHeader nivel="seccion" idTitulo="demo-tabs" titulo="Pestañas" ceja="Tabs" />
+      <div class="ui-demo-caja">
+        <Tabs
+          etiquetaAria="Vista"
+          clase="ui-demo-tabs"
+          pestanas={[
+            { texto: 'Lugar', valor: 'lugar', activa: true },
+            { texto: 'Línea de tiempo', valor: 'linea' },
+            { texto: 'Crímenes', valor: 'crimenes' },
+          ]}
+        />
+        <Tabs
+          etiquetaAria="Tipo de agente"
+          pestanas={[
+            { texto: 'Personas', href: '#demo-tabs', activa: true },
+            { texto: 'Otros agentes', href: '#demo-tabs' },
+          ]}
+        />
+        <Tabs
+          etiquetaAria="Vista del gráfico"
+          tamano="sm"
+          clase="ui-demo-tabs"
+          pestanas={[
+            { texto: 'Vista en línea', valor: 'linea', activa: true },
+            { texto: 'Vista en detalle', valor: 'detalle' },
+          ]}
+        />
+      </div>
+      <div class="ui-demo-caja ui-demo-caja--clara ui-clara">
+        <Tabs
+          etiquetaAria="Casos similares"
+          tamano="sm"
+          clase="ui-demo-tabs"
+          pestanas={[
+            { texto: 'Mismo crimen', valor: 'crimen', activa: true },
+            { texto: 'Mismo lugar', valor: 'lugar' },
+            { texto: 'Mismas personas', valor: 'personas' },
+          ]}
+        />
+      </div>
+    </section>
+
+    <section class="ui-demo-seccion" aria-labelledby="demo-chips">
+      <PageHeader nivel="seccion" idTitulo="demo-chips" titulo="Chips" ceja="Chip" />
+      <div class="ui-demo-caja">
+        <div class="ui-chip-group">
+          <Chip texto="Mujer" color="var(--genero-mujer)" presionado clase="ui-demo-chip" />
+          <Chip texto="Hombre" color="var(--genero-hombre)" clase="ui-demo-chip" />
+          <Chip texto="Sin información" color="var(--genero-sin-info)" clase="ui-demo-chip" />
+          <Chip texto="Sin punto" clase="ui-demo-chip" />
+          <Chip texto="Deshabilitado" deshabilitado />
+        </div>
+        <div class="ui-chip-group">
+          <Chip tipo="removible" etiqueta="Crimen:" texto="Homicidio" clase="ui-demo-quitable" />
+          <Chip
+            tipo="removible"
+            etiqueta="Lugar:"
+            texto="Santafé de Bogotá"
+            clase="ui-demo-quitable"
+          />
+          <Chip tipo="estatico" etiqueta="Fondo:" texto="Criminales y civiles" />
+        </div>
+      </div>
+      <div class="ui-demo-caja ui-demo-caja--clara ui-clara">
+        <div class="ui-chip-group">
+          <Chip tipo="estatico" etiqueta="Año:" texto="1785" />
+          <Chip tipo="estatico" texto="Documento 3" />
+          <Chip texto="Filtro sobre crema" presionado clase="ui-demo-chip" />
+          <Chip texto="Sin seleccionar" clase="ui-demo-chip" />
+          <Chip tipo="removible" texto="Removible" clase="ui-demo-quitable" />
+        </div>
+      </div>
+    </section>
+
+    <section class="ui-demo-seccion" aria-labelledby="demo-filtros">
+      <PageHeader
+        nivel="seccion"
+        idTitulo="demo-filtros"
+        titulo="Panel de filtros"
+        ceja="FilterPanel · Select · RangeSlider · Chip"
+      />
+      <FilterPanel etiquetaAria="Filtros de ejemplo">
+        <Select etiqueta="Crimen" opciones={crimenes} clase="ui-demo-ancho" />
+        <Select etiqueta="Rol" opciones={rol} />
+        <span class="ui-filter-separator" aria-hidden="true"></span>
+        <div class="ui-field" role="group" aria-labelledby="demo-genero">
+          <span class="ui-field-label" id="demo-genero">Género</span>
+          <div class="ui-chip-group">
+            <Chip texto="Mujer" color="var(--genero-mujer)" presionado clase="ui-demo-chip" />
+            <Chip texto="Hombre" color="var(--genero-hombre)" clase="ui-demo-chip" />
+            <Chip texto="Sin información" color="var(--genero-sin-info)" clase="ui-demo-chip" />
+          </div>
+        </div>
+        <Button slot="acciones">Restablecer</Button>
+      </FilterPanel>
+
+      <FilterPanel etiquetaAria="Filtros con búsqueda y periodo">
+        <Select etiqueta="Buscar" tipo="busqueda" placeholder="Nombre, lugar o crimen" />
+        <div class="ui-field">
+          <label class="ui-field-label" for="demo-combo">Lugar</label>
+          <div class="ui-combo">
+            <input
+              class="ui-input"
+              id="demo-combo"
+              type="text"
+              role="combobox"
+              aria-expanded="true"
+              aria-controls="demo-combo-lista"
+              aria-autocomplete="list"
+              value="Santa"
+              autocomplete="off"
+            />
+            <ul class="ui-combo-lista ui-demo-combo-lista" id="demo-combo-lista" role="listbox">
+              <li class="ui-combo-opcion" role="option" aria-selected="true">Santafé de Bogotá</li>
+              <li
+                class="ui-combo-opcion ui-combo-opcion--activa"
+                role="option"
+                aria-selected="false"
+              >
+                Santa Marta
+              </li>
+              <li class="ui-combo-opcion" role="option" aria-selected="false">
+                Santa Fe de Antioquia
+              </li>
+            </ul>
+          </div>
+        </div>
+        <Select etiqueta="Deshabilitado" opciones={rol} deshabilitado />
+        <span class="ui-filter-separator" aria-hidden="true"></span>
+        <div class="ui-demo-periodo">
+          <RangeSlider
+            etiqueta="Periodo"
+            min={1550}
+            max={1810}
+            desde={1650}
+            hasta={1780}
+            marcas={[1550, 1600, 1650, 1700, 1750, 1810]}
+            idDesde="demo-desde"
+            idHasta="demo-hasta"
+            idValor="demo-periodo-valor"
+            clase="ui-demo-range"
+          />
+        </div>
+        <Fragment slot="acciones">
+          <Button variante="fantasma">Limpiar</Button>
+          <Button variante="primario">Buscar</Button>
+        </Fragment>
+        <Fragment slot="aviso">Ningún caso coincide con todos los filtros.</Fragment>
+      </FilterPanel>
+    </section>
+
+    <section class="ui-demo-seccion" aria-labelledby="demo-stats">
+      <PageHeader
+        nivel="seccion"
+        idTitulo="demo-stats"
+        titulo="Tarjetas de conteo"
+        ceja="StatCard"
+      />
+      <div class="ui-stat-group">
+        <StatCard
+          etiqueta="Mujer"
+          valor="1.284"
+          sub="32 % de las personas"
+          color="var(--genero-mujer)"
+          accion="Ver rol"
+          interactiva
+          presionada
+          clase="ui-demo-stat"
+        />
+        <StatCard
+          etiqueta="Hombre"
+          valor="2.517"
+          sub="63 % de las personas"
+          color="var(--genero-hombre)"
+          accion="Ver rol"
+          interactiva
+          clase="ui-demo-stat"
+        />
+        <StatCard
+          etiqueta="Sin información"
+          valor="196"
+          sub="5 % de las personas"
+          color="var(--genero-sin-info)"
+        />
+      </div>
+      <div class="ui-demo-caja ui-demo-fila">
+        <StatCard variante="compacta" valor="4.127" etiqueta="registros encontrados" />
+        <StatCard variante="compacta" valor="38" etiqueta="lugares" />
+      </div>
+    </section>
+
+    <section class="ui-demo-seccion" aria-labelledby="demo-acordeon">
+      <PageHeader nivel="seccion" idTitulo="demo-acordeon" titulo="Preguntas" ceja="Accordion" />
+      <Accordion items={preguntas} />
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.ui-demo-alternar').forEach((b) => {
+    b.addEventListener('click', () => {
+      b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'));
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.ui-demo-expandir').forEach((b) => {
+    b.addEventListener('click', () => {
+      const abierto = b.getAttribute('aria-expanded') !== 'true';
+      b.setAttribute('aria-expanded', String(abierto));
+      const objetivo = document.getElementById(b.getAttribute('aria-controls') ?? '');
+      if (objetivo) objetivo.hidden = !abierto;
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.ui-demo-chip').forEach((c) => {
+    c.addEventListener('click', () => {
+      c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true'));
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.ui-demo-stat').forEach((t) => {
+    t.addEventListener('click', () => {
+      t.setAttribute('aria-pressed', String(t.getAttribute('aria-pressed') !== 'true'));
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>('.ui-demo-quitable .ui-chip-quitar').forEach((q) => {
+    q.addEventListener('click', () => q.closest<HTMLElement>('.ui-chip')?.remove());
+  });
+
+  document.querySelectorAll<HTMLElement>('.ui-demo-tabs').forEach((lista) => {
+    const pestanas = Array.from(lista.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const activar = (p: HTMLButtonElement) => {
+      pestanas.forEach((otra) => {
+        const es = otra === p;
+        otra.setAttribute('aria-selected', String(es));
+        otra.tabIndex = es ? 0 : -1;
+      });
+      p.focus();
+    };
+    pestanas.forEach((p, i) => {
+      p.addEventListener('click', () => activar(p));
+      p.addEventListener('keydown', (e) => {
+        const paso = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!paso) return;
+        e.preventDefault();
+        activar(pestanas[(i + paso + pestanas.length) % pestanas.length]);
+      });
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>('.ui-demo-range').forEach((rango) => {
+    const desde = rango.querySelector<HTMLInputElement>('.ui-range-input--desde');
+    const hasta = rango.querySelector<HTMLInputElement>('.ui-range-input--hasta');
+    const salida = rango.closest('.ui-field')?.querySelector('.ui-range-valor');
+    if (!desde || !hasta) return;
+    const min = Number(desde.min);
+    const max = Number(desde.max);
+    const actualizar = (movido: HTMLInputElement) => {
+      if (Number(desde.value) > Number(hasta.value)) {
+        if (movido === desde) desde.value = hasta.value;
+        else hasta.value = desde.value;
+      }
+      const d = Number(desde.value);
+      const h = Number(hasta.value);
+      rango.style.setProperty('--ui-range-desde', String(((d - min) / (max - min)) * 100));
+      rango.style.setProperty('--ui-range-hasta', String(((h - min) / (max - min)) * 100));
+      rango.classList.toggle('ui-range--desde-encima', d > (min + max) / 2);
+      if (salida) salida.textContent = `${d} – ${h}`;
+    };
+    desde.addEventListener('input', () => actualizar(desde));
+    hasta.addEventListener('input', () => actualizar(hasta));
+  });
+</script>
+
+<style>
+  .ui-pagina {
+    align-items: stretch;
+    gap: var(--space-6);
+    text-align: left;
+  }
+
+  .ui-demo-seccion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: none;
+    margin: 0;
+  }
+
+  .ui-demo-caja {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border: var(--border-width) dashed var(--panel-border);
+    border-radius: var(--radius-panel);
+  }
+
+  .ui-demo-caja--clara {
+    background: var(--surface);
+    border-color: var(--surface-border);
+  }
+
+  .ui-demo-fila {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-5);
+  }
+
+  .ui-demo-nota {
+    max-width: none;
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--on-panel-muted);
+  }
+
+  .ui-demo-ancho {
+    min-width: 13rem;
+  }
+
+  .ui-demo-periodo {
+    flex: 1 1 18rem;
+  }
+
+  .ui-demo-combo-lista {
+    position: static;
+    margin-top: var(--space-1);
+  }
+</style>

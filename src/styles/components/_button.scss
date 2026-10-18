@@ -1,0 +1,91 @@
+.ui-btn {
+  --ui-btn-fg: var(--ui-control-fg);
+  --ui-btn-bg: transparent;
+  --ui-btn-borde: var(--ui-linea-fuerte);
+  --ui-btn-bg-hover: var(--ui-hover);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+  color: var(--ui-btn-fg);
+  background: var(--ui-btn-bg);
+  border: var(--border-width) solid var(--ui-btn-borde);
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast),
+    color var(--duration-fast),
+    border-color var(--duration-fast),
+    opacity var(--duration-fast);
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--ui-btn-bg-hover);
+  }
+
+  &:focus-visible {
+    outline: var(--focus-ring-width) solid var(--ui-foco);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    opacity: var(--state-disabled-opacity);
+    cursor: default;
+  }
+}
+
+.ui-btn--primario {
+  --ui-btn-fg: var(--ui-primario-fg);
+  --ui-btn-bg: var(--ui-primario-bg);
+  --ui-btn-borde: var(--ui-primario-bg);
+  --ui-btn-bg-hover: var(--ui-primario-hover);
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    border-color: var(--ui-primario-hover);
+  }
+}
+
+.ui-btn--fantasma {
+  --ui-btn-fg: var(--ui-fg-acento);
+  --ui-btn-borde: transparent;
+  --ui-btn-bg-hover: transparent;
+  padding-inline: var(--space-1);
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    text-decoration: underline;
+  }
+}
+
+.ui-btn--sm {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-ui-xs);
+}
+
+.ui-btn--icono {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border-radius: var(--radius-circle);
+  font-size: var(--fs-ui-md);
+
+  &.ui-btn--sm {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: var(--fs-ui-xs);
+  }
+}
+
+.ui-btn[aria-pressed='true'],
+.ui-btn[aria-expanded='true'] {
+  --ui-btn-fg: var(--state-selected-fg);
+  --ui-btn-bg: var(--state-selected-bg);
+  --ui-btn-borde: var(--state-selected-border);
+  --ui-btn-bg-hover: var(--state-selected-bg);
+}

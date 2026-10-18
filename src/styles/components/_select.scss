@@ -1,0 +1,93 @@
+@use 'abstracts/variables' as v;
+
+.ui-select,
+.ui-input {
+  min-width: 6.5rem;
+  max-width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-md);
+  line-height: var(--lh-snug);
+  color: var(--on-surface);
+  background-color: var(--surface-sunken);
+  border: var(--border-width) solid var(--surface-border);
+  border-radius: var(--radius-control);
+  transition: border-color var(--duration-fast);
+
+  &:hover:not(:disabled) {
+    border-color: var(--border-strong);
+  }
+
+  &:focus-visible {
+    outline: var(--focus-ring-width) solid var(--ui-foco);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  &:disabled {
+    opacity: var(--state-disabled-opacity);
+    cursor: default;
+  }
+}
+
+.ui-select {
+  appearance: none;
+  padding-inline-end: var(--space-6);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--on-surface) 50%),
+    linear-gradient(135deg, var(--on-surface) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.05rem) 50%,
+    calc(100% - 0.75rem) 50%;
+  background-size: 0.3rem 0.3rem;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.ui-input::placeholder {
+  color: var(--on-surface-muted);
+  opacity: 1;
+}
+
+.ui-combo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ui-combo-lista {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  left: 0;
+  z-index: v.$z-panel-flotante;
+  max-height: 16rem;
+  margin: 0;
+  padding: var(--space-1) 0;
+  overflow-y: auto;
+  list-style: none;
+  text-align: left;
+  background: var(--surface);
+  border: var(--border-width) solid var(--surface-border);
+  border-radius: var(--radius-control);
+  box-shadow: var(--panel-shadow);
+}
+
+.ui-combo-opcion {
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
+  line-height: var(--lh-snug);
+  color: var(--on-surface);
+  cursor: pointer;
+
+  &:hover,
+  &.ui-combo-opcion--activa {
+    background: var(--state-hover-on-surface);
+  }
+
+  &[aria-selected='true'] {
+    color: var(--state-selected-fg);
+    background: var(--state-selected-bg);
+  }
+}

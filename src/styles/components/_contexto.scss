@@ -1,0 +1,39 @@
+@mixin contexto-oscuro {
+  --ui-fg: var(--on-panel);
+  --ui-fg-acento: var(--on-panel-label);
+  --ui-fg-suave: var(--on-panel-muted);
+  --ui-control-fg: var(--on-panel);
+  --ui-linea: var(--panel-border);
+  --ui-linea-fuerte: var(--border-strong);
+  --ui-hover: var(--state-hover-on-panel);
+  --ui-foco: var(--focus-ring-on-panel);
+  --ui-primario-bg: var(--dorado);
+  --ui-primario-fg: var(--vinotinto);
+  --ui-primario-hover: var(--crema);
+  --ui-titulo: var(--crema);
+}
+
+@mixin contexto-claro {
+  --ui-fg: var(--on-surface);
+  --ui-fg-acento: var(--vinotinto);
+  --ui-fg-suave: var(--on-surface-muted);
+  --ui-control-fg: var(--vinotinto);
+  --ui-linea: var(--surface-border);
+  --ui-linea-fuerte: var(--vinotinto);
+  --ui-hover: var(--state-hover-on-surface);
+  --ui-foco: var(--focus-ring-on-surface);
+  --ui-primario-bg: var(--vinotinto);
+  --ui-primario-fg: var(--crema);
+  --ui-primario-hover: var(--cafe);
+  --ui-titulo: var(--on-surface);
+}
+
+body,
+.ui-oscura,
+.ui-filter-panel {
+  @include contexto-oscuro;
+}
+
+.ui-clara {
+  @include contexto-claro;
+}

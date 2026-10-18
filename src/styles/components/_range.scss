@@ -1,0 +1,134 @@
+.ui-range-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+
+.ui-range-valor {
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-md);
+  font-weight: var(--fw-bold);
+  color: var(--ui-fg);
+}
+
+.ui-range {
+  --ui-range-desde: 0;
+  --ui-range-hasta: 100;
+  --ui-range-pulgar: 1.15rem;
+  --ui-range-medio: calc(var(--ui-range-pulgar) / 2);
+  position: relative;
+  min-width: 12rem;
+  height: 1.5rem;
+}
+
+.ui-range-pista,
+.ui-range-relleno {
+  position: absolute;
+  top: 50%;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  transform: translateY(-50%);
+}
+
+.ui-range-pista {
+  right: var(--ui-range-medio);
+  left: var(--ui-range-medio);
+  background: var(--ui-linea);
+}
+
+.ui-range-relleno {
+  right: calc(
+    var(--ui-range-medio) + (100% - var(--ui-range-pulgar)) * (100 - var(--ui-range-hasta)) / 100
+  );
+  left: calc(var(--ui-range-medio) + (100% - var(--ui-range-pulgar)) * var(--ui-range-desde) / 100);
+  background: var(--dorado);
+}
+
+@mixin pulgar {
+  box-sizing: border-box;
+  width: var(--ui-range-pulgar);
+  height: var(--ui-range-pulgar);
+  pointer-events: auto;
+  background: var(--crema);
+  border: var(--border-width-strong) solid var(--dorado);
+  border-radius: var(--radius-circle);
+  box-shadow: var(--control-shadow);
+}
+
+@mixin pulgar-foco {
+  outline: var(--focus-ring-width) solid var(--ui-foco);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.ui-range-input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  pointer-events: none;
+  cursor: pointer;
+
+  &::-webkit-slider-runnable-track {
+    height: 100%;
+    background: transparent;
+  }
+
+  &::-moz-range-track {
+    height: 100%;
+    background: transparent;
+  }
+
+  &::-webkit-slider-thumb {
+    @include pulgar;
+    margin-top: calc((1.5rem - var(--ui-range-pulgar)) / 2);
+    appearance: none;
+  }
+
+  &::-moz-range-thumb {
+    @include pulgar;
+  }
+
+  &:focus-visible {
+    outline: none;
+
+    &::-webkit-slider-thumb {
+      @include pulgar-foco;
+    }
+
+    &::-moz-range-thumb {
+      @include pulgar-foco;
+    }
+  }
+
+  &:disabled {
+    opacity: var(--state-disabled-opacity);
+  }
+}
+
+.ui-range-input--hasta {
+  z-index: 2;
+}
+
+.ui-range--desde-encima .ui-range-input--desde {
+  z-index: 3;
+}
+
+.ui-range-marcas {
+  position: relative;
+  height: 1rem;
+  margin: 0 var(--ui-range-medio);
+}
+
+.ui-range-marca {
+  position: absolute;
+  top: 0;
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-xs);
+  color: var(--ui-fg-suave);
+  transform: translateX(-50%);
+}

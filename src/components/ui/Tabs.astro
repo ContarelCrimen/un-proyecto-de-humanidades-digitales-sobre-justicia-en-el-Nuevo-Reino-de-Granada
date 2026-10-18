@@ -1,0 +1,51 @@
+---
+interface Pestana {
+  texto: string;
+  valor?: string;
+  href?: string;
+  activa?: boolean;
+  controla?: string;
+  id?: string;
+}
+
+interface Props {
+  pestanas: Pestana[];
+  etiquetaAria: string;
+  tamano?: 'sm' | 'md';
+  id?: string;
+  clase?: string;
+}
+
+const { pestanas, etiquetaAria, tamano = 'md', id, clase } = Astro.props;
+const sonEnlaces = pestanas.some((p) => p.href);
+const clases = ['ui-tabs', { 'ui-tabs--sm': tamano === 'sm' }, clase];
+---
+
+{
+  sonEnlaces ? (
+    <nav class:list={clases} id={id} aria-label={etiquetaAria}>
+      {pestanas.map((p) => (
+        <a class="ui-tab" id={p.id} href={p.href} aria-current={p.activa ? 'page' : undefined}>
+          {p.texto}
+        </a>
+      ))}
+    </nav>
+  ) : (
+    <div class:list={clases} id={id} role="tablist" aria-label={etiquetaAria}>
+      {pestanas.map((p) => (
+        <button
+          class="ui-tab"
+          id={p.id}
+          type="button"
+          role="tab"
+          data-valor={p.valor}
+          aria-selected={p.activa ? 'true' : 'false'}
+          aria-controls={p.controla}
+          tabindex={p.activa ? 0 : -1}
+        >
+          {p.texto}
+        </button>
+      ))}
+    </div>
+  )
+}

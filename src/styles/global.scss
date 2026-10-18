@@ -14,6 +14,16 @@
 @use 'abstracts/root';
 @use 'base/reset';
 @use 'base/typography';
+@use 'components/contexto';
+@use 'components/page-header';
+@use 'components/button';
+@use 'components/tabs';
+@use 'components/chip';
+@use 'components/filter-panel';
+@use 'components/select';
+@use 'components/range';
+@use 'components/stat-card';
+@use 'components/accordion';
 
 .container {
   width: min(var(--ancho-pagina), 100% - 2 * var(--margen-pagina));

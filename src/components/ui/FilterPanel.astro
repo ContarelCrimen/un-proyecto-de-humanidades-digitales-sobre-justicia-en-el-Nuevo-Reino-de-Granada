@@ -1,0 +1,35 @@
+---
+interface Props {
+  etiquetaAria: string;
+  fijo?: boolean;
+  id?: string;
+  clase?: string;
+}
+
+const { etiquetaAria, fijo = false, id, clase } = Astro.props;
+const conAcciones = Astro.slots.has('acciones');
+const conAviso = Astro.slots.has('aviso');
+---
+
+<div
+  class:list={['ui-filter-panel', { 'ui-filter-panel--fijo': fijo }, clase]}
+  id={id}
+  role="group"
+  aria-label={etiquetaAria}
+>
+  <slot />
+  {
+    conAcciones && (
+      <div class="ui-filter-actions">
+        <slot name="acciones" />
+      </div>
+    )
+  }
+  {
+    conAviso && (
+      <p class="ui-filter-aviso" role="status">
+        <slot name="aviso" />
+      </p>
+    )
+  }
+</div>

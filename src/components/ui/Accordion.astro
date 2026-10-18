@@ -1,0 +1,32 @@
+---
+interface Item {
+  pregunta: string;
+  respuesta: string | string[];
+  abierto?: boolean;
+  id?: string;
+}
+
+interface Props {
+  items: Item[];
+  exclusivo?: string;
+  id?: string;
+  clase?: string;
+}
+
+const { items, exclusivo, id, clase } = Astro.props;
+---
+
+<div class:list={['ui-accordion', clase]} id={id}>
+  {
+    items.map((item) => (
+      <details class="ui-accordion-item" id={item.id} name={exclusivo} open={item.abierto}>
+        <summary class="ui-accordion-trigger">{item.pregunta}</summary>
+        <div class="ui-accordion-panel">
+          {(Array.isArray(item.respuesta) ? item.respuesta : [item.respuesta]).map((p) => (
+            <p>{p}</p>
+          ))}
+        </div>
+      </details>
+    ))
+  }
+</div>

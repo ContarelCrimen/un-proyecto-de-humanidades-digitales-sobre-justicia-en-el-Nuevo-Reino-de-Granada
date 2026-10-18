@@ -1,0 +1,68 @@
+---
+interface Props {
+  texto: string;
+  tipo?: 'filtro' | 'removible' | 'estatico';
+  etiqueta?: string;
+  presionado?: boolean;
+  color?: string;
+  valor?: string;
+  etiquetaQuitar?: string;
+  deshabilitado?: boolean;
+  id?: string;
+  clase?: string;
+}
+
+const {
+  texto,
+  tipo = 'filtro',
+  etiqueta,
+  presionado = false,
+  color,
+  valor,
+  etiquetaQuitar,
+  deshabilitado = false,
+  id,
+  clase,
+} = Astro.props;
+
+const clases = [
+  'ui-chip',
+  { 'ui-chip--removible': tipo === 'removible', 'ui-chip--estatico': tipo === 'estatico' },
+  clase,
+];
+const estilo = color ? `--chip-dot: ${color}` : undefined;
+---
+
+{
+  tipo === 'filtro' ? (
+    <button
+      class:list={clases}
+      id={id}
+      type="button"
+      style={estilo}
+      data-valor={valor}
+      aria-pressed={presionado ? 'true' : 'false'}
+      disabled={deshabilitado}
+    >
+      {color && <span class="ui-chip-punto" aria-hidden="true" />}
+      <span class="ui-chip-texto">{texto}</span>
+    </button>
+  ) : (
+    <span class:list={clases} id={id} style={estilo} data-valor={valor}>
+      {color && <span class="ui-chip-punto" aria-hidden="true" />}
+      <span class="ui-chip-texto">
+        {etiqueta && <span class="ui-chip-etiqueta">{etiqueta} </span>}
+        {texto}
+      </span>
+      {tipo === 'removible' && (
+        <button
+          class="ui-chip-quitar"
+          type="button"
+          aria-label={etiquetaQuitar ?? `Quitar ${etiqueta ? `${etiqueta} ` : ''}${texto}`}
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      )}
+    </span>
+  )
+}

@@ -8,6 +8,7 @@ interface Props {
   idSubtitulo?: string;
   sinMayusculas?: boolean;
   oculto?: boolean;
+  nivel?: 'pagina' | 'seccion' | 'subseccion';
 }
 
 const {
@@ -19,11 +20,16 @@ const {
   idSubtitulo,
   sinMayusculas = false,
   oculto = false,
+  nivel = 'pagina',
 } = Astro.props;
 const conExtra = Astro.slots.has('extra');
+const Titulo = nivel === 'pagina' ? 'h1' : nivel === 'seccion' ? 'h2' : 'h3';
 ---
 
-<header class="page-header" hidden={oculto}>
+<header
+  class:list={['page-header', { [`page-header--${nivel}`]: nivel !== 'pagina' }]}
+  hidden={oculto}
+>
   <div class="page-header-texto">
     {
       (ceja || idCeja) && (
@@ -32,12 +38,12 @@ const conExtra = Astro.slots.has('extra');
         </p>
       )
     }
-    <h1
+    <Titulo
       class:list={['page-header-titulo', { 'page-header-titulo--sin-mayusculas': sinMayusculas }]}
       id={idTitulo}
     >
       {titulo}
-    </h1>
+    </Titulo>
     {
       (subtitulo || idSubtitulo) && (
         <p class="page-header-subtitulo" id={idSubtitulo}>
@@ -54,63 +60,3 @@ const conExtra = Astro.slots.has('extra');
     )
   }
 </header>
-
-<style>
-  .page-header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 1rem 2rem;
-    align-self: center;
-    width: 100%;
-    max-width: var(--ancho-pagina);
-    margin: 3rem auto calc(2rem - var(--espacio-bloques, 0px));
-    text-align: left;
-  }
-
-  .page-header[hidden] {
-    display: none;
-  }
-
-  .page-header-texto {
-    display: flex;
-    flex: 1 1 32rem;
-    flex-direction: column;
-    gap: 0.5rem;
-    min-width: 0;
-  }
-
-  .page-header-ceja,
-  .page-header-subtitulo {
-    max-width: none;
-    margin: 0;
-    font-family: var(--font-ui);
-    line-height: var(--lh-normal);
-    color: var(--dorado);
-  }
-
-  .page-header-ceja {
-    font-size: var(--fs-ui-xs);
-    text-transform: uppercase;
-  }
-
-  .page-header-subtitulo {
-    font-size: var(--fs-ui-sm);
-  }
-
-  .page-header-titulo {
-    margin: 0;
-    font-size: var(--fs-title);
-    line-height: var(--lh-snug);
-    color: var(--crema);
-  }
-
-  .page-header-titulo--sin-mayusculas {
-    text-transform: none;
-  }
-
-  .page-header-extra {
-    flex: 0 0 auto;
-  }
-</style>

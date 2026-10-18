@@ -114,6 +114,7 @@
   --panel-bg: #{v.$panel-bg};
   --panel-border: #{v.$panel-border};
   --panel-shadow: #{v.$panel-shadow};
+  --control-shadow: #{v.$control-shadow};
   --on-panel: #{v.$on-panel};
   --on-panel-label: #{v.$on-panel-label};
   --on-panel-muted: #{v.$on-panel-muted};
@@ -129,6 +130,8 @@
 
   --radius-pill: #{v.$radius-pill};
   --radius-panel: #{v.$radius-panel};
+  --radius-control: #{v.$radius-control};
+  --radius-circle: #{v.$radius-circle};
 
   --space-1: #{v.$space-1};
   --space-2: #{v.$space-2};

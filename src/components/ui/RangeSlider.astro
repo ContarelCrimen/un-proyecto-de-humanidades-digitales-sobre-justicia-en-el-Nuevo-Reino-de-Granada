@@ -1,0 +1,81 @@
+---
+interface Props {
+  etiqueta: string;
+  min: number;
+  max: number;
+  desde?: number;
+  hasta?: number;
+  paso?: number;
+  marcas?: number[];
+  idDesde?: string;
+  idHasta?: string;
+  idValor?: string;
+  deshabilitado?: boolean;
+  clase?: string;
+}
+
+const {
+  etiqueta,
+  min,
+  max,
+  desde = min,
+  hasta = max,
+  paso = 1,
+  marcas = [],
+  idDesde,
+  idHasta,
+  idValor,
+  deshabilitado = false,
+  clase,
+} = Astro.props;
+
+const posicion = (v: number) => ((v - min) / (max - min)) * 100;
+const estilo = `--ui-range-desde: ${posicion(desde)}; --ui-range-hasta: ${posicion(hasta)}`;
+const encima = desde > (min + max) / 2;
+---
+
+<div class="ui-field">
+  <div class="ui-range-cabecera">
+    <span class="ui-field-label">{etiqueta}</span>
+    <output class="ui-range-valor" id={idValor} for={[idDesde, idHasta].filter(Boolean).join(' ')}>
+      {desde} – {hasta}
+    </output>
+  </div>
+  <div class:list={['ui-range', { 'ui-range--desde-encima': encima }, clase]} style={estilo}>
+    <span class="ui-range-pista" aria-hidden="true"></span>
+    <span class="ui-range-relleno" aria-hidden="true"></span>
+    <input
+      class="ui-range-input ui-range-input--desde"
+      id={idDesde}
+      type="range"
+      min={min}
+      max={max}
+      step={paso}
+      value={desde}
+      aria-label={`${etiqueta}: desde`}
+      disabled={deshabilitado}
+    />
+    <input
+      class="ui-range-input ui-range-input--hasta"
+      id={idHasta}
+      type="range"
+      min={min}
+      max={max}
+      step={paso}
+      value={hasta}
+      aria-label={`${etiqueta}: hasta`}
+      disabled={deshabilitado}
+    />
+  </div>
+  {
+    marcas.length > 0 && (
+      <div class="ui-range-marcas" aria-hidden="true">
+        {marcas.map((m) => (
+          <span class="ui-range-marca" style={`left: ${posicion(m)}%`}>
+            {m}
+          </span>
+        ))}
+      </div>
+    )
+  }
+</div>
