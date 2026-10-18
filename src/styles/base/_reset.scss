@@ -25,3 +25,10 @@ textarea,
 option {
   font: inherit;
 }
+
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-ui);
+}

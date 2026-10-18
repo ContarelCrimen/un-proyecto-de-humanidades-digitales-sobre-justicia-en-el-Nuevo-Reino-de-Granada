@@ -19,10 +19,7 @@ h1 {
   font-family: var(--font-display);
   font-size: var(--fs-title);
   color: var(--crema);
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 0.4rem;
   margin: 2.5rem 0 1.25rem;
-  letter-spacing: 0.02em;
   text-align: center;
   width: 100%;
 }
@@ -31,18 +28,17 @@ h1 {
 section h2,
 .section-title {
   font-family: var(--font-display);
-  font-size: var(--fs-xl);
+  font-size: var(--fs-h2);
   color: var(--crema);
   border-bottom: 1px solid var(--rule);
   padding-bottom: 0.4rem;
   margin: 2.5rem 0 1.25rem;
-  letter-spacing: 0.02em;
   text-align: left;
   width: 100%;
 }
 
 p {
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
   line-height: var(--lh-relaxed);
   max-width: 650px;
   color: var(--ink-light);

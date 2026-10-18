@@ -16,11 +16,9 @@
 @use 'base/typography';
 
 .container {
-  width: 90%;
-  max-width: 900px;
+  width: min(var(--ancho-pagina), 100% - 2 * var(--margen-pagina));
   margin: 0 auto;
-  padding: 3rem 1rem 5rem;
-  padding-top: 100px; /* Espacio para el topnav sticky */
+  padding: 0 0 5rem;
 
   display: flex;
   flex-direction: column;
@@ -201,10 +199,9 @@ body.nav-abierto {
   font-style: italic;
   color: var(--vinotinto);
   text-decoration: none;
-  font-size: var(--fs-md);
-  font-weight: 400;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
   transition: color 0.15s;
 }
 
@@ -286,7 +283,7 @@ a.card {
 
 a.card h3 {
   font-family: var(--font-display);
-  font-size: var(--fs-lg);
+  font-size: var(--fs-h3);
   color: var(--accent);
   margin-bottom: 0.5rem;
 }
@@ -318,10 +315,9 @@ a.card p {
   background: #ffffff;
   color: var(--ink);
   font-family: var(--font-ui);
-  font-size: var(--fs-sm);
-  font-weight: 600;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
   text-decoration: none;
   transition:
     background 0.15s,
@@ -348,7 +344,7 @@ a.card p {
 }
 
 #mapa-contenedor {
-  font-family: var(--font-display);
+  font-family: var(--font-ui);
 }
 
 /* =====================================================
@@ -357,8 +353,8 @@ a.card p {
 .filtros-tabla select,
 .filtros-tabla input[type='text'] {
   padding: 0.6rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-md);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-md);
   color: var(--vinotinto);
   background: var(--crema);
   border: 1px solid var(--rule);
@@ -380,8 +376,8 @@ a.card p {
   .filtros-tabla select::picker(select) {
     background: var(--crema);
     color: var(--vinotinto);
-    font-family: var(--font-body);
-    font-size: var(--fs-md);
+    font-family: var(--font-ui);
+    font-size: var(--fs-ui-md);
     border: 1px solid var(--rule);
     border-radius: 4px;
   }
@@ -390,8 +386,8 @@ a.card p {
     padding: 0.6rem;
     background: var(--crema);
     color: var(--vinotinto);
-    font-family: var(--font-body);
-    font-size: var(--fs-md);
+    font-family: var(--font-ui);
+    font-size: var(--fs-ui-md);
   }
 
   .filtros-tabla option:hover,
@@ -418,10 +414,9 @@ a.card p {
 .tabla-metadatos th {
   background: var(--parchment-dark);
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
   padding: 1rem;
   text-align: left;
   border-bottom: 2px solid var(--rule);
@@ -429,8 +424,9 @@ a.card p {
 
 .tabla-datos td,
 .tabla-metadatos td {
+  font-family: var(--font-ui);
   padding: 0.8rem;
-  font-size: var(--fs-md);
+  font-size: var(--fs-ui-md);
   color: var(--ink-light);
   border-bottom: 1px solid var(--rule);
 }
@@ -457,7 +453,7 @@ a.card p {
 .orden-icono {
   display: inline-block;
   margin-left: 0.4em;
-  font-size: 0.85em;
+  font-size: var(--fs-ui-xs);
   opacity: 0.4;
 }
 
@@ -502,10 +498,9 @@ a.card p {
   background: var(--accent);
   color: var(--parchment);
   font-family: var(--font-ui);
-  font-size: var(--fs-sm);
-  font-weight: 600;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
   padding: 0.9rem 1.5rem;
   text-decoration: none;
   border-radius: 2px;
@@ -536,9 +531,8 @@ a.card p {
   background: #ffffff;
   color: var(--accent);
   font-family: var(--font-ui);
-  font-weight: 600;
-  font-size: var(--fs-md);
-  letter-spacing: 0.02em;
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-ui-md);
   cursor: pointer;
   transition:
     background 0.2s ease,
