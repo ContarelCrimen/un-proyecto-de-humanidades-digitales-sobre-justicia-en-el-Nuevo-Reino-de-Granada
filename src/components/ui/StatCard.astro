@@ -8,7 +8,10 @@ interface Props {
   interactiva?: boolean;
   presionada?: boolean;
   variante?: 'tarjeta' | 'compacta';
+  vivo?: boolean;
   id?: string;
+  idValor?: string;
+  idEtiqueta?: string;
   clase?: string;
 }
 
@@ -21,7 +24,10 @@ const {
   interactiva = false,
   presionada = false,
   variante = 'tarjeta',
+  vivo = false,
   id,
+  idValor,
+  idEtiqueta,
   clase,
 } = Astro.props;
 
@@ -36,12 +42,17 @@ const Etiqueta = interactiva ? 'button' : 'div';
   style={estilo}
   type={interactiva ? 'button' : undefined}
   aria-pressed={interactiva ? (presionada ? 'true' : 'false') : undefined}
+  aria-live={vivo ? 'polite' : undefined}
 >
   {
     variante === 'compacta' ? (
       <>
-        <span class="ui-stat-valor">{valor}</span>
-        <span class="ui-stat-etiqueta">{etiqueta}</span>
+        <span class="ui-stat-valor" id={idValor}>
+          {valor}
+        </span>
+        <span class="ui-stat-etiqueta" id={idEtiqueta}>
+          {etiqueta}
+        </span>
       </>
     ) : (
       <>

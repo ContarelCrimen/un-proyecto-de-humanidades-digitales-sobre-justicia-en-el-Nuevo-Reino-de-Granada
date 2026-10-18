@@ -190,7 +190,7 @@ export async function crearTabla() {
   ];
   anioMarcas.forEach((anio) => {
     const marca = document.createElement('span');
-    marca.className = 'tg-marca';
+    marca.className = 'ui-range-marca';
     marca.textContent = String(anio);
     marca.style.left = `${posicionMarca(anio)}%`;
     marcas.append(marca);
@@ -201,9 +201,9 @@ export async function crearTabla() {
   function sincronizarSlider() {
     const desde = +filtroAnioDesde.value;
     const hasta = +filtroAnioHasta.value;
-    slider.style.setProperty('--desde', `${posicionMarca(desde)}%`);
-    slider.style.setProperty('--hasta', `${posicionMarca(hasta)}%`);
-    slider.classList.toggle('tg-slider--desde-encima', desde > (ANIO_MIN + ANIO_MAX) / 2);
+    slider.style.setProperty('--ui-range-desde', String(posicionMarca(desde)));
+    slider.style.setProperty('--ui-range-hasta', String(posicionMarca(hasta)));
+    slider.classList.toggle('ui-range--desde-encima', desde > (ANIO_MIN + ANIO_MAX) / 2);
     periodoValor.textContent = desde === hasta ? `${desde}` : `${desde} – ${hasta}`;
   }
   function sincronizarUrl() {
@@ -311,20 +311,20 @@ export async function crearTabla() {
     contenedorActivos.replaceChildren();
     if (etiquetas.length === 0) return;
     const titulo = document.createElement('span');
-    titulo.className = 'tg-activos-titulo';
+    titulo.className = 'ui-field-label';
     titulo.textContent = 'Filtros activos:';
     contenedorActivos.append(titulo);
     etiquetas.forEach(({ texto, titulo: tituloEtiqueta, quitar }) => {
       const chip = document.createElement('span');
-      chip.className = 'tg-chip';
+      chip.className = 'ui-chip ui-chip--removible';
       chip.title = tituloEtiqueta;
       const textoChip = document.createElement('span');
-      textoChip.className = 'tg-chip-texto';
+      textoChip.className = 'ui-chip-texto';
       textoChip.textContent = texto;
       const boton = document.createElement('button');
       boton.type = 'button';
-      boton.className = 'tg-chip-quitar';
-      boton.textContent = '×';
+      boton.className = 'ui-chip-quitar';
+      boton.innerHTML = '<span aria-hidden="true">×</span>';
       boton.setAttribute('aria-label', `Quitar el filtro ${tituloEtiqueta}: ${texto}`);
       boton.addEventListener('click', quitar);
       chip.append(textoChip, boton);
@@ -332,7 +332,7 @@ export async function crearTabla() {
     });
     const limpiar = document.createElement('button');
     limpiar.type = 'button';
-    limpiar.className = 'tg-limpiar';
+    limpiar.className = 'ui-btn ui-btn--fantasma ui-btn--sm';
     limpiar.textContent = 'Limpiar todo';
     limpiar.addEventListener('click', limpiarTodo);
     contenedorActivos.append(limpiar);

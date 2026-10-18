@@ -326,57 +326,6 @@ body.nav-abierto {
 }
 
 /* =====================================================
-   FILTROS
-==================================================== */
-.filtros-tabla select,
-.filtros-tabla input[type='text'] {
-  padding: 0.6rem;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-md);
-  color: var(--vinotinto);
-  background: var(--crema);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  outline: none;
-}
-
-.filtros-tabla select:focus,
-.filtros-tabla input[type='text']:focus {
-  border-color: var(--accent);
-}
-
-@supports (appearance: base-select) {
-  .filtros-tabla select,
-  .filtros-tabla select::picker(select) {
-    appearance: base-select;
-  }
-
-  .filtros-tabla select::picker(select) {
-    background: var(--crema);
-    color: var(--vinotinto);
-    font-family: var(--font-ui);
-    font-size: var(--fs-ui-md);
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-  }
-
-  .filtros-tabla option {
-    padding: 0.6rem;
-    background: var(--crema);
-    color: var(--vinotinto);
-    font-family: var(--font-ui);
-    font-size: var(--fs-ui-md);
-  }
-
-  .filtros-tabla option:hover,
-  .filtros-tabla option:focus,
-  .filtros-tabla option:checked {
-    background: var(--vinotinto);
-    color: var(--crema);
-  }
-}
-
-/* =====================================================
    TABLAS ARCHIVÍSTICAS
 ===================================================== */
 .tabla-datos,

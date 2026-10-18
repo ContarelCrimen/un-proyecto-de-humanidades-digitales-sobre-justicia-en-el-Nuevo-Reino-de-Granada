@@ -10,6 +10,8 @@ interface Props {
   paso?: number;
   marcas?: number[];
   id?: string;
+  idRango?: string;
+  idMarcas?: string;
   idDesde?: string;
   idHasta?: string;
   idValor?: string;
@@ -28,6 +30,8 @@ const {
   paso = 1,
   marcas = [],
   id,
+  idRango,
+  idMarcas,
   idDesde,
   idHasta,
   idValor,
@@ -56,6 +60,7 @@ const controles = simple ? [id] : [idDesde, idHasta];
       { 'ui-range--simple': simple, 'ui-range--desde-encima': encima },
       clase,
     ]}
+    id={idRango}
     style={estilo}
   >
     <span class="ui-range-pista" aria-hidden="true"></span>
@@ -102,8 +107,8 @@ const controles = simple ? [id] : [idDesde, idHasta];
     }
   </div>
   {
-    marcas.length > 0 && (
-      <div class="ui-range-marcas" aria-hidden="true">
+    (marcas.length > 0 || idMarcas) && (
+      <div class="ui-range-marcas" id={idMarcas} aria-hidden="true">
         {marcas.map((m) => (
           <span class="ui-range-marca" style={`left: ${posicion(m)}%`}>
             {m}
