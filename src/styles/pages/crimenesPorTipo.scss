@@ -79,7 +79,7 @@
   font-family: var(--font-ui);
   font-size: var(--fs-ui-xs);
   font-weight: var(--fw-bold);
-  color: var(--mapa-tinta-oscura);
+  color: var(--on-panel);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -102,7 +102,7 @@
   font-size: var(--fs-ui-md);
   font-weight: var(--fw-bold);
   line-height: var(--lh-tight);
-  color: var(--mapa-tinta-oscura);
+  color: var(--on-panel);
   white-space: nowrap;
   flex: none;
 }

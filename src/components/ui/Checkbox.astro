@@ -1,0 +1,27 @@
+---
+interface Props {
+  etiqueta: string;
+  id?: string;
+  nombre?: string;
+  valor?: string;
+  marcado?: boolean;
+  deshabilitado?: boolean;
+  clase?: string;
+}
+
+const { etiqueta, id, nombre, valor, marcado = false, deshabilitado = false, clase } = Astro.props;
+---
+
+<label class:list={['ui-checkbox', clase]}>
+  <input
+    class="ui-checkbox-input"
+    type="checkbox"
+    id={id}
+    name={nombre}
+    value={valor}
+    checked={marcado}
+    disabled={deshabilitado}
+  />
+  <span class="ui-checkbox-caja" aria-hidden="true"></span>
+  {etiqueta}
+</label>
