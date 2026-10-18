@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
+import Button from '../../components/ui/Button.astro';
+import Tabs from '../../components/ui/Tabs.astro';
 
 // Cadena de tiempomain.js, en el mismo orden. La global la pone BaseLayout.
 import '../../styles/pages/tooltips.scss';
@@ -18,108 +20,135 @@ const base = import.meta.env.BASE_URL
     <PageHeader titulo="Cambio de los crímenes en el tiempo y espacio" />
 
     <div class="mapa-selector-vista">
-      <button type="button" id="btn-informacion" class="btn-mapa-vista mapa-selector-vista-informacion">
+      <Button
+        id="btn-informacion"
+        clase="mapa-selector-vista-informacion"
+        expandido={false}
+        controla="panel-informacion"
+      >
         Información
-      </button>
+      </Button>
       <div class="mapa-selector-vista-grupo">
-        <button type="button" id="btn-vista-lugar" class="btn-mapa-vista btn-mapa--activo">Lugar</button>
-        <button type="button" id="btn-vista-tiempo" class="btn-mapa-vista">Línea de tiempo</button>
-        <button type="button" id="btn-vista-crimenes" class="btn-mapa-vista">Crímenes</button>
+        <Tabs
+          etiquetaAria="Vista"
+          pestanas={[
+            { texto: 'Lugar', id: 'btn-vista-lugar', controla: 'vista-lugar', activa: true },
+            { texto: 'Línea de tiempo', id: 'btn-vista-tiempo', controla: 'vista-tiempo' },
+            { texto: 'Crímenes', id: 'btn-vista-crimenes', controla: 'vista-crimenes' },
+          ]}
+        />
       </div>
-      <button type="button" id="btn-instrucciones" class="btn-mapa-vista mapa-selector-vista-instrucciones">
+      <Button
+        id="btn-instrucciones"
+        clase="mapa-selector-vista-instrucciones"
+        expandido={false}
+        controla="panel-instrucciones"
+      >
         Instrucciones
-      </button>
+      </Button>
     </div>
 
-    <div id="panel-instrucciones" class="mapa-tarjeta mapa-vista--oculta">
-      <button type="button" class="mapa-tarjeta-cerrar" id="cerrar-instrucciones" aria-label="Cerrar instrucciones">×</button>
-      <div class="mapa-tarjeta-titulo">Instrucciones</div>
-      <div class="mapa-tarjeta-divisor"></div>
+    <div id="panel-instrucciones" class="mapa-tarjeta ui-clara mapa-vista--oculta">
+      <Button
+        id="cerrar-instrucciones"
+        variante="fantasma"
+        icono
+        tamano="sm"
+        clase="mapa-tarjeta-cerrar"
+        etiquetaAria="Cerrar instrucciones"
+      >
+        <span aria-hidden="true">×</span>
+      </Button>
+      <PageHeader nivel="subseccion" titulo="Instrucciones" />
       <p class="mapa-tarjeta-parrafo">
-        Para navegar en esta sección tienes tres opciones: Lugar, Línea del tiempo y crímenes.
+        Para navegar en esta sección tienes tres opciones: Lugar, Línea de tiempo y Crímenes.
       </p>
       <p class="mapa-tarjeta-parrafo">
         En <b>Lugar</b> está el mapa de las provincias (1808). Puedes hacer clic en los puntos para ver los lugares específicos, lo que abrirá más información sobre el lugar. Prueba comparar varios lugares a la par.
       </p>
       <p class="mapa-tarjeta-parrafo">
-        En <b>Línea del tiempo</b> tienes dos vistas, puedes navegar por línea o rueda. En la vista de línea puedes observar el desarrollo de los casos a lo largo de los años. Por otro lado, la rueda te permite explorar año a año, haz clic en uno de los círculos para detallar cada caso.
+        En <b>Línea de tiempo</b> tienes dos vistas: puedes navegar por línea o rueda. En la vista de línea puedes observar el desarrollo de los casos a lo largo de los años. Por otro lado, la rueda te permite explorar año a año; haz clic en uno de los círculos para detallar cada caso.
       </p>
       <p class="mapa-tarjeta-parrafo">
-        Los <b>crímenes</b> están organizados de los más frecuentes a los menos. Haz clic en una barra y tendrás más detalles. Puedes seleccionar varios crímenes a la vez o puedes ver el top de crímenes de cada lugar.
+        Los <b>Crímenes</b> están organizados de los más frecuentes a los menos. Haz clic en una barra y tendrás más detalles. Puedes seleccionar varios crímenes a la vez o ver el top de crímenes de cada lugar.
       </p>
       <p class="mapa-tarjeta-parrafo">¡Explora!</p>
     </div>
 
-    <div id="panel-informacion" class="mapa-tarjeta mapa-vista--oculta">
-      <button type="button" class="mapa-tarjeta-cerrar" id="cerrar-informacion" aria-label="Cerrar información">×</button>
-      <div class="mapa-tarjeta-titulo">Información importante</div>
-      <div class="mapa-tarjeta-divisor"></div>
-      <p>
-       Para comprender las gráficas recuerda: <br>
-      Un <b>caso</b> es uno o más documentos que se refieren al mismo proceso judicial. Un caso puede contener varios crímenes. Cada <b> crimen</b> se ha clasificado con una observación analítica del equipo. <br> <a href={`${base}about/index.html`}>Más información.</a> </p>
+    <div id="panel-informacion" class="mapa-tarjeta ui-clara mapa-vista--oculta">
+      <Button
+        id="cerrar-informacion"
+        variante="fantasma"
+        icono
+        tamano="sm"
+        clase="mapa-tarjeta-cerrar"
+        etiquetaAria="Cerrar información"
+      >
+        <span aria-hidden="true">×</span>
+      </Button>
+      <PageHeader nivel="subseccion" titulo="Información importante" />
+      <p class="mapa-tarjeta-parrafo">
+        Para comprender las gráficas recuerda: un <b>caso</b> es uno o más documentos que se refieren al mismo proceso judicial. Un caso puede contener varios crímenes. Cada <b>crimen</b> se ha clasificado con una observación analítica del equipo.
+      </p>
+      <p class="mapa-tarjeta-parrafo"><a href={`${base}about/index.html`}>Más información.</a></p>
     </div>
 
     <div id="panel-filtros" class="controles"></div>
 
-    <div id="vista-lugar">
+    <div id="vista-lugar" role="tabpanel" aria-labelledby="btn-vista-lugar">
       <div class="dashboard-visualizaciones">
         <div id="mapa-contenedor"></div>
         <div id="crimenesChart"></div>
       </div>
     </div>
 
-    <div id="vista-tiempo" class="mapa-vista--oculta">
-      <div class="mapa-tarjeta">
-        <div class="mapa-tarjeta-encabezado">
-          <div class="mapa-tarjeta-titulo" id="lineaTiempoCasosTitulo">Casos a lo largo de los años</div>
-          <div class="mapa-tarjeta-subtitulo" id="lineaTiempoCasosSubtitulo">Cada línea suma los casos por año según su tipo de proceso. </div>
-        </div>
-        <div class="mapa-tarjeta-divisor"></div>
+    <div id="vista-tiempo" class="mapa-vista--oculta" role="tabpanel" aria-labelledby="btn-vista-tiempo">
+      <div class="mapa-tarjeta ui-clara">
+        <PageHeader
+          nivel="subseccion"
+          idTitulo="lineaTiempoCasosTitulo"
+          titulo="Casos a lo largo de los años"
+          idSubtitulo="lineaTiempoCasosSubtitulo"
+          subtitulo="Cada línea suma los casos por año según su tipo de proceso."
+        />
         <div id="lineaTiempoCasosContenedor"></div>
       </div>
     </div>
 
-    <div id="vista-crimenes" class="mapa-vista--oculta mapa-vista-crimenes">
+    <div
+      id="vista-crimenes"
+      class="mapa-vista--oculta mapa-vista-crimenes"
+      role="tabpanel"
+      aria-labelledby="btn-vista-crimenes"
+    >
       <div class="mapa-crimenes-layout">
         <div class="mapa-crimenes-col-izquierda">
-          <div class="mapa-tarjeta mapa-tarjeta--compacta">
-            <div class="mapa-tarjeta-encabezado">
-              <div class="mapa-tarjeta-titulo">Top de crímenes</div>
-              <div class="mapa-tarjeta-subtitulo">
-               Aquí puede observar los crímenes de los más frecuentes a los menos frecuentes a lo largo de los años.
-               Ajuste el rango de fecha para observar los cambios en cada periodo. Haga clic en cada barra para conocer más. 
-              </div>
-            </div>
-            <div class="mapa-tarjeta-divisor"></div>
+          <div class="mapa-tarjeta mapa-tarjeta--compacta ui-clara">
+            <PageHeader
+              nivel="subseccion"
+              titulo="Top de crímenes"
+              subtitulo="Aquí puedes observar los crímenes de los más frecuentes a los menos frecuentes a lo largo de los años. Ajusta el rango de fecha para observar los cambios en cada periodo. Haz clic en cada barra para conocer más."
+            />
             <div id="crimenesPorTipo"></div>
           </div>
         </div>
 
         <div class="mapa-crimenes-col-derecha mapa-crimenes-col-derecha--oculta">
-          <div class="mapa-tarjeta mapa-tarjeta--compacta">
-            <div class="mapa-tarjeta-encabezado">
-              <div class="mapa-tarjeta-titulo">Evolución del crimen</div>
-              <div class="mapa-tarjeta-subtitulo">
-                Si quiere comparar, seleccione otros crímenes. Si quiere ver algún subcrimen a lo largo del tiempo, seleccione uno de la dona. 
-              </div>
-            </div>
-            <div class="mapa-tarjeta-divisor"></div>
+          <div class="mapa-tarjeta mapa-tarjeta--compacta ui-clara">
+            <PageHeader
+              nivel="subseccion"
+              titulo="Evolución del crimen"
+              subtitulo="Si quieres comparar, selecciona otros crímenes. Si quieres ver algún subcrimen a lo largo del tiempo, selecciona uno de la dona."
+            />
             <div id="crimenesSpikeContenedor"></div>
           </div>
 
-          <div class="mapa-tarjeta mapa-tarjeta--compacta">
-            <div class="mapa-tarjeta-encabezado">
-              <div class="mapa-tarjeta-titulo">Subcrímenes</div>
-              <div class="mapa-tarjeta-subtitulo">
-                Del crimen fijado
-              </div>
-            </div>
-            <div class="mapa-tarjeta-divisor"></div>
+          <div class="mapa-tarjeta mapa-tarjeta--compacta ui-clara">
+            <PageHeader nivel="subseccion" titulo="Subcrímenes" subtitulo="Del crimen fijado" />
             <div id="crimenesDonutContenedor"></div>
           </div>
         </div>
       </div>
-
     </div>
 
     <script>
@@ -166,7 +195,7 @@ const base = import.meta.env.BASE_URL
         (Object.keys(vistas) as Vista[]).forEach((clave) => {
           const activa = clave === vista;
           vistas[clave].contenedor.classList.toggle('mapa-vista--oculta', !activa);
-          vistas[clave].boton.classList.toggle('btn-mapa--activo', activa);
+          vistas[clave].boton.setAttribute('aria-selected', String(activa));
         });
 
         // El filtro de Lugar no aplica en "Línea de tiempo" (esa vista ya no
@@ -227,7 +256,7 @@ const base = import.meta.env.BASE_URL
             });
           }
           panel.classList.toggle('mapa-vista--oculta', !abierto);
-          boton.classList.toggle('btn-mapa--activo', abierto);
+          boton.setAttribute('aria-expanded', String(abierto));
         }
         panelesDesplegables.push(establecer);
 

@@ -21,61 +21,16 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
 }
 
 .crimenes-tipo-fijados--oculto {
   display: none;
 }
 
-.crimenes-tipo-fijados-etiqueta {
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-xs);
-  font-weight: var(--fw-bold);
-  color: var(--mapa-tinta-oscura);
-}
-
-.crimenes-tipo-fijados-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--mapa-acento-linea);
-  background: var(--mapa-panel);
-  color: var(--mapa-tinta-oscura);
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-xs);
-  font-weight: var(--fw-semibold);
-  cursor: pointer;
-}
-
-.crimenes-tipo-fijados-chip:hover {
-  background: var(--mapa-acento-hover);
-  border-color: var(--mapa-acento-hover);
-  color: #fff;
-}
-
-.crimenes-tipo-fijados-chip-quitar {
-  font-weight: var(--fw-bold);
-  line-height: var(--lh-tight);
-}
-
 .crimenes-tipo-fijados-limpiar {
   margin-left: auto;
-  border: none;
-  background: none;
-  padding: 0;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-xs);
-  color: var(--mapa-borde);
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.crimenes-tipo-fijados-limpiar:hover {
-  color: var(--mapa-tinta-oscura);
 }
 
 .crimenes-tipo-fila {
@@ -204,40 +159,6 @@
   margin-top: 10px;
 }
 
-.crimenes-tipo-leyenda-chip {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border: none;
-  background: none;
-  padding: 0;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-xs);
-  color: var(--mapa-tinta-oscura);
-  cursor: pointer;
-}
-
-.crimenes-tipo-leyenda-chip:hover {
-  text-decoration: underline;
-}
-
-/* Leyenda del donut (ver renderizarDonut): no quita nada al hacer clic, a
-   diferencia de la del spike — sin cursor ni subrayado. */
-.crimenes-tipo-leyenda-chip--estatico {
-  cursor: default;
-}
-
-.crimenes-tipo-leyenda-chip--estatico:hover {
-  text-decoration: none;
-}
-
-.crimenes-tipo-leyenda-punto {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
 /* Texto de la columna Explicación de Linaje.csv, en el panel inline de cada
    delito (ver .crimenes-tipo-definicion arriba). */
 .crimenes-tipo-definicion-texto {
@@ -257,33 +178,7 @@
 /* Tarjeta "Subcrimenes": selector de pestañas cuando hay más de un crimen
    fijado (ver renderizarDonut en CrimenesPorTipo.ts) y el donut en sí. */
 .crimenes-tipo-donut-selector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.crimenes-tipo-donut-tab {
-  padding: 5px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--mapa-borde);
-  background: var(--mapa-fondo-pergamino);
-  color: var(--mapa-tinta-oscura);
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-xs);
-  font-weight: var(--fw-semibold);
-  cursor: pointer;
-}
-
-.crimenes-tipo-donut-tab--activo {
-  background: var(--mapa-acento-linea);
-  border-color: var(--mapa-acento-linea);
-  color: #fff;
-}
-
-.crimenes-tipo-donut-tab--activo:hover {
-  background: var(--mapa-acento-hover);
-  border-color: var(--mapa-acento-hover);
+  margin-bottom: var(--space-3);
 }
 
 /* Misma ancla de posicionamiento que #crimenesSpikeContenedor arriba, para

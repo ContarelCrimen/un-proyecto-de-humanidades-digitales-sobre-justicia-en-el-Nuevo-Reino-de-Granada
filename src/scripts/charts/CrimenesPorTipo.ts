@@ -237,7 +237,8 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       panelDefinicion.appendChild(cuerpo);
       const botonVerCasos = document.createElement('button');
       botonVerCasos.type = 'button';
-      botonVerCasos.className = 'btn-mapa-ver-casos btn-mapa--visible crimenes-tipo-boton-ver-casos';
+      botonVerCasos.className =
+        'ui-btn ui-btn--primario ui-btn--sm btn-mapa-ver-casos btn-mapa--visible crimenes-tipo-boton-ver-casos';
       botonVerCasos.textContent = `Ver casos: ${delito.nombre}`;
       botonVerCasos.addEventListener('click', (evento) => {
         evento.stopPropagation();
@@ -311,7 +312,7 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       texto.textContent = `Subcrimen: ${foco.sub} (dentro de ${foco.crimen})`;
       const volver = document.createElement('button');
       volver.type = 'button';
-      volver.className = 'crimenes-tipo-fijados-limpiar';
+      volver.className = 'ui-btn ui-btn--fantasma ui-btn--sm';
       volver.textContent = 'Volver a la comparación';
       volver.addEventListener('click', () => {
         subcrimenEnSpike = null;
@@ -419,9 +420,9 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
     seleccion.forEach((serie) => {
       const chip = document.createElement('button');
       chip.type = 'button';
-      chip.className = 'crimenes-tipo-leyenda-chip';
+      chip.className = 'ui-chip';
       const punto = document.createElement('span');
-      punto.className = 'crimenes-tipo-leyenda-punto';
+      punto.className = 'ui-chip-punto';
       punto.style.background = colorDe.get(serie.nombre)!;
       chip.append(
         punto,
@@ -455,12 +456,15 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
     }
     if (seleccion.length > 1) {
       const selector = document.createElement('div');
-      selector.className = 'crimenes-tipo-donut-selector';
+      selector.className = 'ui-tabs ui-tabs--sm crimenes-tipo-donut-selector';
+      selector.setAttribute('role', 'tablist');
+      selector.setAttribute('aria-label', 'Crimen del gráfico de subcrímenes');
       seleccion.forEach((nombre) => {
         const boton = document.createElement('button');
         boton.type = 'button';
-        boton.className = 'crimenes-tipo-donut-tab';
-        boton.classList.toggle('crimenes-tipo-donut-tab--activo', nombre === crimenActivoDonut);
+        boton.className = 'ui-tab';
+        boton.setAttribute('role', 'tab');
+        boton.setAttribute('aria-selected', String(nombre === crimenActivoDonut));
         boton.textContent = nombre;
         boton.addEventListener('click', () => {
           crimenActivoDonut = nombre;
@@ -562,9 +566,9 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
     leyenda.className = 'crimenes-tipo-leyenda';
     datos.forEach((d) => {
       const chip = document.createElement('div');
-      chip.className = 'crimenes-tipo-leyenda-chip crimenes-tipo-leyenda-chip--estatico';
+      chip.className = 'ui-chip ui-chip--estatico';
       const punto = document.createElement('span');
-      punto.className = 'crimenes-tipo-leyenda-punto';
+      punto.className = 'ui-chip-punto';
       punto.style.background = colorDe.get(d.nombre)!;
       chip.append(
         punto,
@@ -615,24 +619,29 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       contenedorFijados.classList.toggle('crimenes-tipo-fijados--oculto', !haySeleccion);
       if (!haySeleccion) return;
       const etiqueta = document.createElement('span');
-      etiqueta.className = 'crimenes-tipo-fijados-etiqueta';
+      etiqueta.className = 'ui-field-label';
       etiqueta.textContent = 'Fijados para comparar:';
       contenedorFijados.appendChild(etiqueta);
       [...crimenesSeleccionados].forEach((nombre) => {
         const chip = document.createElement('button');
         chip.type = 'button';
-        chip.className = 'crimenes-tipo-fijados-chip';
+        chip.className = 'ui-chip ui-chip--removible';
         chip.title = `Quitar "${nombre}" de la comparación`;
+        chip.setAttribute('aria-label', `Quitar "${nombre}" de la comparación`);
+        const texto = document.createElement('span');
+        texto.className = 'ui-chip-texto';
+        texto.textContent = nombre;
         const quitar = document.createElement('span');
-        quitar.className = 'crimenes-tipo-fijados-chip-quitar';
+        quitar.className = 'ui-chip-quitar';
+        quitar.setAttribute('aria-hidden', 'true');
         quitar.textContent = '×';
-        chip.append(document.createTextNode(`${nombre} `), quitar);
+        chip.append(texto, quitar);
         chip.addEventListener('click', () => alternarSeleccion(nombre));
         contenedorFijados.appendChild(chip);
       });
       const botonLimpiar = document.createElement('button');
       botonLimpiar.type = 'button';
-      botonLimpiar.className = 'crimenes-tipo-fijados-limpiar';
+      botonLimpiar.className = 'ui-btn ui-btn--fantasma ui-btn--sm crimenes-tipo-fijados-limpiar';
       botonLimpiar.textContent = 'Quitar selección';
       botonLimpiar.addEventListener('click', limpiarSeleccion);
       contenedorFijados.appendChild(botonLimpiar);

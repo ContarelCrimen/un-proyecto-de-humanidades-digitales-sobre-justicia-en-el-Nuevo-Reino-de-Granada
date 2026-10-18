@@ -10,7 +10,7 @@ interface FiltrosTabla {
 export function crearBotonVerCasos() {
   const boton = document.createElement('button');
   boton.type = 'button';
-  boton.className = 'btn-ver-casos-generico';
+  boton.className = 'ui-btn ui-btn--primario ui-btn--sm btn-ver-casos-generico';
   let handlerActivo: (() => void) | null = null;
   boton.addEventListener('click', () => {
     if (handlerActivo) handlerActivo();

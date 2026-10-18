@@ -357,7 +357,6 @@ const preguntas = [
       pestanas.forEach((otra) => {
         const es = otra === p;
         otra.setAttribute('aria-selected', String(es));
-        otra.tabIndex = es ? 0 : -1;
       });
       p.focus();
     };

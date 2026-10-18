@@ -145,10 +145,12 @@ export async function crearLineaTiempoCasos(containerId: string) {
   const wrapper = document.createElement('div');
   wrapper.className = 'linea-tiempo-casos-wrapper';
   const selectorVista = document.createElement('div');
-  selectorVista.className = 'linea-tiempo-casos-selector-vista';
+  selectorVista.className = 'ui-tabs ui-tabs--sm linea-tiempo-casos-selector-vista';
+  selectorVista.setAttribute('role', 'tablist');
+  selectorVista.setAttribute('aria-label', 'Vista de la línea de tiempo');
   selectorVista.innerHTML = `
-    <button type="button" class="linea-tiempo-casos-selector-vista__boton linea-tiempo-casos-selector-vista__boton--activo" data-vista="linea">Vista en línea</button>
-    <button type="button" class="linea-tiempo-casos-selector-vista__boton" data-vista="rueda">Vista en detalle</button>
+    <button type="button" class="ui-tab" role="tab" aria-selected="true" data-vista="linea">Vista en línea</button>
+    <button type="button" class="ui-tab" role="tab" aria-selected="false" data-vista="rueda">Vista en detalle</button>
   `;
   wrapper.appendChild(selectorVista);
   const botonVistaLinea = selectorVista.querySelector<HTMLButtonElement>('[data-vista="linea"]')!;
@@ -175,8 +177,8 @@ export async function crearLineaTiempoCasos(containerId: string) {
   function mostrarVistaTimeline(vista: 'linea' | 'rueda') {
     cuerpo.classList.toggle('linea-tiempo-casos-cuerpo--oculto', vista !== 'rueda');
     contenedorLinea.classList.toggle('linea-tiempo-casos-contenedor-linea--oculto', vista !== 'linea');
-    botonVistaLinea.classList.toggle('linea-tiempo-casos-selector-vista__boton--activo', vista === 'linea');
-    botonVistaRueda.classList.toggle('linea-tiempo-casos-selector-vista__boton--activo', vista === 'rueda');
+    botonVistaLinea.setAttribute('aria-selected', String(vista === 'linea'));
+    botonVistaRueda.setAttribute('aria-selected', String(vista === 'rueda'));
     if (elTitulo) elTitulo.textContent = TEXTOS_VISTA[vista].titulo;
     if (elSubtitulo) elSubtitulo.textContent = TEXTOS_VISTA[vista].subtitulo;
     leyenda.classList.toggle('linea-tiempo-casos-leyenda--linea', vista === 'linea');
@@ -394,14 +396,14 @@ export async function crearLineaTiempoCasos(containerId: string) {
   const panelCaso = document.createElement('div');
   panelCaso.className = 'linea-tiempo-casos-panel-caso';
   panelCaso.innerHTML = `
-    <button type="button" class="linea-tiempo-casos-panel-caso__cerrar" aria-label="Cerrar">×</button>
-    <button type="button" class="linea-tiempo-casos-panel-caso__volver" hidden>← Volver al año</button>
+    <button type="button" class="ui-btn ui-btn--fantasma ui-btn--icono ui-btn--sm linea-tiempo-casos-panel-caso__cerrar" aria-label="Cerrar"><span aria-hidden="true">×</span></button>
+    <button type="button" class="ui-btn ui-btn--fantasma ui-btn--sm linea-tiempo-casos-panel-caso__volver" hidden>← Volver al año</button>
     <div class="linea-tiempo-casos-panel-caso__fecha"></div>
     <div class="linea-tiempo-casos-panel-caso__lugar"></div>
     <p class="linea-tiempo-casos-panel-caso__descripcion"></p>
     <ul class="linea-tiempo-casos-panel-caso__lista"></ul>
-    <button type="button" class="linea-tiempo-casos-panel-caso__boton-mapa">Ver en el mapa</button>
-    <button type="button" class="linea-tiempo-casos-panel-caso__boton-caso">Ver caso</button>
+    <button type="button" class="ui-btn ui-btn--primario linea-tiempo-casos-panel-caso__boton-mapa">Ver en el mapa</button>
+    <button type="button" class="ui-btn linea-tiempo-casos-panel-caso__boton-caso">Ver caso</button>
   `;
   cuerpo.appendChild(panelCaso);
   const elFecha = panelCaso.querySelector<HTMLElement>('.linea-tiempo-casos-panel-caso__fecha')!;
@@ -657,7 +659,7 @@ export async function crearLineaTiempoCasos(containerId: string) {
     contenedorLinea.appendChild(svg.node()!);
     const botonReproducir = document.createElement('button');
     botonReproducir.type = 'button';
-    botonReproducir.className = 'linea-tiempo-casos-linea-reproducir';
+    botonReproducir.className = 'ui-btn ui-btn--sm linea-tiempo-casos-linea-reproducir';
     botonReproducir.textContent = '▶ Reproducir';
     contenedorLinea.appendChild(botonReproducir);
     const duracionMs = Math.min(9000, Math.max(2500, spanAnios * 20));

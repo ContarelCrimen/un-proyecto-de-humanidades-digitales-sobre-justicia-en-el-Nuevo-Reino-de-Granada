@@ -10,39 +10,7 @@
 // mostrarVistaTimeline en el .ts. Ambas vistas se recalculan siempre en
 // cada dibujar(); esto solo cambia cuál se ve.
 .linea-tiempo-casos-selector-vista {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.linea-tiempo-casos-selector-vista__boton {
-  padding: 6px 14px;
-  border: 1px solid var(--mapa-borde);
-  border-radius: 999px;
-  background: var(--mapa-tarjeta-fondo);
-  color: var(--mapa-tinta-oscura);
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-bold);
-  cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
-}
-
-.linea-tiempo-casos-selector-vista__boton:hover {
-  background: var(--mapa-panel);
-}
-
-.linea-tiempo-casos-selector-vista__boton--activo {
-  background: var(--mapa-acento-linea);
-  border-color: var(--mapa-acento-linea);
-  color: #fff;
-}
-
-.linea-tiempo-casos-selector-vista__boton--activo:hover {
-  background: var(--mapa-acento-hover);
-  border-color: var(--mapa-acento-hover);
+  margin-bottom: var(--space-3);
 }
 
 .linea-tiempo-casos-cuerpo {
@@ -102,29 +70,6 @@
   position: absolute;
   top: 0;
   right: 0;
-  padding: 6px 14px;
-  border: 1px solid var(--mapa-borde);
-  border-radius: 999px;
-  background: var(--mapa-tarjeta-fondo);
-  color: var(--mapa-tinta-oscura);
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-bold);
-  cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
-}
-
-.linea-tiempo-casos-linea-reproducir:hover:not(:disabled) {
-  background: var(--mapa-acento-hover);
-  border-color: var(--mapa-acento-hover);
-  color: #fff;
-}
-
-.linea-tiempo-casos-linea-reproducir:disabled {
-  opacity: 0.7;
-  cursor: default;
 }
 
 .linea-tiempo-casos-columna-izq {
@@ -224,16 +169,15 @@
 }
 
 .linea-tiempo-casos-anio--activo .linea-tiempo-casos-anio-numero {
-  background: var(--mapa-acento-linea);
-  border-color: var(--mapa-acento-linea);
-  color: #fff;
+  background: var(--state-selected-bg);
+  border-color: var(--state-selected-border);
+  color: var(--state-selected-fg);
   font-size: var(--fs-ui-md);
   padding: 7px 16px;
 }
 
 .linea-tiempo-casos-anio--activo .linea-tiempo-casos-anio-numero:hover {
-  background: var(--mapa-acento-hover);
-  border-color: var(--mapa-acento-hover);
+  background: var(--state-selected-bg);
 }
 
 // Total de casos de ese año, arriba de los puntos — no es interactivo, solo
@@ -337,9 +281,9 @@
   overflow: hidden;
   box-sizing: border-box;
   align-self: stretch;
-  background: var(--mapa-tarjeta-fondo);
-  border: 1px solid var(--mapa-borde);
-  border-radius: 6px;
+  background: var(--surface-sunken);
+  border: var(--border-width) solid var(--surface-border);
+  border-radius: var(--radius-panel);
   padding: 0;
   font-family: var(--font-ui);
   text-align: left;
@@ -361,37 +305,17 @@
 
 .linea-tiempo-casos-panel-caso__cerrar {
   position: absolute;
-  top: 10px;
-  right: 12px;
-  border: none;
-  background: none;
-  font-size: var(--fs-ui-lg);
-  line-height: var(--lh-tight);
-  color: var(--mapa-borde);
-  cursor: pointer;
+  top: var(--space-2);
+  right: var(--space-2);
 }
 
 // "← Volver al año": solo visible cuando el caso se abrió desde la lista de
 // un año (botonVolver.hidden en el .ts).
 .linea-tiempo-casos-panel-caso__volver {
-  display: block;
-  margin: 0 0 8px;
-  padding: 0;
-  border: none;
-  background: none;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-bold);
-  color: var(--mapa-borde);
-  cursor: pointer;
+  margin: 0 0 var(--space-2);
 
-  // Sin esto, el display:block de arriba pisa el atributo [hidden].
   &[hidden] {
     display: none;
-  }
-
-  &:hover {
-    color: var(--mapa-acento-linea);
   }
 }
 
@@ -482,47 +406,13 @@
   border-radius: 2px;
 }
 
-.linea-tiempo-casos-panel-caso__boton-mapa {
+.linea-tiempo-casos-panel-caso__boton-mapa,
+.linea-tiempo-casos-panel-caso__boton-caso {
   width: 100%;
-  padding: 9px 14px;
-  border: 1px solid var(--mapa-borde);
-  border-radius: 4px;
-  background: var(--mapa-acento-linea);
-  color: #fff;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-bold);
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.linea-tiempo-casos-panel-caso__boton-mapa:hover:not(:disabled) {
-  background: var(--mapa-acento-hover);
-}
-
-.linea-tiempo-casos-panel-caso__boton-mapa:disabled {
-  background: var(--mapa-tierra);
-  color: var(--mapa-borde);
-  cursor: not-allowed;
 }
 
 .linea-tiempo-casos-panel-caso__boton-caso {
-  width: 100%;
-  margin-top: 8px;
-  padding: 9px 14px;
-  border: 1px solid var(--mapa-borde);
-  border-radius: 4px;
-  background: transparent;
-  color: var(--mapa-tinta-oscura);
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-bold);
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.linea-tiempo-casos-panel-caso__boton-caso:hover {
-  background: var(--mapa-panel);
+  margin-top: var(--space-2);
 }
 
 // Los nombres de tipo de proceso son largos ("No es un proceso penal con
