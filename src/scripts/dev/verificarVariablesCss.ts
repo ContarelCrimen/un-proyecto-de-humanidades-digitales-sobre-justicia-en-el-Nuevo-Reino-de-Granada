@@ -26,6 +26,8 @@ export const VARIABLES_REQUERIDAS: readonly string[] = [
   '--mapa-punto-color',
   '--accent',
   '--ink',
+  '--on-panel',
+  '--on-surface',
 ];
 export function verificarVariablesCss(): void {
   const estilos = getComputedStyle(document.documentElement);

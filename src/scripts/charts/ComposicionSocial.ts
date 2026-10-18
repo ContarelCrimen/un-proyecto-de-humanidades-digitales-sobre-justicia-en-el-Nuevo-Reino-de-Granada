@@ -249,9 +249,13 @@ export async function crearComposicionSocial(modo: Modo) {
     const cabecera = document.createElement('div');
     cabecera.className = 'cs-rol-cabecera';
     cabecera.innerHTML = `
-      <h3 class="cs-rol-titulo"><i></i>${config.tituloRol(g)}</h3>
-      <div class="cs-leyenda-cuadros">
-        ${ATRIBUTOS.map((a) => `<span><i style="background:${(PALETA_ATRIBUTO as Record<string, string>)[a]}"></i>${a}</span>`).join('')}
+      <header class="page-header page-header--subseccion">
+        <div class="page-header-texto">
+          <h3 class="page-header-titulo"><span class="page-header-punto" style="--page-header-punto: ${g.color}" aria-hidden="true"></span>${config.tituloRol(g)}</h3>
+        </div>
+      </header>
+      <div class="ui-chip-group cs-leyenda">
+        ${ATRIBUTOS.map((a) => `<span class="ui-chip ui-chip--estatico" style="--chip-dot: ${(PALETA_ATRIBUTO as Record<string, string>)[a]}"><span class="ui-chip-punto" aria-hidden="true"></span><span class="ui-chip-texto">${a}</span></span>`).join('')}
       </div>
     `;
     panel.appendChild(cabecera);
@@ -379,7 +383,7 @@ export async function crearComposicionSocial(modo: Modo) {
       dibujarSunburst('csDonaGrafico', filasFiltradas, estado.crimen, opcionesDona);
     }
     const subtituloRedBase =
-      'Puedes observar cuáles son los crímenes que más suceden en un mismo caso, puedes hacer clic en los nodos para ver su conexión.';
+      'Puedes observar cuáles son los crímenes que más suceden en un mismo caso. Puedes hacer clic en los nodos para ver su conexión.';
     redSubtitulo.textContent = !hayGrupos
       ? subtituloRedBase
       : `Con ${elegidos.map((g) => g.etiqueta).join(' y ')} elegido${elegidos.length > 1 ? 's' : ''}, el tamaño de cada nodo muestra en cuántos de sus casos aparece el delito — haz clic para filtrar y arrastra para mover`;

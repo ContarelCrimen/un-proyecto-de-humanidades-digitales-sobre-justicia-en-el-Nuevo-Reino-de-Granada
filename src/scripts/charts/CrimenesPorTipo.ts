@@ -60,6 +60,24 @@ interface ContenedoresCrimenesPorTipo {
   spikeId: string;
   donutId: string;
 }
+function luminancia(color: string): number {
+  const { r, g, b } = d3.rgb(color);
+  const canal = (v: number) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
+}
+function contraste(a: string, b: string): number {
+  const [claro, oscuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (claro + 0.05) / (oscuro + 0.05);
+}
+function textoSobre(fondo: string): string {
+  const estilos = getComputedStyle(document.documentElement);
+  const claro = estilos.getPropertyValue('--on-panel').trim();
+  const oscuro = estilos.getPropertyValue('--on-surface').trim();
+  return contraste(fondo, claro) >= contraste(fondo, oscuro) ? 'var(--on-panel)' : 'var(--on-surface)';
+}
 export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
   const contenedorBarras = document.getElementById(ids.barrasId);
   const contenedorSpike = document.getElementById(ids.spikeId);
@@ -217,7 +235,9 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       const barra = document.createElement('div');
       barra.className = 'crimenes-tipo-barra';
       barra.style.width = `${anchoPct}%`;
-      barra.style.background = colorDeCrimen(codigoPorNombreCrimen.get(delito.nombre));
+      const fondoBarra = colorDeCrimen(codigoPorNombreCrimen.get(delito.nombre));
+      barra.style.background = fondoBarra;
+      barra.style.color = textoSobre(fondoBarra);
       const nombreEl = document.createElement('div');
       nombreEl.className = 'crimenes-tipo-nombre';
       const marca = document.createElement('span');

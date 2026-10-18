@@ -119,11 +119,12 @@ export function dibujarLineaEvolucion({
   });
   wrapper.appendChild(svg.node()!);
   const leyenda = document.createElement('div');
-  leyenda.className = 'cs-leyenda-lineas';
+  leyenda.className = 'ui-chip-group cs-leyenda';
   grupos.forEach((gr) => {
     const item = document.createElement('span');
-    item.className = 'cs-leyenda-linea';
-    item.innerHTML = `<i style="background:${gr.color}"></i>${gr.etiqueta}`;
+    item.className = 'ui-chip ui-chip--estatico';
+    item.style.setProperty('--chip-dot', gr.color);
+    item.innerHTML = `<span class="ui-chip-punto" aria-hidden="true"></span><span class="ui-chip-texto">${gr.etiqueta}</span>`;
     leyenda.appendChild(item);
   });
   contenedor.appendChild(leyenda);

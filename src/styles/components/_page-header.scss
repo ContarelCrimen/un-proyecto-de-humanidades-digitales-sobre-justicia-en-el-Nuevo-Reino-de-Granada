@@ -27,18 +27,19 @@
 .page-header-subtitulo {
   max-width: none;
   margin: 0;
-  font-family: var(--font-ui);
   line-height: var(--lh-normal);
   color: var(--ui-fg-acento);
 }
 
 .page-header-ceja {
+  font-family: var(--font-ui);
   font-size: var(--fs-ui-xs);
   text-transform: uppercase;
 }
 
 .page-header-subtitulo {
-  font-size: var(--fs-ui-sm);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
 }
 
 .page-header-titulo {
@@ -50,6 +51,17 @@
   color: var(--ui-titulo);
   text-align: left;
   border: 0;
+}
+
+.page-header-punto {
+  display: inline-block;
+  flex: none;
+  width: 0.6em;
+  height: 0.6em;
+  margin-right: var(--space-2);
+  vertical-align: 0.05em;
+  border-radius: var(--radius-circle);
+  background: var(--page-header-punto, var(--dorado));
 }
 
 .page-header-titulo--sin-mayusculas {
@@ -89,8 +101,6 @@
   }
 
   .page-header-subtitulo {
-    font-family: var(--font-body);
-    font-size: var(--fs-sm);
     color: var(--ui-fg-suave);
   }
 }

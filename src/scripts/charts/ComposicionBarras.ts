@@ -221,10 +221,12 @@ export function dibujarBarras({
   });
   wrapper.appendChild(svg.node()!);
   const leyenda = document.createElement('div');
-  leyenda.className = 'cs-leyenda-cuadros';
+  leyenda.className = 'ui-chip-group cs-leyenda';
   [ladoIzq, ladoDer].forEach((lado) => {
     const item = document.createElement('span');
-    item.innerHTML = `<i style="background:${lado.color}"></i>${lado.etiqueta}`;
+    item.className = 'ui-chip ui-chip--estatico';
+    item.style.setProperty('--chip-dot', lado.color);
+    item.innerHTML = `<span class="ui-chip-punto" aria-hidden="true"></span><span class="ui-chip-texto">${lado.etiqueta}</span>`;
     leyenda.appendChild(item);
   });
   contenedor.appendChild(leyenda);
