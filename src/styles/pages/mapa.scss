@@ -99,13 +99,13 @@
 
 .mapa-crimenes-layout--con-spike .mapa-crimenes-col-izquierda {
   flex: 1 1 380px;
-  min-width: 320px;
+  min-width: min(320px, 100%);
   width: auto;
 }
 
 .mapa-crimenes-col-derecha {
   flex: 1 1 380px;
-  min-width: 320px;
+  min-width: min(320px, 100%);
   max-width: 620px;
   opacity: 1;
   overflow: hidden;
@@ -238,12 +238,12 @@
 
 .mapa-lugar-layout--con-spike .mapa-lugar-col-mapa {
   flex: 1 1 460px;
-  min-width: 400px;
+  min-width: min(400px, 100%);
 }
 
 .mapa-lugar-col-spike {
   flex: 1 1 460px;
-  min-width: 400px;
+  min-width: min(400px, 100%);
   max-width: 620px;
   opacity: 1;
   overflow: hidden;
@@ -271,7 +271,7 @@
   padding: 16px 18px;
   box-shadow: 0 2px 6px rgba(58, 45, 26, 0.1);
   flex: 1 1 460px;
-  min-width: 400px;
+  min-width: min(400px, 100%);
   box-sizing: border-box;
 }
 
@@ -283,7 +283,7 @@
 
 .mapa-tarjeta--compacta {
   flex: 1 1 380px;
-  min-width: 320px;
+  min-width: min(320px, 100%);
 }
 
 .mapa-tarjeta-encabezado {

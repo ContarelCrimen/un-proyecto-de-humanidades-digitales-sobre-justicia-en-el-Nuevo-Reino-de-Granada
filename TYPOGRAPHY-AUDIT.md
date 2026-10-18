@@ -292,7 +292,10 @@ tiempo) usan hasta 1700px centradas, debajo del encabezado.
 
 ### Pendientes que ya existían (para después)
 
-1. **Scroll horizontal del mapa en móvil:** en tiempo a 390px el documento mide 417px de ancho
-   (antes 616px). El de about se corrigió al hacer que el selector de vistas se reacomode en móvil.
+1. **Resuelto: scroll horizontal del mapa en móvil.** En tiempo a 390px el documento medía 417px
+   por el `min-width: 400px` de `.mapa-tarjeta` y de las columnas del layout con spike (y
+   `320px` en otras tarjetas del tablero). Ahora son `min(400px, 100%)` y `min(320px, 100%)`. Las
+   tres vistas de tiempo, y el estado con un lugar fijado, miden 390px a 390px y no cambian a
+   1440px. El de about se corrigió antes, al hacer que el selector de vistas se reacomode en móvil.
 2. **Título del proyecto en el nav en 4 líneas en móvil:** el `<br>` fuerza dos segmentos, y cada
    uno vuelve a partirse a 390px.
