@@ -12,9 +12,9 @@
   border: 1px solid var(--accent);
   background: var(--accent);
   color: #fff;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   font-family: var(--font-ui);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   cursor: pointer;
 }
 
@@ -43,7 +43,7 @@
   width: fit-content;
   margin: 22px auto 0;
   padding: 13px 26px;
-  font-size: var(--fs-md);
+  font-size: var(--fs-ui-md);
 }
 
 .btn-descargar-datos--grande svg {

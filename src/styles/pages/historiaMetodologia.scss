@@ -86,7 +86,7 @@
 .historia-slide-texto {
   margin: 0;
   max-width: 560px;
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
   line-height: var(--lh-relaxed);
   color: var(--ink, #1a1410);
   text-align: left;
@@ -139,7 +139,7 @@
   border-radius: 50%;
   background: #fff;
   color: var(--accent);
-  font-size: var(--fs-lg);
+  font-size: var(--fs-ui-lg);
   line-height: var(--lh-tight);
   cursor: pointer;
   transition: all 0.15s;

@@ -48,8 +48,8 @@
   border-radius: 999px;
   padding: 12px 18px;
   font-family: var(--font-ui);
-  font-size: var(--fs-sm);
-  font-weight: 600;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-semibold);
   line-height: var(--lh-snug);
   color: #fff;
   background: var(--mapa-acento-linea, #ac8c9b);
@@ -119,8 +119,8 @@
   background: var(--mapa-acento-linea, #ac8c9b);
   color: #fff;
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
-  font-weight: 700;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   line-height: var(--lh-snug);
 }
 
@@ -131,7 +131,7 @@
   // al padding izquierdo.
   max-width: 640px;
   margin: 0 auto;
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
   line-height: var(--lh-relaxed);
   color: var(--ink, #1a1410);
   white-space: pre-line;

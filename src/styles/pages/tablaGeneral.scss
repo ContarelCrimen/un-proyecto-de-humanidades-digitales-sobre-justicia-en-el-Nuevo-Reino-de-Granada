@@ -10,44 +10,14 @@ $tg-fila-alterna: #ebe2c9;
 $tg-encabezado-tabla: #e2d5b0;
 
 main.container.tg-pagina {
-  width: calc(100% - 2rem);
-  max-width: 1200px;
-  padding: 2.5rem 0 5rem;
+  --espacio-bloques: 1.5rem;
   align-items: stretch;
   text-align: left;
-  gap: 1.5rem;
-}
-
-// ── Encabezado ───────────────────────────────────────────
-.tg-encabezado {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 0.75rem 2rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid transparent;
-  border-image: linear-gradient(to right, var(--dorado), transparent) 1;
-}
-
-.tg-titulo {
-  margin: 0;
-  font-size: var(--fs-title);
-  line-height: var(--lh-tight);
-  color: var(--crema);
-}
-
-.tg-subtitulo {
-  max-width: none;
-  margin: 0.6rem 0 0;
-  font-family: var(--font-ui);
-  font-size: var(--fs-xs);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--dorado);
+  gap: var(--espacio-bloques);
 }
 
 .tg-conteo {
+  font-family: var(--font-ui);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -57,13 +27,13 @@ main.container.tg-pagina {
 }
 
 .tg-conteo-numero {
-  font-size: var(--fs-xl);
-  font-weight: 700;
+  font-size: var(--fs-ui-lg);
+  font-weight: var(--fw-bold);
   color: var(--crema);
 }
 
 .tg-conteo-etiqueta {
-  font-size: var(--fs-md);
+  font-size: var(--fs-ui-md);
   color: var(--dorado);
 }
 
@@ -103,8 +73,7 @@ main.container.tg-pagina {
 
 .tg-etiqueta {
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
-  letter-spacing: 0.14em;
+  font-size: var(--fs-ui-xs);
   text-transform: uppercase;
   color: var(--dorado);
 }
@@ -154,8 +123,8 @@ main.container.tg-pagina {
   align-items: center;
   gap: 0.6rem;
   font-family: var(--font-ui);
-  font-size: var(--fs-md);
-  font-weight: 600;
+  font-size: var(--fs-ui-md);
+  font-weight: var(--fw-semibold);
   color: var(--crema);
   cursor: pointer;
 
@@ -211,8 +180,8 @@ main.container.tg-pagina {
   border: 1px solid var(--dorado);
   border-radius: 4px;
   font-family: var(--font-ui);
-  font-size: var(--fs-md);
-  font-weight: 700;
+  font-size: var(--fs-ui-md);
+  font-weight: var(--fw-bold);
   cursor: pointer;
   transition: background 0.15s;
 
@@ -238,8 +207,9 @@ main.container.tg-pagina {
 }
 
 .tg-periodo-valor {
-  font-size: var(--fs-md);
-  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-md);
+  font-weight: var(--fw-bold);
   color: var(--crema);
 }
 
@@ -360,7 +330,7 @@ main.container.tg-pagina {
   top: 0;
   transform: translateX(-50%);
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-ui-xs);
   color: color-mix(in srgb, var(--dorado) 80%, transparent);
 }
 
@@ -375,13 +345,13 @@ main.container.tg-pagina {
 .tg-activos-titulo {
   margin-right: 0.25rem;
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
-  letter-spacing: 0.14em;
+  font-size: var(--fs-ui-xs);
   text-transform: uppercase;
   color: color-mix(in srgb, var(--dorado) 75%, transparent);
 }
 
 .tg-chip {
+  font-family: var(--font-ui);
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
@@ -391,8 +361,8 @@ main.container.tg-pagina {
   border: 1px solid rgba(209, 166, 119, 0.5);
   border-radius: 999px;
   color: var(--crema);
-  font-size: var(--fs-sm);
-  font-weight: 600;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-semibold);
 }
 
 .tg-chip-texto {
@@ -412,8 +382,8 @@ main.container.tg-pagina {
   border: 0;
   border-radius: 50%;
   color: inherit;
-  font-size: var(--fs-md);
-  line-height: 1;
+  font-size: var(--fs-ui-md);
+  line-height: var(--lh-tight);
   cursor: pointer;
 
   &:hover,
@@ -428,7 +398,7 @@ main.container.tg-pagina {
   background: none;
   border: 0;
   color: var(--dorado);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   text-decoration: underline;
   cursor: pointer;
 

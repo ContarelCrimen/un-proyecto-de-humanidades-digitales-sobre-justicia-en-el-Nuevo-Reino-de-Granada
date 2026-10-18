@@ -3,6 +3,7 @@
 // las dos páginas de esta carpeta (index.astro y otrosAgentes.astro), que solo
 // cambian el modo.
 import type { Modo } from '../../scripts/charts/ComposicionDatos';
+import PageHeader from '../../components/PageHeader.astro';
 
 // Hojas que siguen usando los sunbursts reutilizados (tooltip, botón "Ver
 // casos", envoltorio y etiquetas) más la propia del layout.
@@ -33,26 +34,21 @@ const pestañas = [
 ---
 
 <main class="container cs-pagina" data-modo={modo}>
-  <header class="cs-encabezado">
-    <p class="cs-eyebrow">Agentes registrados</p>
-    <h1 class="cs-titulo">{titulo}</h1>
+  <PageHeader ceja="Agentes registrados" titulo={titulo} subtitulo={pista} />
 
-    <nav class="cs-pestañas" aria-label="Tipo de agente">
-      {
-        pestañas.map((p) => (
-          <a
-            href={p.href}
-            class={`cs-pestaña${p.modo === modo ? ' cs-pestaña--activa' : ''}`}
-            aria-current={p.modo === modo ? 'page' : undefined}
-          >
-            {p.texto}
-          </a>
-        ))
-      }
-    </nav>
-
-    <p class="cs-pista">{pista}</p>
-  </header>
+  <nav class="cs-pestañas" aria-label="Tipo de agente">
+    {
+      pestañas.map((p) => (
+        <a
+          href={p.href}
+          class={`cs-pestaña${p.modo === modo ? ' cs-pestaña--activa' : ''}`}
+          aria-current={p.modo === modo ? 'page' : undefined}
+        >
+          {p.texto}
+        </a>
+      ))
+    }
+  </nav>
 
   <div id="csFiltros" class="cs-filtros"></div>
 

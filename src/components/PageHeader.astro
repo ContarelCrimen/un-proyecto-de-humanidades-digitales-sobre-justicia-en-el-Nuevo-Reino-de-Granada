@@ -1,0 +1,116 @@
+---
+interface Props {
+  titulo?: string;
+  ceja?: string;
+  subtitulo?: string;
+  idTitulo?: string;
+  idCeja?: string;
+  idSubtitulo?: string;
+  sinMayusculas?: boolean;
+  oculto?: boolean;
+}
+
+const {
+  titulo,
+  ceja,
+  subtitulo,
+  idTitulo,
+  idCeja,
+  idSubtitulo,
+  sinMayusculas = false,
+  oculto = false,
+} = Astro.props;
+const conExtra = Astro.slots.has('extra');
+---
+
+<header class="page-header" hidden={oculto}>
+  <div class="page-header-texto">
+    {
+      (ceja || idCeja) && (
+        <p class="page-header-ceja" id={idCeja}>
+          {ceja}
+        </p>
+      )
+    }
+    <h1
+      class:list={['page-header-titulo', { 'page-header-titulo--sin-mayusculas': sinMayusculas }]}
+      id={idTitulo}
+    >
+      {titulo}
+    </h1>
+    {
+      (subtitulo || idSubtitulo) && (
+        <p class="page-header-subtitulo" id={idSubtitulo}>
+          {subtitulo}
+        </p>
+      )
+    }
+  </div>
+  {
+    conExtra && (
+      <div class="page-header-extra">
+        <slot name="extra" />
+      </div>
+    )
+  }
+</header>
+
+<style>
+  .page-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem 2rem;
+    align-self: center;
+    width: 100%;
+    max-width: var(--ancho-pagina);
+    margin: 3rem auto calc(2rem - var(--espacio-bloques, 0px));
+    text-align: left;
+  }
+
+  .page-header[hidden] {
+    display: none;
+  }
+
+  .page-header-texto {
+    display: flex;
+    flex: 1 1 32rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .page-header-ceja,
+  .page-header-subtitulo {
+    max-width: none;
+    margin: 0;
+    font-family: var(--font-ui);
+    line-height: var(--lh-normal);
+    color: var(--dorado);
+  }
+
+  .page-header-ceja {
+    font-size: var(--fs-ui-xs);
+    text-transform: uppercase;
+  }
+
+  .page-header-subtitulo {
+    font-size: var(--fs-ui-sm);
+  }
+
+  .page-header-titulo {
+    margin: 0;
+    font-size: var(--fs-title);
+    line-height: var(--lh-snug);
+    color: var(--crema);
+  }
+
+  .page-header-titulo--sin-mayusculas {
+    text-transform: none;
+  }
+
+  .page-header-extra {
+    flex: 0 0 auto;
+  }
+</style>

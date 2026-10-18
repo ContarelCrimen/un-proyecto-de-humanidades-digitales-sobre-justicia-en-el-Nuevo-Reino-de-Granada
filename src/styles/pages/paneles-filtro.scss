@@ -19,15 +19,16 @@
   border-radius: 10px;
   padding: 14px 20px;
   box-shadow: 0 2px 6px rgba(58, 45, 26, 0.1);
-  font-family: var(--mapa-font);
+  font-family: var(--font-ui);
   position: sticky;
   top: 75px;
   z-index: v.$z-panel-filtros;
 }
 
 .panel-filtros-titulo {
-  font-size: var(--fs-md);
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-regular);
   color: var(--mapa-tinta-oscura);
   align-self: center;
   flex: 0 0 auto;
@@ -37,14 +38,13 @@
 }
 
 .filtro-label {
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-ui-xs);
   color: var(--mapa-borde);
-  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
 .filtro-label--chico {
-  font-size: var(--fs-3xs);
+  font-size: var(--fs-ui-xs);
 }
 
 .filtro-wrap {
@@ -85,7 +85,7 @@
   border-radius: 4px;
   background: var(--mapa-fondo-pergamino);
   color: var(--mapa-tinta-oscura);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   cursor: pointer;
   font-family: var(--font-ui);
 }
@@ -118,7 +118,7 @@
 
 .filtro-combo-item {
   padding: 6px 10px;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   cursor: pointer;
 }
 
@@ -127,7 +127,7 @@
 }
 
 .filtro-combo-nota {
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-ui-xs);
   font-style: italic;
   color: var(--mapa-borde);
   opacity: 0.85;
@@ -144,13 +144,13 @@
   border-radius: 4px;
   background: var(--mapa-fondo-pergamino);
   color: var(--mapa-tinta-oscura);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   font-family: var(--font-ui);
 }
 
 .filtro-select--compacto {
   padding: 5px 8px;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
 }
 
 .filtro-aviso-sin-datos {
@@ -162,8 +162,8 @@
   border-radius: 4px;
   background: #f7dede;
   color: #7a1f1f;
-  font-family: var(--mapa-font);
-  font-size: var(--fs-xs);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
 }
 
 .filtro-aviso-sin-datos--visible {

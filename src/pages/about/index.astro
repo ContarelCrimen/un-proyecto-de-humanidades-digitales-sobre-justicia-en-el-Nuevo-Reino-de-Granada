@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
 import '../../styles/pages/botones.scss';
 import '../../styles/pages/mapa.scss';
 import '../../styles/pages/linaje.scss';
@@ -12,7 +13,7 @@ import '../../styles/pages/preguntasTarjetas.scss';
 
 <BaseLayout title="Sobre el proyecto" active="about">
   <main class="container linaje-main-ancho">
-    <h1 class="section-mainTitle">Sobre el proyecto</h1>
+    <PageHeader titulo="Sobre el proyecto" />
 
     <div class="mapa-selector-vista">
       <div class="mapa-selector-vista-grupo">

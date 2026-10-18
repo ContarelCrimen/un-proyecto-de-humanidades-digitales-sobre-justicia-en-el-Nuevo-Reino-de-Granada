@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
 
 // baseDeDatosMain.js importaba style.css y caso.css. Aquí caso.css es la hoja
 // principal: define .caso-barra, .back-link, .page, .state-msg y todo el
@@ -28,6 +29,9 @@ const base = import.meta.env.BASE_URL;
   </header>
 
   <main class="page" id="main-content">
+    <PageHeader idCeja="casoCeja" idTitulo="casoTitulo" sinMayusculas oculto>
+      <div slot="extra" class="meta-row" id="casoMeta"></div>
+    </PageHeader>
     <p class="state-msg" id="loading-msg">Cargando expediente…</p>
   </main>
 

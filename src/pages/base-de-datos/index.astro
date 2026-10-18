@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
 
 // baseDeDatosMain.js importaba style.css Y caso.css, así que esta página
 // recibía las dos aunque caso.css sea sobre todo para el detalle del caso.
@@ -10,16 +11,16 @@ import '../../styles/pages/tablaGeneral.scss';
 
 <BaseLayout title="Tablas y Filtros" active="base-de-datos">
   <main class="container tg-pagina">
-    <header class="tg-encabezado">
-      <div class="tg-encabezado-texto">
-        <h1 class="tg-titulo">Base de Datos de crímenes Coloniales</h1>
-        <p id="tgSubtitulo" class="tg-subtitulo">Archivo general</p>
-      </div>
-      <p class="tg-conteo" aria-live="polite">
+    <PageHeader
+      ceja="Archivo general"
+      titulo="Base de datos de crímenes coloniales"
+      idSubtitulo="tgSubtitulo"
+    >
+      <p slot="extra" class="tg-conteo" aria-live="polite">
         <strong id="tgConteo" class="tg-conteo-numero">—</strong>
         <span id="tgConteoEtiqueta" class="tg-conteo-etiqueta">registros encontrados</span>
       </p>
-    </header>
+    </PageHeader>
 
     <form class="filtros-tabla tg-filtros" id="tgFiltros" aria-label="Filtros de la tabla">
       <div class="tg-filtros-izquierda">

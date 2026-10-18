@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
 
 // Cadena de tiempomain.js, en el mismo orden. La global la pone BaseLayout.
 import '../../styles/pages/tooltips.scss';
@@ -14,7 +15,7 @@ const base = import.meta.env.BASE_URL
 
 <BaseLayout title="Tiempo" active="tiempo">
   <main class="container">
-    <h1 class="section-mainTitle">Cambio de los crímenes en el tiempo y espacio </h1>
+    <PageHeader titulo="Cambio de los crímenes en el tiempo y espacio" />
 
     <div class="mapa-selector-vista">
       <button type="button" id="btn-informacion" class="btn-mapa-vista mapa-selector-vista-informacion">

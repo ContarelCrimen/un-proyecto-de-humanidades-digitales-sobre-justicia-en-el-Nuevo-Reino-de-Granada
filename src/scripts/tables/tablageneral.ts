@@ -179,7 +179,7 @@ export async function crearTabla() {
   }
   filtroAnioDesde.value = String(ANIO_MIN);
   filtroAnioHasta.value = String(ANIO_MAX);
-  subtitulo.textContent = `Archivo general · ${ANIO_MIN} — ${ANIO_MAX}`;
+  subtitulo.textContent = `${ANIO_MIN} — ${ANIO_MAX}`;
   const posicionMarca = (anio: number) => ((anio - ANIO_MIN) / (ANIO_MAX - ANIO_MIN)) * 100;
   const anioMarcas = [
     ANIO_MIN,

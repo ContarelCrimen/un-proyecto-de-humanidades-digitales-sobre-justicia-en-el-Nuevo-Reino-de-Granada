@@ -14,42 +14,16 @@ $cs-texto-suave: #8a6f55;
 $cs-grilla: #e8dfc8;
 
 main.container.cs-pagina {
-  width: calc(100% - 2rem);
-  max-width: 1240px;
-  padding: 2rem 0 5rem;
+  --espacio-bloques: 1.25rem;
   align-items: stretch;
   text-align: left;
-  gap: 1.25rem;
+  gap: var(--espacio-bloques);
 }
 
 // ── Encabezado y pestañas ────────────────────────────────
-.cs-encabezado {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 0.6rem;
-}
-
-.cs-eyebrow {
-  margin: 0;
-  font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--rosado);
-}
-
-.cs-titulo {
-  margin: 0;
-  font-size: var(--fs-title);
-  line-height: var(--lh-tight);
-  color: var(--crema);
-}
-
 .cs-pestañas {
   display: inline-flex;
-  margin-top: 0.4rem;
+  align-self: flex-start;
   border: 1px solid var(--dorado);
   border-radius: 4px;
   overflow: hidden;
@@ -58,8 +32,8 @@ main.container.cs-pagina {
 .cs-pestaña {
   padding: 0.5rem 1.6rem;
   font-family: var(--font-ui);
-  font-size: var(--fs-sm);
-  font-weight: 600;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-semibold);
   color: var(--dorado);
   text-decoration: none;
   transition: background 0.15s;
@@ -77,13 +51,6 @@ main.container.cs-pagina {
       background: var(--dorado);
     }
   }
-}
-
-.cs-pista {
-  margin: 0.25rem 0 0;
-  max-width: none;
-  font-size: var(--fs-sm);
-  color: var(--dorado);
 }
 
 // ── Filtros ──────────────────────────────────────────────
@@ -114,8 +81,7 @@ main.container.cs-pagina {
 
 .cs-campo-titulo {
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
-  letter-spacing: 0.14em;
+  font-size: var(--fs-ui-xs);
   text-transform: uppercase;
   color: var(--dorado);
 }
@@ -128,8 +94,8 @@ main.container.cs-pagina {
   color: $cs-texto;
   border: 1px solid $cs-borde;
   border-radius: 4px;
-  font-family: var(--font-body);
-  font-size: var(--fs-md);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-md);
 }
 
 .cs-campo:first-child .cs-select {
@@ -159,7 +125,7 @@ main.container.cs-pagina {
   border: 1px solid rgba(209, 166, 119, 0.4);
   border-radius: 999px;
   font-family: var(--font-ui);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   cursor: pointer;
   transition:
     background 0.15s,
@@ -180,7 +146,7 @@ main.container.cs-pagina {
     background: var(--cs-color);
     border-color: var(--cs-color);
     color: $cs-texto;
-    font-weight: 700;
+    font-weight: var(--fw-bold);
 
     i {
       background: $cs-texto;
@@ -196,7 +162,7 @@ main.container.cs-pagina {
   border: 1px solid var(--dorado);
   border-radius: 999px;
   font-family: var(--font-ui);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   cursor: pointer;
   transition:
     background 0.15s,
@@ -221,9 +187,7 @@ h2.cs-seccion-titulo {
   padding: 0;
   border: 0;
   font-family: var(--font-display);
-  font-size: var(--fs-2xs);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: var(--fs-h2);
   color: var(--dorado);
   text-align: center;
 
@@ -259,7 +223,6 @@ h2.cs-seccion-titulo {
   border-radius: 4px;
   text-align: left;
   cursor: pointer;
-  font: inherit;
   transition:
     border-color 0.15s,
     transform 0.15s;
@@ -285,9 +248,8 @@ h2.cs-seccion-titulo {
   align-items: center;
   gap: 0.5rem;
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-bold);
   text-transform: uppercase;
   color: $cs-texto-suave;
 
@@ -312,8 +274,8 @@ h2.cs-seccion-titulo {
   border: 1px solid var(--accent);
   border-radius: 999px;
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
-  font-weight: 700;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   white-space: nowrap;
   box-shadow: 0 1px 4px rgba(122, 59, 30, 0.35);
   transition:
@@ -346,13 +308,13 @@ h2.cs-seccion-titulo {
 }
 
 .cs-tarjeta-valor {
-  font-family: var(--font-display);
-  font-size: var(--fs-3xl);
-  line-height: 1.1;
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-xl);
+  line-height: var(--lh-tight);
 }
 
 .cs-tarjeta-sub {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   color: $cs-texto-suave;
 }
 
@@ -369,7 +331,7 @@ h2.cs-seccion-titulo {
 
 .cs-panel-titulo {
   margin: 0;
-  font-size: var(--fs-xl);
+  font-size: var(--fs-h3);
   line-height: var(--lh-snug);
 }
 
@@ -412,10 +374,11 @@ h2.cs-seccion-titulo {
 // Leyendas
 .cs-leyenda-cuadros,
 .cs-leyenda-lineas {
+  font-family: var(--font-ui);
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem 1.1rem;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   color: $cs-texto-suave;
 
   span {
@@ -482,7 +445,7 @@ h2.cs-seccion-titulo {
   align-items: center;
   gap: 0.6rem;
   margin: 0;
-  font-size: var(--fs-lg);
+  font-size: var(--fs-h3);
 
   i {
     width: 0.7rem;
@@ -509,19 +472,20 @@ h2.cs-seccion-titulo {
   }
 
   figcaption {
+    font-family: var(--font-ui);
     display: flex;
     flex-direction: column;
     margin-top: -1.1rem;
-    line-height: 1.2;
+    line-height: var(--lh-snug);
 
     strong {
-      font-family: var(--font-display);
-      font-size: var(--fs-xl);
-      font-weight: 400;
+      font-family: var(--font-ui);
+      font-size: var(--fs-ui-lg);
+      font-weight: var(--fw-regular);
     }
 
     span {
-      font-size: var(--fs-sm);
+      font-size: var(--fs-ui-sm);
       color: $cs-texto-suave;
     }
   }
@@ -543,17 +507,16 @@ h2.cs-seccion-titulo {
 
 .cs-rol-delito-titulo {
   font-family: var(--font-ui);
-  font-size: var(--fs-2xs);
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-bold);
   text-transform: uppercase;
   color: var(--accent);
 }
 
 .cs-rol-delito-nombre {
   font-family: var(--font-display);
-  font-size: var(--fs-lg);
-  font-weight: 400;
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-regular);
 }
 
 .cs-rol-delito-texto {
@@ -566,8 +529,7 @@ h2.cs-seccion-titulo {
   padding: 0;
   background: none;
   border: 0;
-  font: inherit;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   color: var(--accent);
   text-decoration: underline;
   cursor: pointer;
@@ -591,9 +553,9 @@ h2.cs-seccion-titulo {
 }
 
 .cs-eje-texto {
-  // d3.axis fija font-family="sans-serif" en el <g> del eje; se corrige aquí.
+  // d3.axis fija una familia genérica en el <g> del eje; se corrige aquí.
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   fill: $cs-texto-suave;
 }
 
@@ -627,7 +589,7 @@ h2.cs-seccion-titulo {
   .filtro-nota {
     max-width: none;
     margin: 0.5rem 0 0;
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     color: $cs-texto-suave;
   }
 
@@ -642,15 +604,15 @@ h2.cs-seccion-titulo {
 // En el modo de un nivel el anillo es ancho: las etiquetas pueden ser más grandes.
 .cs-panel--dona .sunburst-svg--un-nivel {
   .sunburst-etiqueta {
-    font-size: var(--fs-md);
+    font-size: var(--fs-ui-md);
   }
 
   .sunburst-etiqueta-pct {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-ui-sm);
   }
 
   .sunburst-texto-central {
-    font-size: var(--fs-md);
+    font-size: var(--fs-ui-md);
   }
 }
 
@@ -677,7 +639,7 @@ h2.cs-seccion-titulo {
   border: 1px solid var(--accent);
   border-radius: 999px;
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   cursor: pointer;
   transition: background 0.15s;
 
@@ -720,22 +682,22 @@ h2.cs-seccion-titulo {
 }
 
 .cs-barras-etiqueta {
-  font-size: var(--fs-md);
+  font-size: var(--fs-ui-md);
   fill: $cs-texto;
   pointer-events: none;
 
   &--sub {
-    font-size: var(--fs-sm);
+    font-size: var(--fs-ui-sm);
     fill: $cs-texto-suave;
   }
 
   &--activa {
-    font-weight: 700;
+    font-weight: var(--fw-bold);
   }
 }
 
 .cs-barras-valor {
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-ui-xs);
   fill: $cs-texto-suave;
   pointer-events: none;
 }
@@ -749,7 +711,7 @@ h2.cs-seccion-titulo {
   border: 1px solid var(--accent);
   border-radius: 999px;
   font-family: var(--font-ui);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   cursor: pointer;
 
   &:hover {
@@ -784,8 +746,8 @@ h2.cs-seccion-titulo {
   border: 1px solid var(--accent);
   border-radius: 6px;
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
-  font-weight: 600;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-semibold);
   cursor: pointer;
 
   &--visible {
@@ -825,15 +787,15 @@ h2.cs-seccion-titulo {
 .cs-red-etiqueta {
   text-anchor: middle;
   pointer-events: none;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
 
   &--dentro {
-    font-weight: 700;
+    font-weight: var(--fw-bold);
     fill: $cs-tarjeta;
   }
 
   &--fuera {
-    font-weight: 700;
+    font-weight: var(--fw-bold);
     fill: $cs-texto;
   }
 

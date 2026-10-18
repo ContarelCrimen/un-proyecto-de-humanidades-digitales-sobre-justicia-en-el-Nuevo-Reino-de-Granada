@@ -198,11 +198,9 @@ async function loadCase(
   }
 }
 function renderCase(caso: any, personas: Fila[], main: HTMLElement, casesMap: Map<string, any>) {
-  const header = document.createElement('div');
-  header.innerHTML = `
-    <p class="case-eyebrow">Caso ID ${escaparHtml(String(caso.id))}</p>
-    <h1 class="case-title">${formatearDescripcion(caso.descripcion, false)}</h1>
-    <div class="meta-row">
+  document.getElementById('casoCeja')!.textContent = `Caso ID ${caso.id}`;
+  document.getElementById('casoTitulo')!.innerHTML = formatearDescripcion(caso.descripcion, false);
+  document.getElementById('casoMeta')!.innerHTML = `
       <div class="meta-pill">
         <span class="label">Año</span>
         ${caso.rangoAnios}
@@ -211,9 +209,8 @@ function renderCase(caso: any, personas: Fila[], main: HTMLElement, casesMap: Ma
         <span class="label">Lugar</span>
         ${caso.lugar}
       </div>
-    </div>
   `;
-  main.appendChild(header);
+  document.getElementById('casoMeta')!.closest('header')!.hidden = false;
   if (caso.documentos.length > 1) {
     const secTitle = document.createElement('h2');
     secTitle.className = 'section-title';
