@@ -40,7 +40,7 @@ verificación en Chrome headless (protocolo DevTools) de las 8 páginas, más 3 
 **Carga:** un único `<link>` en `src/layouts/BaseLayout.astro:49`:
 
 ```
-Crimson Pro:ital,wght@0,400;0,600;0,700;1,400
+Crimson Pro:ital,wght@0,400;0,600;0,700;1,400;1,700
 IM Fell English:ital@0;1
 Source Code Pro:ital,wght@0,400;0,600;0,700;1,400
 ```
@@ -64,14 +64,14 @@ Source Code Pro:ital,wght@0,400;0,600;0,700;1,400
 
 **Familias que se ven, medidas en Chrome** (caras distintas con texto visible, a 1440px):
 
-| Página        | Caras                                                                                     |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| home          | Fell 400 itálica, Crimson 400                                                             |
-| about         | Fell 400 / 400 itálica, Crimson 400 / 700, Code 400 / 600 / 700                           |
-| tiempo        | Fell 400 / 400 itálica, Crimson 400 / 700, Code 400 / 600 / 700                           |
-| base de datos | Fell 400 itálica, Crimson 400, Code 400 / 600 / 700                                       |
-| personas      | Fell 400 / 400 itálica, Crimson 400, Code 400 / 600 / 700                                 |
-| caso          | Fell 400 / 400 itálica, Crimson 400 / 400 itálica / **700 itálica**, Code 400 / 600 / 700 |
+| Página        | Caras                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------- |
+| home          | Fell 400 itálica, Crimson 400                                                         |
+| about         | Fell 400 / 400 itálica, Crimson 400 / 700, Code 400 / 600 / 700                       |
+| tiempo        | Fell 400 / 400 itálica, Crimson 400 / 700, Code 400 / 600 / 700                       |
+| base de datos | Fell 400 itálica, Crimson 400, Code 400 / 600 / 700                                   |
+| personas      | Fell 400 / 400 itálica, Crimson 400, Code 400 / 600 / 700                             |
+| caso          | Fell 400 / 400 itálica, Crimson 400 / 400 itálica / 700 itálica, Code 400 / 600 / 700 |
 
 No aparece ninguna otra familia.
 
@@ -275,8 +275,8 @@ tiempo) usan hasta 1700px centradas, debajo del encabezado.
    cuerpo por la familia.
 4. **La cifra de las tarjetas de personas (`--fs-ui-xl`, 28px) iguala al h1 en escritorio.** Es una
    cifra, no un título.
-5. **Crimson Pro 700 itálica sintética** en la prosa de la ficha de caso: las palabras en negrilla
-   dentro de `.crime-descripcion`, que es itálica. Solo se carga la itálica 400.
+5. **Resuelto:** la negrilla dentro de `.crime-descripcion` (itálica) usaba una 700 itálica
+   sintética. Ahora se carga Crimson Pro itálica 700.
 6. **Crimson Pro 600 se descarga pero no se usa** en ninguna página medida.
 7. **Ancho de tiempo:** además del mapa, el selector de vistas y el panel de filtros llegan a
    1700px. Forman parte del tablero.
