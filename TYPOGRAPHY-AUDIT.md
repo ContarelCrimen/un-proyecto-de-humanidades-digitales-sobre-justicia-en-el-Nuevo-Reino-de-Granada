@@ -40,7 +40,7 @@ verificación en Chrome headless (protocolo DevTools) de las 8 páginas, más 3 
 **Carga:** un único `<link>` en `src/layouts/BaseLayout.astro:49`:
 
 ```
-Crimson Pro:ital,wght@0,400;0,600;0,700;1,400;1,700
+Crimson Pro:ital,wght@0,400;0,700;1,400;1,700
 IM Fell English:ital@0;1
 Source Code Pro:ital,wght@0,400;0,600;0,700;1,400
 ```
@@ -277,7 +277,7 @@ tiempo) usan hasta 1700px centradas, debajo del encabezado.
    cifra, no un título.
 5. **Resuelto:** la negrilla dentro de `.crime-descripcion` (itálica) usaba una 700 itálica
    sintética. Ahora se carga Crimson Pro itálica 700.
-6. **Crimson Pro 600 se descarga pero no se usa** en ninguna página medida.
+6. **Resuelto:** Crimson Pro 600 no se usaba en ninguna página medida y se quitó del enlace.
 7. **Ancho de tiempo:** además del mapa, el selector de vistas y el panel de filtros llegan a
    1700px. Forman parte del tablero.
 8. **Reglas tipográficas muertas** que siguen en el CSS (sin efecto): `.about-tab`, `a.card h3`,
