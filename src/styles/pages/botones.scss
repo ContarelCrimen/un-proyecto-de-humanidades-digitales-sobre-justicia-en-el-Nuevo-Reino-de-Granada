@@ -12,18 +12,6 @@
   margin-bottom: var(--space-2);
 }
 
-.btn-mapa-vista {
-  padding: 8px 22px;
-  font-size: var(--fs-ui-sm);
-  border-radius: 6px;
-  border: 1px solid var(--mapa-borde);
-  background: var(--mapa-fondo-pergamino);
-  color: var(--mapa-tinta-oscura);
-  cursor: pointer;
-  font-family: var(--font-ui);
-  font-weight: var(--fw-semibold);
-}
-
 .btn-mapa-limpiar {
   display: none;
 }
@@ -36,15 +24,6 @@
 
 .btn-mapa-base-topografico {
   margin-left: var(--space-2);
-}
-
-.btn-mapa--activo {
-  background: var(--mapa-acento-linea);
-  color: #fff;
-}
-
-.btn-mapa--activo:hover {
-  background: var(--mapa-acento-hover);
 }
 
 .btn-mapa--visible {

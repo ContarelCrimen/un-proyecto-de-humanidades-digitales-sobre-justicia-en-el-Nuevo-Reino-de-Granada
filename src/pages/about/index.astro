@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
+import Tabs from '../../components/ui/Tabs.astro';
 import '../../styles/pages/botones.scss';
 import '../../styles/pages/mapa.scss';
 import '../../styles/pages/linaje.scss';
@@ -11,63 +12,76 @@ import '../../styles/pages/preguntasTarjetas.scss';
 ---
 
 <BaseLayout title="Sobre el proyecto" active="about">
-  <main class="container linaje-main-ancho">
+  <main class="container pagina-dashboard">
     <PageHeader titulo="Sobre el proyecto" />
 
     <div class="mapa-selector-vista">
       <div class="mapa-selector-vista-grupo">
-        <button type="button" id="btn-vista-fuentes" class="btn-mapa-vista btn-mapa--activo">
-          Metodología
-        </button>
-        <button type="button" id="btn-vista-delitos" class="btn-mapa-vista">Crímenes</button>
-        <button type="button" id="btn-vista-documentacion" class="btn-mapa-vista">
-          Documentación técnica
-        </button>
+        <Tabs
+          etiquetaAria="Sección"
+          pestanas={[
+            { texto: 'Metodología', id: 'btn-vista-fuentes', controla: 'vista-fuentes', activa: true },
+            { texto: 'Crímenes', id: 'btn-vista-delitos', controla: 'vista-delitos' },
+            {
+              texto: 'Documentación técnica',
+              id: 'btn-vista-documentacion',
+              controla: 'vista-documentacion',
+            },
+          ]}
+        />
       </div>
     </div>
 
-    <div id="vista-fuentes">
-
+    <div id="vista-fuentes" class="about-vista" role="tabpanel" aria-labelledby="btn-vista-fuentes">
       <section class="linaje-seccion-ancha">
-        <h2>Historia de un caso</h2>
+        <PageHeader nivel="seccion" titulo="Historia de un caso" />
         <div id="historiaMetodologia"></div>
       </section>
 
       <section class="linaje-seccion-ancha">
-        <h2>Sobre la base de datos</h2>
+        <PageHeader nivel="seccion" titulo="Sobre la base de datos" />
         <div id="preguntasMetodologicas"></div>
       </section>
-
     </div>
 
-    <div id="vista-delitos" class="mapa-vista--oculta">
+    <div
+      id="vista-delitos"
+      class="about-vista mapa-vista--oculta"
+      role="tabpanel"
+      aria-labelledby="btn-vista-delitos"
+    >
       <section class="linaje-seccion-ancha">
-        <h2>Preguntas metodológicas</h2>
+        <PageHeader nivel="seccion" titulo="Preguntas metodológicas" />
         <div id="preguntasFrecuentes"></div>
       </section>
 
       <section class="linaje-seccion-ancha">
-        <h2>Clasificación de delitos criminales</h2>
-        <p>
+        <PageHeader nivel="seccion" titulo="Clasificación de delitos criminales" />
+        <p class="about-parrafo">
           Esta gráfica muestra la clasificación metodológica de los delitos criminales. Para ver la
-          definición de las categorías haz clic en los circulos y para leer la descripción de
-          subcategorías haz clic en los rectangulos
+          definición de las categorías haz clic en los círculos y para leer la descripción de
+          subcategorías haz clic en los rectángulos.
         </p>
         <div id="chartLinajeCriminal" class="chart-linaje"></div>
       </section>
 
       <section class="linaje-seccion-ancha">
-        <h2>Clasificación de casos no criminales</h2>
-        <p>
+        <PageHeader nivel="seccion" titulo="Clasificación de casos no criminales" />
+        <p class="about-parrafo">
           Esta gráfica muestra la clasificación metodológica de los documentos que no son delitos
-          criminales
+          criminales.
         </p>
         <div id="chartLinajeNoCriminal" class="chart-linaje"></div>
       </section>
     </div>
 
-    <div id="vista-documentacion" class="mapa-vista--oculta">
-      <p>
+    <div
+      id="vista-documentacion"
+      class="about-vista mapa-vista--oculta"
+      role="tabpanel"
+      aria-labelledby="btn-vista-documentacion"
+    >
+      <p class="about-parrafo">
         Esta guía está dirigida a investigadores o personas externas que quieran utilizar, citar o
         analizar las bases de datos del proyecto con otro tipo de herramientas. Aquí se explica cómo
         están construidas las tablas, qué precauciones metodológicas se deben tener y cómo
@@ -75,7 +89,7 @@ import '../../styles/pages/preguntasTarjetas.scss';
       </p>
 
       <section class="linaje-seccion-ancha">
-        <h2>Para considerar</h2>
+        <PageHeader nivel="seccion" titulo="Para considerar" />
         <div id="documentacionPreguntas"></div>
       </section>
     </div>
@@ -112,7 +126,7 @@ import '../../styles/pages/preguntasTarjetas.scss';
         (Object.keys(vistas) as Vista[]).forEach((clave) => {
           const activa = clave === vista;
           vistas[clave].contenedor.classList.toggle('mapa-vista--oculta', !activa);
-          vistas[clave].boton.classList.toggle('btn-mapa--activo', activa);
+          vistas[clave].boton.setAttribute('aria-selected', String(activa));
         });
 
         if (vista === 'delitos' && !vistaDelitosInicializada) {

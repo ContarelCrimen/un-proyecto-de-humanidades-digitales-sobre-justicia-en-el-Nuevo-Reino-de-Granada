@@ -54,11 +54,11 @@ function crearHub() {
   const hub = document.createElement('div');
   hub.className = 'linaje-hub';
   hub.innerHTML = `
-    <div class="linaje-panel">
+    <div class="linaje-panel ui-clara">
       <h3 class="linaje-panel-titulo"></h3>
       <p class="linaje-panel-definicion"></p>
       <p class="linaje-panel-sinonimos"></p>
-      <button type="button" class="linaje-panel-boton">Ver casos</button>
+      <button type="button" class="ui-btn ui-btn--primario linaje-panel-boton">Ver casos</button>
     </div>
   `;
   const panel = hub.querySelector<HTMLElement>('.linaje-panel')!;
@@ -179,7 +179,7 @@ export async function crearLinaje(containerId: string, esCriminal: boolean) {
   });
   const { elemento: hubElemento, seleccionar: seleccionarBase } = crearHub();
   const selectorCrimen = document.createElement('select');
-  selectorCrimen.className = 'linaje-selector-crimen';
+  selectorCrimen.className = 'ui-select linaje-selector-crimen';
   selectorCrimen.setAttribute('aria-label', 'Ir directo a una categoría');
   const opcionInicial = document.createElement('option');
   opcionInicial.value = '';

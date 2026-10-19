@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import Lenis from 'lenis';
 interface FilaPreguntaTarjeta {
   Pregunta: string;
   Respuesta: string;
@@ -34,23 +33,7 @@ export async function crearPreguntasTarjetas(
 ) {
   const preguntas = await cargarPreguntas(rutaCsv);
   const contenedor = document.getElementById(containerId)!;
-  const raiz = document.createElement('div');
-  raiz.className = 'preguntas-tarjetas';
-  const pista = document.createElement('div');
-  pista.className = 'preguntas-tarjetas-pista';
-  const listaPildoras = document.createElement('div');
-  listaPildoras.className = 'preguntas-tarjetas-pildoras';
-  pista.appendChild(listaPildoras);
-  const panel = document.createElement('div');
-  panel.className = 'preguntas-tarjetas-panel';
-  const chip = document.createElement('span');
-  chip.className = 'preguntas-tarjetas-chip';
-  const respuesta = document.createElement('div');
-  respuesta.className = 'preguntas-tarjetas-respuesta';
-  panel.append(chip, respuesta);
-  raiz.append(pista, panel);
-  contenedor.appendChild(raiz);
-  function enlazarNavegacion() {
+  function enlazarNavegacion(respuesta: HTMLElement) {
     respuesta.querySelectorAll<HTMLAnchorElement>('[data-ir-vista]').forEach((enlace) => {
       enlace.addEventListener('click', (evento) => {
         evento.preventDefault();
@@ -58,70 +41,49 @@ export async function crearPreguntasTarjetas(
       });
     });
   }
-  function pintarRespuesta(etiquetaChip: string, html: string) {
-    chip.textContent = etiquetaChip;
-    respuesta.innerHTML = html;
-    enlazarNavegacion();
-  }
-  let indiceRaizActivo = 0;
-  function pintarNivelRaiz() {
-    listaPildoras.innerHTML = '';
-    preguntas.forEach((fila, indice) => {
-      const boton = document.createElement('button');
-      boton.type = 'button';
-      boton.className = 'preguntas-tarjetas-pildora';
-      boton.classList.toggle('preguntas-tarjetas-pildora--activa', indice === indiceRaizActivo);
-      boton.textContent = fila.Pregunta;
-      boton.addEventListener('click', () => {
-        indiceRaizActivo = indice;
-        if (fila.Desglose) {
-          abrirDesglose(fila.Desglose);
-        } else {
-          pintarNivelRaiz();
-          pintarRespuesta(fila.Pregunta, fila.Respuesta);
-        }
-      });
-      listaPildoras.appendChild(boton);
-    });
-  }
-  async function abrirDesglose(rutaDesglose: string) {
-    const decisiones = await cargarDesglose(`${import.meta.env.BASE_URL}${rutaDesglose}`);
-    let indiceDecisionActivo = 0;
-    function activarDecision(indice: number) {
-      indiceDecisionActivo = indice;
-      pintarNivelDesglose();
-      const decision = decisiones[indice];
-      pintarRespuesta(decision.Decision, decision.Explicacion);
+  function crearItem(titulo: string, html: string, abierto: boolean) {
+    const item = document.createElement('details');
+    item.className = 'ui-accordion-item';
+    item.open = abierto;
+    const resumen = document.createElement('summary');
+    resumen.className = 'ui-accordion-trigger';
+    resumen.textContent = titulo;
+    const panel = document.createElement('div');
+    panel.className = 'ui-accordion-panel';
+    if (html) {
+      const respuesta = document.createElement('div');
+      respuesta.className = 'preguntas-respuesta';
+      respuesta.innerHTML = html;
+      enlazarNavegacion(respuesta);
+      panel.appendChild(respuesta);
     }
-    function pintarNivelDesglose() {
-      listaPildoras.innerHTML = '';
-      const volver = document.createElement('button');
-      volver.type = 'button';
-      volver.className = 'preguntas-tarjetas-pildora preguntas-tarjetas-pildora--volver';
-      volver.textContent = '‹ Volver';
-      volver.addEventListener('click', () => {
-        pintarNivelRaiz();
-        pintarRespuesta(preguntas[indiceRaizActivo].Pregunta, preguntas[indiceRaizActivo].Respuesta);
+    item.append(resumen, panel);
+    return { item, panel };
+  }
+  const acordeon = document.createElement('div');
+  acordeon.className = 'ui-accordion';
+  preguntas.forEach((fila, indice) => {
+    const { item, panel } = crearItem(fila.Pregunta, fila.Respuesta, indice === 0);
+    if (fila.Desglose) {
+      const rutaDesglose = fila.Desglose;
+      let cargado = false;
+      const cargar = async () => {
+        if (cargado) return;
+        cargado = true;
+        const decisiones = await cargarDesglose(`${import.meta.env.BASE_URL}${rutaDesglose}`);
+        const anidado = document.createElement('div');
+        anidado.className = 'ui-accordion preguntas-desglose';
+        decisiones.forEach((decision, i) => {
+          anidado.appendChild(crearItem(decision.Decision, decision.Explicacion, i === 0).item);
+        });
+        panel.appendChild(anidado);
+      };
+      item.addEventListener('toggle', () => {
+        if (item.open) cargar();
       });
-      listaPildoras.appendChild(volver);
-      decisiones.forEach((decision, indice) => {
-        const boton = document.createElement('button');
-        boton.type = 'button';
-        boton.className = 'preguntas-tarjetas-pildora';
-        boton.classList.toggle('preguntas-tarjetas-pildora--activa', indice === indiceDecisionActivo);
-        boton.textContent = decision.Decision;
-        boton.addEventListener('click', () => activarDecision(indice));
-        listaPildoras.appendChild(boton);
-      });
+      if (item.open) cargar();
     }
-    activarDecision(0);
-  }
-  pintarNivelRaiz();
-  pintarRespuesta(preguntas[0].Pregunta, preguntas[0].Respuesta);
-  const lenis = new Lenis({ wrapper: pista, content: listaPildoras, duration: 1 });
-  function raf(time: number) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
+    acordeon.appendChild(item);
+  });
+  contenedor.replaceChildren(acordeon);
 }
