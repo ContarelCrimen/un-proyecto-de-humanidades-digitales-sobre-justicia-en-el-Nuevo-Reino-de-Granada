@@ -262,12 +262,6 @@
   box-sizing: border-box;
 }
 
-.mapa-tarjeta--vertical {
-  flex: 0 0 auto;
-  width: 100%;
-  min-width: 0;
-}
-
 .mapa-tarjeta--compacta {
   flex: 1 1 380px;
   min-width: min(320px, 100%);

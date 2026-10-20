@@ -3,16 +3,6 @@
 // comparten el mismo estado. Los tokens llegan por la inyección de
 // astro.config.mjs; el bloque :root lo emite solo abstracts/_root.scss.
 
-// Tonos propios del tablero: el vino oscuro de la barra de filtros y el
-// crema de las tarjetas. Los demás salen de los tokens de identidad.
-$cs-filtros-fondo: $panel-bg;
-$cs-tarjeta: $surface;
-$cs-tarjeta-realce: $surface-sunken;
-$cs-borde: $surface-border;
-$cs-texto: $on-surface;
-$cs-texto-suave: $on-surface-muted;
-$cs-grilla: $chart-grid;
-
 // ── Paneles crema ────────────────────────────────────────
 .cs-panel {
   max-width: none;
@@ -29,14 +19,14 @@ $cs-grilla: $chart-grid;
   padding: 2rem 0;
   text-align: center;
   font-style: italic;
-  color: $cs-texto-suave;
+  color: var(--on-surface-muted);
 }
 
 .cs-nota {
   max-width: none;
   margin: 0.75rem 0 0;
   font-size: var(--fs-sm);
-  color: $cs-texto-suave;
+  color: var(--on-surface-muted);
 
   a,
   .cs-enlace {
@@ -66,7 +56,7 @@ $cs-grilla: $chart-grid;
 .cs-rol {
   margin: 1.5rem 1.75rem 0;
   padding: 1.25rem 1.5rem 1rem;
-  border: 1px solid $cs-borde;
+  border: var(--border-width) solid var(--surface-border);
   border-radius: 4px;
 }
 
@@ -118,13 +108,13 @@ $cs-grilla: $chart-grid;
 
     span {
       font-size: var(--fs-ui-sm);
-      color: $cs-texto-suave;
+      color: var(--on-surface-muted);
     }
   }
 }
 
 .cs-medidor-pista {
-  fill: $cs-grilla;
+  fill: var(--chart-grid);
 }
 
 .cs-rol-delito {
@@ -134,7 +124,7 @@ $cs-grilla: $chart-grid;
   gap: 0.2rem;
   margin: 1.25rem 0 0;
   padding: 1.1rem 1.75rem 1.4rem;
-  background: $cs-tarjeta-realce;
+  background: var(--surface-sunken);
 }
 
 .cs-rol-delito-titulo {
@@ -153,7 +143,7 @@ $cs-grilla: $chart-grid;
 
 .cs-rol-delito-texto {
   font-size: var(--fs-sm);
-  color: $cs-texto-suave;
+  color: var(--on-surface-muted);
 }
 
 .cs-rol-enlace {
@@ -181,18 +171,18 @@ $cs-grilla: $chart-grid;
 }
 
 .cs-grilla {
-  stroke: $cs-grilla;
+  stroke: var(--chart-grid);
 }
 
 .cs-eje-base {
-  stroke: $cs-borde;
+  stroke: var(--surface-border);
 }
 
 .cs-eje-texto {
   // d3.axis fija una familia genérica en el <g> del eje; se corrige aquí.
   font-family: var(--font-ui);
   font-size: var(--fs-ui-sm);
-  fill: $cs-texto-suave;
+  fill: var(--on-surface-muted);
 }
 
 .cs-trazo {
@@ -202,7 +192,7 @@ $cs-grilla: $chart-grid;
 }
 
 .cs-punto {
-  stroke: $cs-tarjeta;
+  stroke: var(--surface);
   stroke-width: 1.5;
   cursor: default;
 }
@@ -239,14 +229,14 @@ $cs-grilla: $chart-grid;
     max-width: none;
     margin: 0.5rem 0 0;
     font-size: var(--fs-sm);
-    color: $cs-texto-suave;
+    color: var(--on-surface-muted);
   }
 
   .grafico-vacio,
   .agentes-vacio {
     max-width: none;
     text-align: center;
-    color: $cs-texto-suave;
+    color: var(--on-surface-muted);
   }
 }
 
@@ -311,12 +301,12 @@ $cs-grilla: $chart-grid;
 
 .cs-barras-etiqueta {
   font-size: var(--fs-ui-md);
-  fill: $cs-texto;
+  fill: var(--on-surface);
   pointer-events: none;
 
   &--sub {
     font-size: var(--fs-ui-sm);
-    fill: $cs-texto-suave;
+    fill: var(--on-surface-muted);
   }
 
   &--activa {
@@ -326,7 +316,7 @@ $cs-grilla: $chart-grid;
 
 .cs-barras-valor {
   font-size: var(--fs-ui-xs);
-  fill: $cs-texto-suave;
+  fill: var(--on-surface-muted);
   pointer-events: none;
 }
 
@@ -373,17 +363,17 @@ $cs-grilla: $chart-grid;
 }
 
 .cs-red-circulo {
-  stroke: $cs-tarjeta;
+  stroke: var(--surface);
   stroke-width: 2;
 
   &--activo {
-    stroke: $cs-texto;
+    stroke: var(--on-surface);
     stroke-width: 3.5;
   }
 }
 
 .cs-red-nodo:focus-visible .cs-red-circulo {
-  stroke: $cs-texto;
+  stroke: var(--on-surface);
   stroke-width: 3;
 }
 
@@ -394,12 +384,12 @@ $cs-grilla: $chart-grid;
 
   &--dentro {
     font-weight: var(--fw-bold);
-    fill: $cs-tarjeta;
+    fill: var(--surface);
   }
 
   &--fuera {
     font-weight: var(--fw-bold);
-    fill: $cs-texto;
+    fill: var(--on-surface);
   }
 
   &--apagada {

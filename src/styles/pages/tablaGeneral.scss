@@ -3,12 +3,6 @@
 // en mono, y etiquetas/botones en ui. Los tokens llegan por la inyección de
 // astro.config.mjs; el bloque :root lo emite solo abstracts/_root.scss.
 
-$tg-panel: $panel-bg;
-$tg-linea: $panel-border;
-$tg-fila: $crema;
-$tg-fila-alterna: $surface-table-alt;
-$tg-encabezado-tabla: $surface-table-head;
-
 .tg-conteo {
   align-items: flex-end;
   text-align: right;
@@ -44,23 +38,23 @@ $tg-encabezado-tabla: $surface-table-head;
 .tg-tabla {
   .tabla-datos {
     margin-top: 0;
-    border: 1px solid $tg-linea;
+    border: var(--border-width) solid var(--panel-border);
     border-radius: 6px;
     border-collapse: separate;
     border-spacing: 0;
     overflow: hidden;
-    background: $tg-fila;
+    background: var(--crema);
   }
 
   .tabla-datos th {
-    background: $tg-encabezado-tabla;
+    background: var(--surface-table-head);
     color: var(--cafe);
     padding: 1rem 1.4rem;
     border-bottom: 1px solid rgba(84, 59, 39, 0.25);
   }
 
   .tabla-datos th.th-ordenable:hover {
-    background: color-mix(in srgb, $tg-encabezado-tabla 85%, white);
+    background: color-mix(in srgb, var(--surface-table-head) 85%, white);
   }
 
   .tabla-datos th.th-ordenable--activo {
@@ -76,11 +70,11 @@ $tg-encabezado-tabla: $surface-table-head;
   }
 
   .tabla-datos tbody tr:nth-child(odd) {
-    background: $tg-fila;
+    background: var(--crema);
   }
 
   .tabla-datos tbody tr:nth-child(even) {
-    background: $tg-fila-alterna;
+    background: var(--surface-table-alt);
   }
 
   .tabla-datos tbody tr:last-child td {

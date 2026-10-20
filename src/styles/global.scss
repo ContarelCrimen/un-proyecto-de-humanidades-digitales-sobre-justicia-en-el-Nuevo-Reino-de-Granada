@@ -25,7 +25,6 @@
 @use 'components/checkbox';
 @use 'components/range';
 @use 'components/stat-card';
-@use 'components/accordion';
 
 .container {
   width: min(var(--ancho-pagina), 100% - 2 * var(--margen-pagina));
@@ -267,57 +266,8 @@ body.nav-abierto {
   background: var(--crema);
 }
 
-/* =====================================================
-   VISUALIZACIONES Y TARJETAS
-===================================================== */
-.col-root {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  width: 100%;
-  max-width: 1400px;
-}
-
-.cards-container {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  width: 100%;
-}
-
-.card {
-  flex: 1;
-  background: #ffffff;
-  border-radius: 2px; /* Bordes más rectos para look manuscrito/antiguo */
-  padding: 25px;
-  border: 1px solid var(--rule);
-  border-left: 4px solid var(--accent); /* Detalle elegante tomado de crime-card */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.15s;
-}
-
-.card:hover {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-}
-
-/* =====================================================
-   PESTAÑAS DE "SOBRE EL PROYECTO" (AboutTabs.astro)
-   Barra de 3 botones (Fuentes / Delitos / Documentación técnica) que
-   aparece en las tres páginas de la sección para poder saltar de una a otra
-   sin volver antes al índice — son enlaces reales entre páginas, no un
-   cambio de contenido por JS.
-===================================================== */
-.about-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 2.5rem;
-}
-
 .chart-linaje,
-#tablaContainer,
-#tablaMetadatos {
+#tablaContainer {
   overflow-x: auto;
   width: 100%;
 }
@@ -329,8 +279,7 @@ body.nav-abierto {
 /* =====================================================
    TABLAS ARCHIVÍSTICAS
 ===================================================== */
-.tabla-datos,
-.tabla-metadatos {
+.tabla-datos {
   width: 100%;
   border-collapse: collapse;
   background: #ffffff;
@@ -338,8 +287,7 @@ body.nav-abierto {
   margin-top: 1rem;
 }
 
-.tabla-datos th,
-.tabla-metadatos th {
+.tabla-datos th {
   background: var(--parchment-dark);
   color: var(--ink);
   font-family: var(--font-ui);
@@ -350,8 +298,7 @@ body.nav-abierto {
   border-bottom: 2px solid var(--rule);
 }
 
-.tabla-datos td,
-.tabla-metadatos td {
+.tabla-datos td {
   font-family: var(--font-ui);
   padding: 0.8rem;
   font-size: var(--fs-ui-md);
@@ -359,8 +306,7 @@ body.nav-abierto {
   border-bottom: 1px solid var(--rule);
 }
 
-.tabla-datos tr:hover,
-.tabla-metadatos tr:hover {
+.tabla-datos tr:hover {
   background: var(--parchment);
 }
 
@@ -406,39 +352,6 @@ body.nav-abierto {
 }
 
 /* =====================================================
-   BOTONES DE DESCARGA
-===================================================== */
-.descargas {
-  width: 100%;
-  margin-top: 3rem;
-  text-align: center;
-}
-
-.botones-descarga {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-top: 1rem;
-}
-
-/* =====================================================
-   TOGGLE DASHBOARD / HISTORIA
-===================================================== */
-.vista-toggle {
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  margin: 0 0 2rem;
-}
-
-.vista-historia {
-  max-width: 750px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-/* =====================================================
    RESPONSIVE
 ===================================================== */
 @media (max-width: v.$bp-movil) {
@@ -450,12 +363,5 @@ body.nav-abierto {
   }
   .nav-links a {
     padding: 0.9rem 20px;
-  }
-  .col-root,
-  .cards-container {
-    flex-direction: column;
-  }
-  .card {
-    width: 100%;
   }
 }
