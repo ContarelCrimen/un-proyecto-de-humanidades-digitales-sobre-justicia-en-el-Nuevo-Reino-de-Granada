@@ -243,18 +243,37 @@ body.nav-abierto {
 
 /* =====================================================
    PIE DE PÁGINA
-   Barra vacía por ahora. Deliberadamente más alta que el topnav (65px), y sin
-   borde: el fondo de la página ya es vinotinto, así que un borde vinotinto no
-   se vería contra él. La altura la da min-height porque no hay contenido.
 ===================================================== */
 .site-footer {
   width: 100%;
   min-height: 120px;
   display: flex;
-  align-items: center;
-  padding: 0 40px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-6) 40px;
   box-sizing: border-box;
   background: var(--crema);
+
+  p {
+    max-width: none;
+    margin: 0;
+    color: var(--vinotinto);
+  }
+}
+
+.site-footer-titulo {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-style: italic;
+  line-height: var(--lh-snug);
+}
+
+.site-footer-institucion {
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
+  line-height: var(--lh-normal);
 }
 
 .chart-linaje,
