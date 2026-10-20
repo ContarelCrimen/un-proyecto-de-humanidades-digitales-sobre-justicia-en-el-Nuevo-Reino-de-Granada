@@ -320,12 +320,18 @@
   border-radius: var(--radius-panel);
   background: var(--surface);
   padding: 0.9rem var(--space-4);
-  cursor: pointer;
+  color: var(--ui-fg);
+  text-decoration: none;
   transition: box-shadow var(--duration-fast);
-}
 
-.similar-card:hover {
-  box-shadow: var(--control-shadow);
+  &:hover {
+    box-shadow: var(--control-shadow);
+  }
+
+  &:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-on-panel);
+    outline-offset: var(--focus-ring-offset);
+  }
 }
 
 .similar-card-meta {

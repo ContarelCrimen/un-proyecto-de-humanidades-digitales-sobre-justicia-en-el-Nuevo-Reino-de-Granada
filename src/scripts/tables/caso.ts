@@ -462,23 +462,18 @@ function renderCasosSimilares(caso: any, casesMap: Map<string, any>, main: HTMLE
       ? similares
           .map(
             (s) => `
-        <article class="similar-card ui-clara" data-caso="${s.id}" title="Ver expediente ${s.id}">
+        <a class="similar-card ui-clara" href="${base}base-de-datos/caso.html?caso=${encodeURIComponent(s.id)}" title="Ver expediente ${s.id}">
           <div class="similar-card-meta">
             <span>${s.año || 'Sin año'}</span>
             <span>${s.lugar || 'Sin lugar'}</span>
           </div>
           <p class="similar-card-desc">${formatearDescripcion(s.descripcion, false)}</p>
           <div class="similar-card-crimen">${[...crimenesDeCaso(s)].join(', ')}</div>
-        </article>
+        </a>
       `,
           )
           .join('')
       : `<p class="similares-vacio">No se encontraron casos similares para este criterio.</p>`;
-    carrusel.querySelectorAll<HTMLElement>('[data-caso]').forEach((card) => {
-      card.addEventListener('click', () => {
-        window.location.href = `${base}base-de-datos/caso.html?caso=${encodeURIComponent(card.dataset.caso!)}`;
-      });
-    });
   }
   section.querySelectorAll<HTMLButtonElement>('.ui-tab').forEach((tab) => {
     tab.addEventListener('click', () => {

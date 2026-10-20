@@ -41,6 +41,10 @@
   }
 }
 
+.ui-btn[hidden] {
+  display: none;
+}
+
 .ui-btn--primario {
   --ui-btn-fg: var(--ui-primario-fg);
   --ui-btn-bg: var(--ui-primario-bg);

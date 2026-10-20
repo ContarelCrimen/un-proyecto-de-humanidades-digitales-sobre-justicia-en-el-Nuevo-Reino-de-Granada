@@ -48,3 +48,18 @@
   padding: var(--space-1) var(--space-3);
   font-size: var(--fs-ui-xs);
 }
+
+.ui-tabs--vertical {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-self: stretch;
+
+  .ui-tab {
+    text-align: left;
+    white-space: normal;
+
+    + .ui-tab {
+      border-top: var(--border-width) solid var(--ui-linea);
+    }
+  }
+}

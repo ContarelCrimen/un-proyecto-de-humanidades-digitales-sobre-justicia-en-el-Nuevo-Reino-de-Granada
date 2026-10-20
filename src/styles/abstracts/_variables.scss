@@ -186,7 +186,7 @@ $duration-fast: 0.15s;
 // Sin lector en JS: son variables SCSS de tiempo de compilación y no se emiten
 // como custom properties. Los cinco valores que usa el proyecto, con lo que
 // hace cada uno (ver MIGRATION.md).
-$bp-caso: 600px; // padding de .page
+$bp-caso: 600px;
 $bp-conteo: 640px; // dos bloques del conteo
 $bp-nav: 640px;
 $bp-filtros: 720px; // apila las filas de filtros
