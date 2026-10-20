@@ -66,6 +66,7 @@ body.home main {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: var(--space-7);
   padding: 3rem 2.5rem;
 
   // The hero no longer grows, so on a short viewport long text has to stay
@@ -73,18 +74,17 @@ body.home main {
   min-height: 0;
   overflow-y: auto;
 
-  .page-header {
-    margin: 0 0 var(--space-5);
+  .page-header,
+  .ui-burbujas {
+    margin: 0;
   }
 
   .page-header-titulo {
     font-size: var(--fs-title-home);
   }
 
-  // `p` carries margin: 0.5rem auto 1.5rem, and the auto centres it inside the
-  // column. Only the inline half is reset; the vertical rhythm stays.
   p {
-    margin-inline: 0;
+    margin: 0;
   }
 }
 
