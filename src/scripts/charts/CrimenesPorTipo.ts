@@ -403,7 +403,7 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
           .attr('r', 9)
           .attr('class', 'crimenes-tipo-spike-punto-hit')
           .on('mouseenter', () => {
-            tooltip.innerHTML = `<strong>${serie.nombre}</strong><br/>${formatoDecada(decadas[i])}: ${valor.toLocaleString('es')} caso${valor === 1 ? '' : 's'}`;
+            tooltip.innerHTML = `<strong>${serie.nombre}</strong><br/>${formatoDecada(decadas[i])}: ${valor.toLocaleString('es')} registro${valor === 1 ? '' : 's'}`;
             tooltip.classList.add('tooltip-grafico--visible');
           })
           .on('mousemove', (event: MouseEvent) => {
@@ -447,7 +447,7 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       chip.append(
         punto,
         document.createTextNode(
-          ` ${serie.nombre} · ${serie.total.toLocaleString('es')} caso${serie.total === 1 ? '' : 's'}`,
+          ` ${serie.nombre} · ${serie.total.toLocaleString('es')} registro${serie.total === 1 ? '' : 's'}`,
         ),
       );
       chip.addEventListener('click', () => {
