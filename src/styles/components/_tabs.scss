@@ -53,13 +53,14 @@
   flex-direction: column;
   flex-wrap: nowrap;
   align-self: stretch;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
 
   .ui-tab {
     text-align: left;
     white-space: normal;
-
-    + .ui-tab {
-      border-top: var(--border-width) solid var(--ui-linea);
-    }
+    border-radius: var(--radius-control);
   }
 }
