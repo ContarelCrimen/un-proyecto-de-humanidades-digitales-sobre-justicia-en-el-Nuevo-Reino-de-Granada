@@ -1,0 +1,17 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  href: string;
+  texto: string;
+  imagen: ImageMetadata;
+  clase?: string;
+}
+
+const { href, texto, imagen, clase } = Astro.props;
+---
+
+<a class:list={['ui-burbuja', clase]} href={href}>
+  <Image class="ui-burbuja-imagen" src={imagen} alt="" widths={[128, 256]} sizes="8rem" />
+  <span class="ui-burbuja-texto">{texto}</span>
+</a>

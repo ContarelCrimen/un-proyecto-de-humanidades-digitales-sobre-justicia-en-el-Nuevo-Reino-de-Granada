@@ -25,6 +25,7 @@
 @use 'components/checkbox';
 @use 'components/range';
 @use 'components/stat-card';
+@use 'components/burbuja';
 
 .container {
   width: min(var(--ancho-pagina), 100% - 2 * var(--margen-pagina));

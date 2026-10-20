@@ -29,7 +29,7 @@ body.home main {
 
   // <a> has no colour rule anywhere in the repo, so without this the link
   // renders in the browser's default blue: 1.25:1 on vinotinto, unreadable.
-  a {
+  p a {
     color: var(--dorado);
     text-decoration: underline;
   }
