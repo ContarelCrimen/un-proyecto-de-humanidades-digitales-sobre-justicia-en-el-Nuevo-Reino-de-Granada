@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import { irATablasFiltradas } from './verCasos.js';
 import { esLinajeCriminal } from './linajeComun.js';
 import { colorDeCrimen } from './coloresCrimen.js';
+import { iconoDeCrimen } from './iconosCrimen.js';
 type NodoMutable = any;
 function formatearSinonimos(crudo: string | undefined): string {
   if (!crudo || crudo.trim() === '' || crudo.trim().toLowerCase() === 'null') {
@@ -32,6 +33,19 @@ const ANCHO_CAJA_SATELITE = 112;
 const ALTO_CAJA_SATELITE = 30;
 const GAP_RADIAL = 22;
 const DURACION_GIRO_MS = 700;
+function crearContenidoCirculo(nombre: string): HTMLElement {
+  const elemento = document.createElement('span');
+  const icono = iconoDeCrimen(nombre);
+  if (icono) {
+    elemento.className = 'linaje-nodo-circulo-icono';
+    elemento.setAttribute('aria-hidden', 'true');
+    elemento.style.setProperty('--icono-crimen', `url("${icono}")`);
+  } else {
+    elemento.className = 'linaje-nodo-circulo-texto';
+    elemento.textContent = nombre;
+  }
+  return elemento;
+}
 function polarACartesiano(angulo: number, radio: number) {
   return { x: radio * Math.sin(angulo), y: -radio * Math.cos(angulo) };
 }
@@ -164,10 +178,8 @@ export async function crearLinaje(containerId: string, esCriminal: boolean) {
     circulo.className = 'linaje-nodo linaje-nodo-circulo';
     circulo.style.setProperty('--categoria-color', color);
     circulo.style.setProperty('--categoria-color-texto', colorTextoContraste(color));
-    const texto = document.createElement('span');
-    texto.className = 'linaje-nodo-circulo-texto';
-    texto.textContent = categoria.data.Nombre;
-    circulo.append(texto);
+    circulo.setAttribute('aria-label', categoria.data.Nombre);
+    circulo.append(crearContenidoCirculo(categoria.data.Nombre));
     circulo.addEventListener('click', () => activarCategoria(categoria));
     conectarTooltip(circulo, categoria);
     hueco.append(circulo);
@@ -287,6 +299,7 @@ export async function crearLinaje(containerId: string, esCriminal: boolean) {
       caja.style.setProperty('--categoria-color', colorHijo);
       caja.style.setProperty('--categoria-color-texto', colorTextoContraste(colorHijo));
       caja.textContent = hijo.data.Nombre;
+      caja.setAttribute('aria-label', hijo.data.Nombre);
       caja.addEventListener('click', () => seleccionar(hijo, caja, colorDeNodo));
       conectarTooltip(caja, hijo);
       const foHijo = crearForeignObject(
@@ -308,10 +321,9 @@ export async function crearLinaje(containerId: string, esCriminal: boolean) {
     centro.className = 'linaje-subrueda-centro';
     centro.style.setProperty('--categoria-color', colorCategoria);
     centro.style.setProperty('--categoria-color-texto', colorTextoContraste(colorCategoria));
-    const centroTexto = document.createElement('span');
-    centroTexto.className = 'linaje-nodo-circulo-texto';
-    centroTexto.textContent = categoria.data.Nombre;
-    centro.append(centroTexto);
+    centro.setAttribute('role', 'img');
+    centro.setAttribute('aria-label', categoria.data.Nombre);
+    centro.append(crearContenidoCirculo(categoria.data.Nombre));
     conectarTooltip(centro, categoria);
     foCentro.append(centro);
     svgSub.append(foCentro);
