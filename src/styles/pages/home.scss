@@ -21,10 +21,6 @@ body.home {
 }
 
 body.home main {
-  .section-mainTitle {
-    color: var(--crema);
-  }
-
   p {
     font-size: var(--fs-lead);
     line-height: var(--lh-normal);
@@ -77,12 +73,12 @@ body.home main {
   min-height: 0;
   overflow-y: auto;
 
-  // .container used to supply text-align: center. Without it the h1 keeps its
-  // own centring rule while the paragraph goes left, which reads as a mistake.
-  // Both are pinned left here, inside the hero only.
-  .section-mainTitle {
+  .page-header {
+    margin: 0 0 var(--space-5);
+  }
+
+  .page-header-titulo {
     font-size: var(--fs-title-home);
-    text-align: left;
   }
 
   // `p` carries margin: 0.5rem auto 1.5rem, and the auto centres it inside the
@@ -134,7 +130,7 @@ body.home main {
   .hero-texto {
     padding: 2rem 1.25rem;
 
-    .section-mainTitle {
+    .page-header-titulo {
       font-size: var(--fs-title);
     }
   }

@@ -49,7 +49,7 @@ const Titulo = nivel === 'pagina' ? 'h1' : nivel === 'seccion' ? 'h2' : 'h3';
           <span class="page-header-punto" style={`--page-header-punto: ${color}`} aria-hidden="true" />
         )
       }
-      {titulo}
+      <slot name="titulo">{titulo}</slot>
     </Titulo>
     {
       (subtitulo || idSubtitulo) && (
