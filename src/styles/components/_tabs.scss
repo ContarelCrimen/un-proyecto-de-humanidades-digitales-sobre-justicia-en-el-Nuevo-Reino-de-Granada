@@ -53,9 +53,44 @@
   flex-direction: column;
   flex-wrap: nowrap;
   align-self: stretch;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
 
   .ui-tab {
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-display);
+    font-size: var(--fs-h4);
+    font-weight: var(--fw-regular);
+    color: var(--on-panel);
     text-align: left;
     white-space: normal;
+    background: var(--panel-bg);
+    border: var(--border-width) solid var(--panel-border);
+    border-radius: var(--radius-panel);
+    transition:
+      background var(--duration-fast),
+      color var(--duration-fast),
+      border-color var(--duration-fast);
+
+    &:hover {
+      background-image: linear-gradient(var(--state-hover-on-panel), var(--state-hover-on-panel));
+    }
+
+    &:focus-visible {
+      outline-color: var(--focus-ring-on-panel);
+      outline-offset: var(--focus-ring-offset);
+    }
+
+    &[aria-selected='true'] {
+      color: var(--on-panel-label);
+      background: var(--panel-bg);
+      border-color: var(--border-strong);
+
+      &:focus-visible {
+        outline-color: var(--focus-ring-on-panel);
+      }
+    }
   }
 }
