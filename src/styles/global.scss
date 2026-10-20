@@ -91,20 +91,6 @@ section {
   z-index: 1;
 }
 
-.logo-completo {
-  display: none;
-}
-
-@media (min-width: v.$bp-nav) {
-  .logo-corto {
-    display: none;
-  }
-
-  .logo-completo {
-    display: inline;
-  }
-}
-
 /* The hamburger button. It is shown at every width: there is no breakpoint and
    no horizontal-links layout to fall back to. z-index 2 keeps it above the open
    drawer, which is full-height and would otherwise cover the close control. */
@@ -229,6 +215,10 @@ body.nav-abierto {
   font-weight: var(--fw-regular);
   text-transform: uppercase;
   transition: color 0.15s;
+}
+
+.logo {
+  font-size: var(--fs-h2);
 }
 
 /* Same horizontal padding as the bar, so the panel's text lines up under the
