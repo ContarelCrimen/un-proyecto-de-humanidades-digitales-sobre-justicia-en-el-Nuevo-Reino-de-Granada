@@ -1,171 +1,54 @@
-// Portado de src/style/caso.css. Los tokens llegan por la inyección de
-// astro.config.mjs; el bloque :root lo emite solo abstracts/_root.scss desde
-// global.scss.
-//
-// La tipografía de cada elemento (familia, tamaño y peso) es la que ya tenía la
-// página; lo que cambia aquí es la disposición y los colores.
 @use 'abstracts/variables' as v;
 
-/* ── Reset ───────────────────────────────────────────────── */
-// Esta hoja también la carga la tabla general (base-de-datos/index.astro).
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: var(--vinotinto);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: var(--fs-base);
-  line-height: var(--lh-relaxed);
-  min-height: 100vh;
-}
-
-$caso-tarjeta: #faf5e9;
-$caso-tarjeta-realce: #f2e9d3;
-
-/* ── Barra superior ──────────────────────────────────────── */
 .caso-barra {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 0.75rem 1.5rem;
+  gap: var(--space-3) var(--space-5);
   width: min(var(--ancho-pagina), 100% - 2 * var(--margen-pagina));
   margin: 0 auto;
-  padding: 2rem 0 0;
+  padding: var(--space-6) 0 0;
 }
 
 .caso-barra-izquierda {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.4rem 1rem;
+  gap: var(--space-2) var(--space-4);
 }
 
-.back-link {
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-semibold);
-  text-transform: uppercase;
-  color: var(--dorado);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  transition: color 0.15s;
-}
-.back-link:hover {
-  color: var(--crema);
-}
-.back-link::before {
+.caso-volver::before {
   content: '←';
-  font-size: var(--fs-ui-md);
 }
 
 .caso-posicion {
   font-family: var(--font-ui);
   font-size: var(--fs-ui-sm);
-  color: var(--rosado);
+  color: var(--ui-fg-suave);
 }
 
 .caso-nav {
   display: flex;
-  gap: 0.6rem;
+  gap: var(--space-2);
 }
 
-// La clase pone display:flex; sin esto pisaría el atributo hidden.
 .caso-nav[hidden] {
   display: none;
 }
 
-.caso-nav-boton {
-  padding: 0.4rem 0.95rem;
-  border: 1px solid var(--dorado);
-  border-radius: 3px;
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-semibold);
-  color: var(--dorado);
-  text-decoration: none;
-  transition:
-    background 0.15s,
-    color 0.15s;
-
-  &:hover {
-    background: var(--dorado);
-    color: var(--vinotinto);
-  }
-
-  // Primer o último resultado: sigue a la vista, pero no lleva a ningún sitio.
-  &--inactivo {
-    opacity: 0.35;
-    pointer-events: none;
-  }
-}
-
-/* ── Page wrapper ────────────────────────────────────────── */
-.page {
-  width: min(var(--ancho-pagina), 100% - 2 * var(--margen-pagina));
-  margin: 0 auto;
-  padding: 0 0 5rem;
-}
-
-/* ── Meta pills ──────────────────────────────────────────── */
-.meta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-.meta-pill {
-  font-family: var(--font-ui);
-  background: var(--badge-bg);
-  border: 1px solid var(--rule);
-  border-radius: 2px;
-  padding: 0.25rem 0.75rem;
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-semibold);
-  color: var(--ink-light);
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.meta-pill .label {
-  text-transform: uppercase;
-  font-size: var(--fs-ui-xs);
-  color: var(--accent);
-  font-family: var(--font-ui);
-}
-
-/* ── Section divider ─────────────────────────────────────── */
-.section-title {
-  color: var(--crema);
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 0.4rem;
-  margin: 2.5rem 0 1.25rem;
-}
-
-/* ── Crime cards ─────────────────────────────────────────── */
 .crimes-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-5);
 }
 
-// Tarjeta con una barra gruesa a la izquierda, como en el diseño.
 .crime-card {
-  border: 0;
   border-left: 14px solid var(--accent);
-  border-radius: 8px;
-  background: $caso-tarjeta;
-  padding: 2rem 2.4rem 1.8rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  padding: var(--space-6) 2.4rem 1.8rem;
+  box-shadow: var(--panel-shadow);
 }
 
 // Mismas columnas que .ficha-grid (misma minmax y column-gap) para que
@@ -176,15 +59,13 @@ $caso-tarjeta-realce: #f2e9d3;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   column-gap: 1.2rem;
-  row-gap: 0.5rem;
+  row-gap: var(--space-2);
   align-items: flex-start;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-2);
 }
 
 .crime-descripcion {
   grid-column: 1 / -2;
-  // La regla global `p { max-width: 650px; margin: ... auto ... }` (base/_typography)
-  // centraría este párrafo dentro de su columna del grid; se anula aquí.
   max-width: none;
   margin: 0;
   text-align: left;
@@ -215,18 +96,18 @@ $caso-tarjeta-realce: #f2e9d3;
   position: absolute;
   bottom: 100%;
   right: 0;
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-1);
   background: var(--ink);
-  color: #fff;
-  padding: 0.15rem 0.5rem;
-  border-radius: 3px;
+  color: var(--surface);
+  padding: 0.15rem var(--space-2);
+  border-radius: var(--radius-control);
   font-family: var(--font-ui);
   font-size: var(--fs-ui-xs);
   text-transform: uppercase;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s;
+  transition: opacity var(--duration-fast);
 }
 
 [data-tooltip]:hover::after {
@@ -260,24 +141,8 @@ $caso-tarjeta-realce: #f2e9d3;
   color: var(--accent);
 }
 
-/* ── Agentes ─────────────────────────────────────────────── */
 .agents-block {
-  margin-top: 1.75rem;
-  padding-top: 1.5rem;
-  border-top: 1px dashed var(--rule);
-}
-
-.agents-cabecera {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.agents-cabecera h4,
-.ficha-titulo {
-  font-size: var(--fs-h4);
+  margin-top: var(--space-6);
 }
 
 .agent-group {
@@ -290,18 +155,14 @@ $caso-tarjeta-realce: #f2e9d3;
 
 .agent-role {
   font-family: var(--font-ui);
-  margin-bottom: 0.5rem;
-
+  margin-bottom: var(--space-2);
   font-size: var(--fs-ui-sm);
   font-weight: var(--fw-bold);
-
   text-transform: uppercase;
-
-  color: #8b4c2b;
+  color: var(--accent);
 }
 
-// Dentro de la cabecera el rol ya queda alineado con el título.
-.agents-cabecera .agent-role {
+.page-header-extra .agent-role {
   margin-bottom: 0;
 }
 
@@ -314,10 +175,10 @@ $caso-tarjeta-realce: #f2e9d3;
 .agent-person {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-4);
   padding: 0.85rem 1.1rem;
-  background: $caso-tarjeta-realce;
-  border-left: 2px solid var(--accent);
+  background: var(--surface-sunken);
+  border-left: var(--border-width-strong) solid var(--accent);
 }
 
 // El color (--avatar) lo pone caso.ts según el género o el tipo de agente.
@@ -325,7 +186,7 @@ $caso-tarjeta-realce: #f2e9d3;
   flex: none;
   width: 2.4rem;
   height: 2.4rem;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   background: var(--avatar, var(--genero-mujer));
 }
 
@@ -338,37 +199,35 @@ $caso-tarjeta-realce: #f2e9d3;
 .agent-meta {
   font-family: var(--font-ui);
   margin-top: 0.15rem;
-
   font-size: var(--fs-ui-md);
-  color: #666;
+  color: var(--ui-fg-suave);
 }
 
-/* ── Ficha catalográfica ─────────────────────────────────── */
 .ficha {
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
-  margin-top: 1.75rem;
-  padding-top: 1.5rem;
-  border-top: 1px dashed var(--rule);
+  margin-top: var(--space-6);
+
+  > .page-header {
+    margin: 0;
+  }
 }
 
-// Las líneas de la cuadrícula salen del hueco de 1px sobre el fondo del
-// color de la regla.
 .ficha-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
+  gap: var(--border-width);
   background: var(--rule);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
+  border: var(--border-width) solid var(--rule);
+  border-radius: var(--radius-control);
   overflow: hidden;
 }
 
 .source-field {
   font-family: var(--font-ui);
   padding: 0.85rem 1.1rem;
-  background: $caso-tarjeta;
+  background: var(--surface);
   font-size: var(--fs-ui-sm);
 }
 
@@ -390,10 +249,9 @@ $caso-tarjeta-realce: #f2e9d3;
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
-// ID del documento: primera fila de la tarjeta, en su esquina superior izquierda.
 .crime-id {
   display: flex;
   justify-content: flex-start;
@@ -407,68 +265,20 @@ $caso-tarjeta-realce: #f2e9d3;
   gap: 0.6rem;
 }
 
-.doc-chip {
-  font-family: var(--font-ui);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 1rem;
-  border-radius: 4px;
-  background: #e8dcc0;
-  color: var(--ink);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--fw-bold);
-
-  svg {
-    width: 1rem;
-    height: 1rem;
-    margin: 0;
-  }
-
-  // Café pálido, para que el ID se lea sin competir con el resto de la tarjeta.
-  &--id {
-    background: #d8c6ad;
-    color: var(--cafe);
-  }
+.crime-id-chip svg,
+.copiar-ref svg {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
 }
 
-.copiar-ref {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.6rem 1.1rem;
-  border: 1px solid var(--accent);
-  border-radius: 3px;
-  background: transparent;
-  color: var(--accent);
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  cursor: pointer;
-  transition:
-    background 0.15s,
-    color 0.15s;
-
-  svg {
-    width: 1rem;
-    height: 1rem;
-    margin: 0;
-  }
-
-  &:hover,
-  &:focus-visible {
-    background: var(--accent);
-    color: #fff;
-    outline: none;
-  }
-
-  &--copiado {
-    background: var(--verde);
-    border-color: var(--verde);
-    color: #fff;
-  }
+.copiar-ref--copiado {
+  --ui-btn-fg: var(--surface);
+  --ui-btn-bg: var(--verde);
+  --ui-btn-borde: var(--verde);
+  --ui-btn-bg-hover: var(--verde);
 }
 
-/* ── No source fallback ──────────────────────────────────── */
 .no-source {
   font-family: var(--font-body);
   font-size: var(--fs-sm);
@@ -476,65 +286,46 @@ $caso-tarjeta-realce: #f2e9d3;
   font-style: italic;
 }
 
-/* ── Casos similares ─────────────────────────────────────── */
-.similares-tabs {
+.similares-section {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.25rem;
-}
-
-.similares-tab {
-  padding: 0.4rem 1rem;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  background: #fff;
-  color: var(--ink-light);
-  font-family: var(--font-ui);
-  font-size: var(--fs-ui-sm);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.similares-tab:hover {
-  border-color: var(--accent-dim);
-}
-
-.similares-tab--activa {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .similares-carrusel-wrap {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
+
+  > .ui-btn {
+    flex: none;
+  }
 }
 
 .similares-carrusel {
   display: flex;
-  gap: 1rem;
+  gap: var(--space-4);
   overflow-x: auto;
   scroll-snap-type: x proximity;
   scroll-behavior: smooth;
-  padding-bottom: 0.5rem;
+  padding-bottom: var(--space-2);
 }
 
 .similar-card {
   flex: 0 0 240px;
   scroll-snap-align: start;
-  border: 1px solid var(--rule);
+  border: var(--border-width) solid var(--surface-border);
   border-left: 4px solid var(--accent);
-  background: #fff;
-  padding: 0.9rem 1rem;
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  padding: 0.9rem var(--space-4);
   cursor: pointer;
-  transition: box-shadow 0.15s;
+  transition: box-shadow var(--duration-fast);
 }
 
 .similar-card:hover {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--control-shadow);
 }
 
 .similar-card-meta {
@@ -544,7 +335,7 @@ $caso-tarjeta-realce: #f2e9d3;
   font-size: var(--fs-ui-xs);
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-2);
 }
 
 .similar-card-desc {
@@ -555,7 +346,7 @@ $caso-tarjeta-realce: #f2e9d3;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-2);
 }
 
 .similar-card-crimen {
@@ -568,37 +359,16 @@ $caso-tarjeta-realce: #f2e9d3;
 .similares-vacio {
   font-size: var(--fs-sm);
   font-style: italic;
-  color: var(--ink-light);
+  color: var(--ui-fg-suave);
 }
 
-.carrusel-flecha {
-  flex: none;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--rule);
-  border-radius: 50%;
-  background: #fff;
-  color: var(--accent);
-  font-size: var(--fs-ui-lg);
-  line-height: var(--lh-tight);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.carrusel-flecha:hover {
-  background: var(--accent);
-  color: #fff;
-}
-
-/* ── Estado carga / error ────────────────────────────────── */
 .state-msg {
   text-align: center;
-  padding: 4rem 2rem;
-  color: var(--ink-light);
+  padding: var(--space-8) var(--space-6);
+  color: var(--ui-fg-suave);
   font-style: italic;
 }
 
-/* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: v.$bp-movil) {
   .ficha-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -617,7 +387,7 @@ $caso-tarjeta-realce: #f2e9d3;
 
   .crime-header {
     grid-template-columns: 1fr;
-    row-gap: 0.75rem;
+    row-gap: var(--space-3);
   }
 
   .crime-descripcion,
@@ -636,6 +406,5 @@ $caso-tarjeta-realce: #f2e9d3;
 
   .copiar-ref {
     width: 100%;
-    justify-content: center;
   }
 }
