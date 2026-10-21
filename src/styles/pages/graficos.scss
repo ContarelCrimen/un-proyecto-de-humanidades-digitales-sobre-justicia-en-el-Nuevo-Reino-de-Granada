@@ -12,13 +12,6 @@
   width: 100%;
 }
 
-.grafico-wrapper--centrado {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
 .grafico-svg {
   font-family: var(--font-ui);
 }
@@ -36,32 +29,3 @@
   text-align: center;
 }
 
-.grafico-eje-texto {
-  font-size: var(--fs-2xs);
-  fill: #555;
-}
-
-.grafico-serie-linea {
-  fill: none;
-  stroke-width: 2;
-}
-
-.grafico-etiqueta-serie {
-  font-size: var(--fs-2xs);
-  font-weight: 600;
-}
-
-.grafico-linea-guia {
-  stroke: #999;
-  stroke-dasharray: 3, 3;
-  opacity: 0;
-}
-
-.grafico-linea-guia--visible {
-  opacity: 1;
-}
-
-.grafico-rect-hit {
-  fill: transparent;
-  cursor: crosshair;
-}

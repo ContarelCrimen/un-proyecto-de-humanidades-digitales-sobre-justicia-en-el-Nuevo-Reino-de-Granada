@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import Lenis from 'lenis';
 interface FilaPreguntaTarjeta {
   Pregunta: string;
   Respuesta: string;
@@ -34,22 +33,40 @@ export async function crearPreguntasTarjetas(
 ) {
   const preguntas = await cargarPreguntas(rutaCsv);
   const contenedor = document.getElementById(containerId)!;
+  const idPanel = `${containerId}-respuesta`;
+  const idTab = (indice: number) => `${containerId}-pregunta-${indice}`;
   const raiz = document.createElement('div');
   raiz.className = 'preguntas-tarjetas';
-  const pista = document.createElement('div');
-  pista.className = 'preguntas-tarjetas-pista';
-  const listaPildoras = document.createElement('div');
-  listaPildoras.className = 'preguntas-tarjetas-pildoras';
-  pista.appendChild(listaPildoras);
+  const columna = document.createElement('div');
+  columna.className = 'preguntas-tarjetas-columna';
+  const volver = document.createElement('button');
+  volver.type = 'button';
+  volver.className = 'ui-btn ui-btn--fantasma ui-btn--sm';
+  volver.textContent = '‹ Volver';
+  volver.hidden = true;
+  const lista = document.createElement('div');
+  lista.className = 'ui-tabs ui-tabs--vertical';
+  lista.setAttribute('role', 'tablist');
+  lista.setAttribute('aria-orientation', 'vertical');
+  lista.setAttribute('aria-label', 'Preguntas');
+  columna.append(volver, lista);
   const panel = document.createElement('div');
-  panel.className = 'preguntas-tarjetas-panel';
-  const chip = document.createElement('span');
-  chip.className = 'preguntas-tarjetas-chip';
+  panel.className = 'preguntas-tarjetas-panel ui-clara';
+  panel.id = idPanel;
+  panel.setAttribute('role', 'tabpanel');
+  const encabezado = document.createElement('header');
+  encabezado.className = 'page-header page-header--subseccion';
+  const encabezadoTexto = document.createElement('div');
+  encabezadoTexto.className = 'page-header-texto';
+  const titulo = document.createElement('h3');
+  titulo.className = 'page-header-titulo';
+  encabezadoTexto.appendChild(titulo);
+  encabezado.appendChild(encabezadoTexto);
   const respuesta = document.createElement('div');
-  respuesta.className = 'preguntas-tarjetas-respuesta';
-  panel.append(chip, respuesta);
-  raiz.append(pista, panel);
-  contenedor.appendChild(raiz);
+  respuesta.className = 'preguntas-respuesta';
+  panel.append(encabezado, respuesta);
+  raiz.append(columna, panel);
+  contenedor.replaceChildren(raiz);
   function enlazarNavegacion() {
     respuesta.querySelectorAll<HTMLAnchorElement>('[data-ir-vista]').forEach((enlace) => {
       enlace.addEventListener('click', (evento) => {
@@ -58,70 +75,104 @@ export async function crearPreguntasTarjetas(
       });
     });
   }
-  function pintarRespuesta(etiquetaChip: string, html: string) {
-    chip.textContent = etiquetaChip;
+  function pintarRespuesta(texto: string, html: string, indice: number) {
+    titulo.textContent = texto;
     respuesta.innerHTML = html;
+    panel.setAttribute('aria-labelledby', idTab(indice));
     enlazarNavegacion();
   }
-  let indiceRaizActivo = 0;
-  function pintarNivelRaiz() {
-    listaPildoras.innerHTML = '';
-    preguntas.forEach((fila, indice) => {
-      const boton = document.createElement('button');
-      boton.type = 'button';
-      boton.className = 'preguntas-tarjetas-pildora';
-      boton.classList.toggle('preguntas-tarjetas-pildora--activa', indice === indiceRaizActivo);
-      boton.textContent = fila.Pregunta;
-      boton.addEventListener('click', () => {
-        indiceRaizActivo = indice;
-        if (fila.Desglose) {
-          abrirDesglose(fila.Desglose);
-        } else {
-          pintarNivelRaiz();
-          pintarRespuesta(fila.Pregunta, fila.Respuesta);
-        }
-      });
-      listaPildoras.appendChild(boton);
+  function pestanas() {
+    return [...lista.querySelectorAll<HTMLButtonElement>('.ui-tab')];
+  }
+  function marcar(activo: number) {
+    pestanas().forEach((tab, indice) => {
+      tab.setAttribute('aria-selected', String(indice === activo));
+      tab.tabIndex = indice === activo ? 0 : -1;
     });
+  }
+  let activarActual: (indice: number) => void = () => {};
+  let automaticas: boolean[] = [];
+  function pintarLista(
+    textos: string[],
+    activo: number,
+    alActivar: (indice: number) => void,
+    activacionAutomatica: boolean[],
+  ) {
+    activarActual = alActivar;
+    automaticas = activacionAutomatica;
+    lista.replaceChildren(
+      ...textos.map((texto, indice) => {
+        const tab = document.createElement('button');
+        tab.type = 'button';
+        tab.className = 'ui-tab';
+        tab.id = idTab(indice);
+        tab.setAttribute('role', 'tab');
+        tab.setAttribute('aria-controls', idPanel);
+        tab.textContent = texto;
+        tab.addEventListener('click', () => activarActual(indice));
+        return tab;
+      }),
+    );
+    marcar(activo);
+  }
+  lista.addEventListener('keydown', (evento) => {
+    const tabs = pestanas();
+    const actual = tabs.indexOf(document.activeElement as HTMLButtonElement);
+    if (actual < 0) return;
+    const ultimo = tabs.length - 1;
+    const destinos: Record<string, number> = {
+      ArrowDown: actual === ultimo ? 0 : actual + 1,
+      ArrowUp: actual === 0 ? ultimo : actual - 1,
+      Home: 0,
+      End: ultimo,
+    };
+    const destino = destinos[evento.key];
+    if (destino === undefined) return;
+    evento.preventDefault();
+    tabs[destino].focus();
+    if (automaticas[destino]) activarActual(destino);
+  });
+  let indiceRaiz = 0;
+  function mostrarRaiz(indice: number) {
+    indiceRaiz = indice;
+    volver.hidden = true;
+    pintarLista(
+      preguntas.map((fila) => fila.Pregunta),
+      indice,
+      activarRaiz,
+      preguntas.map((fila) => !fila.Desglose),
+    );
+    pintarRespuesta(preguntas[indice].Pregunta, preguntas[indice].Respuesta, indice);
+  }
+  function activarRaiz(indice: number) {
+    indiceRaiz = indice;
+    const fila = preguntas[indice];
+    if (fila.Desglose) {
+      abrirDesglose(fila.Desglose);
+      return;
+    }
+    marcar(indice);
+    pintarRespuesta(fila.Pregunta, fila.Respuesta, indice);
   }
   async function abrirDesglose(rutaDesglose: string) {
     const decisiones = await cargarDesglose(`${import.meta.env.BASE_URL}${rutaDesglose}`);
-    let indiceDecisionActivo = 0;
-    function activarDecision(indice: number) {
-      indiceDecisionActivo = indice;
-      pintarNivelDesglose();
-      const decision = decisiones[indice];
-      pintarRespuesta(decision.Decision, decision.Explicacion);
-    }
-    function pintarNivelDesglose() {
-      listaPildoras.innerHTML = '';
-      const volver = document.createElement('button');
-      volver.type = 'button';
-      volver.className = 'preguntas-tarjetas-pildora preguntas-tarjetas-pildora--volver';
-      volver.textContent = '‹ Volver';
-      volver.addEventListener('click', () => {
-        pintarNivelRaiz();
-        pintarRespuesta(preguntas[indiceRaizActivo].Pregunta, preguntas[indiceRaizActivo].Respuesta);
-      });
-      listaPildoras.appendChild(volver);
-      decisiones.forEach((decision, indice) => {
-        const boton = document.createElement('button');
-        boton.type = 'button';
-        boton.className = 'preguntas-tarjetas-pildora';
-        boton.classList.toggle('preguntas-tarjetas-pildora--activa', indice === indiceDecisionActivo);
-        boton.textContent = decision.Decision;
-        boton.addEventListener('click', () => activarDecision(indice));
-        listaPildoras.appendChild(boton);
-      });
-    }
+    const activarDecision = (indice: number) => {
+      marcar(indice);
+      pintarRespuesta(decisiones[indice].Decision, decisiones[indice].Explicacion, indice);
+    };
+    volver.hidden = false;
+    pintarLista(
+      decisiones.map((decision) => decision.Decision),
+      0,
+      activarDecision,
+      decisiones.map(() => true),
+    );
     activarDecision(0);
+    pestanas()[0]?.focus();
   }
-  pintarNivelRaiz();
-  pintarRespuesta(preguntas[0].Pregunta, preguntas[0].Respuesta);
-  const lenis = new Lenis({ wrapper: pista, content: listaPildoras, duration: 1 });
-  function raf(time: number) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
+  volver.addEventListener('click', () => {
+    mostrarRaiz(indiceRaiz);
+    pestanas()[indiceRaiz]?.focus();
+  });
+  mostrarRaiz(0);
 }

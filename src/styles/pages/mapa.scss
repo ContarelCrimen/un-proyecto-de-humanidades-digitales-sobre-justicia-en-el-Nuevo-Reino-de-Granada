@@ -12,10 +12,9 @@
 // "Instrucciones" a la derecha (columna 3), cada uno pegado a su borde.
 .mapa-selector-vista {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  margin-bottom: 14px;
-  font-family: var(--font-ui);
+  gap: var(--space-2);
 }
 
 .mapa-selector-vista-informacion {
@@ -33,6 +32,23 @@
 .mapa-selector-vista-instrucciones {
   grid-column: 3;
   justify-self: end;
+}
+
+@media (max-width: v.$bp-movil) {
+  .mapa-selector-vista {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .mapa-selector-vista-instrucciones {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .mapa-selector-vista-grupo {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    flex-wrap: wrap;
+  }
 }
 
 .mapa-vista-crimenes {
@@ -81,13 +97,13 @@
 
 .mapa-crimenes-layout--con-spike .mapa-crimenes-col-izquierda {
   flex: 1 1 380px;
-  min-width: 320px;
+  min-width: min(320px, 100%);
   width: auto;
 }
 
 .mapa-crimenes-col-derecha {
   flex: 1 1 380px;
-  min-width: 320px;
+  min-width: min(320px, 100%);
   max-width: 620px;
   opacity: 1;
   overflow: hidden;
@@ -128,7 +144,7 @@
   max-height: calc(100vh - 120px);
   overflow-y: auto;
   z-index: 1000;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--panel-shadow);
 }
 
 #panel-instrucciones {
@@ -165,14 +181,8 @@
 
 .mapa-tarjeta-cerrar {
   position: absolute;
-  top: 10px;
-  right: 12px;
-  border: none;
-  background: none;
-  font-size: var(--fs-xl);
-  line-height: 1;
-  color: var(--mapa-borde);
-  cursor: pointer;
+  top: var(--space-2);
+  right: var(--space-2);
 }
 
 .mapa-dashboard-wrap {
@@ -182,12 +192,6 @@
   flex-wrap: nowrap;
   gap: 18px;
   width: 100%;
-}
-
-.mapa-main-ancho {
-  max-width: 1700px;
-  width: 96%;
-  align-items: stretch;
 }
 
 /* Vista "Lugar": el mapa arranca centrado y solo, ocupando toda la fila.
@@ -220,12 +224,12 @@
 
 .mapa-lugar-layout--con-spike .mapa-lugar-col-mapa {
   flex: 1 1 460px;
-  min-width: 400px;
+  min-width: min(400px, 100%);
 }
 
 .mapa-lugar-col-spike {
   flex: 1 1 460px;
-  min-width: 400px;
+  min-width: min(400px, 100%);
   max-width: 620px;
   opacity: 1;
   overflow: hidden;
@@ -246,76 +250,48 @@
 .mapa-tarjeta {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background: var(--mapa-tarjeta-fondo);
-  border: 1px solid var(--mapa-borde);
-  border-radius: 10px;
-  padding: 16px 18px;
-  box-shadow: 0 2px 6px rgba(58, 45, 26, 0.1);
+  gap: var(--space-3);
+  color: var(--on-surface);
+  text-align: left;
+  background: var(--surface);
+  border: var(--border-width) solid var(--surface-border);
+  border-radius: var(--radius-panel);
+  padding: var(--space-4) var(--space-5);
   flex: 1 1 460px;
-  min-width: 400px;
+  min-width: min(400px, 100%);
   box-sizing: border-box;
-}
-
-.mapa-tarjeta--vertical {
-  flex: 0 0 auto;
-  width: 100%;
-  min-width: 0;
 }
 
 .mapa-tarjeta--compacta {
   flex: 1 1 380px;
-  min-width: 320px;
+  min-width: min(320px, 100%);
 }
 
-.mapa-tarjeta-encabezado {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.mapa-tarjeta-titulo {
-  font-family: var(--mapa-font);
-  font-size: var(--fs-md);
-  font-weight: 700;
-  color: var(--mapa-tinta-oscura);
-  letter-spacing: 0.01em;
-}
-
-.mapa-tarjeta-subtitulo {
-  font-family: var(--mapa-font);
-  font-size: var(--fs-2xs);
-  color: var(--mapa-borde);
-  opacity: 0.85;
-}
-
-.mapa-tarjeta-divisor {
-  height: 1px;
-  background: var(--mapa-borde);
-  opacity: 0.25;
+.mapa-tarjeta > .page-header {
+  margin-bottom: 0;
+  padding-right: var(--space-6);
 }
 
 // Cuerpo de texto de los paneles "Instrucciones" e "Información" (ver
 // tiempo/index.astro): mismo estilo que el resto de las tarjetas.
 .mapa-tarjeta-parrafo {
-  font-family: var(--mapa-font);
+  max-width: none;
+  margin: 0;
+  font-family: var(--font-body);
   font-size: var(--fs-sm);
   line-height: var(--lh-normal);
-  color: var(--mapa-tinta-oscura);
-  margin: 0;
+  color: var(--on-surface);
 }
 
 /* Tarjeta única con la ficha de cada lugar fijado, debajo de "Evolución en
    el tiempo" (ver crearFichaLugar en TiempoCrimenesMapa.ts): datos del lugar,
    línea de tiempo de sus crímenes y la lista de crímenes con sus años. Con
    varios lugares fijados, cada ficha va dentro de esta misma tarjeta,
-   separadas por un divisor. */
+   separadas por espacio. */
 .mapa-info-lugares {
-  margin-top: 14px;
-  gap: 1.25rem;
-  padding: 1.6rem 1.75rem 1.4rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(58, 45, 26, 0.14);
+  margin-top: var(--space-4);
+  gap: var(--space-7);
+  padding: var(--space-5);
 }
 
 // Sin lugares fijados (solo una provincia elegida), renderizarInfoLugares()
@@ -333,11 +309,9 @@
 
 .lugar-ficha-titulo {
   margin: 0;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(107, 79, 42, 0.25);
   font-family: var(--font-display);
-  font-size: var(--fs-2xl);
-  font-weight: 400;
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-regular);
   line-height: var(--lh-tight);
   text-align: center;
   color: var(--mapa-tinta-oscura);
@@ -349,8 +323,6 @@
   display: flex;
   flex-wrap: wrap;
   margin: 0;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(107, 79, 42, 0.25);
 }
 
 .lugar-ficha-dato {
@@ -363,22 +335,21 @@
 }
 
 .lugar-ficha-dato + .lugar-ficha-dato {
-  border-left: 1px solid rgba(107, 79, 42, 0.25);
+  border-left: var(--border-width) solid var(--surface-border);
 }
 
 .lugar-ficha-dato-etiqueta {
   margin: 0;
   font-family: var(--font-ui);
-  font-size: var(--fs-3xs);
-  letter-spacing: 0.14em;
+  font-size: var(--fs-ui-xs);
   text-transform: uppercase;
   color: var(--mapa-borde);
 }
 
 .lugar-ficha-dato-valor {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--fs-lg);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-lg);
   color: var(--verde);
 }
 
@@ -403,14 +374,14 @@
 .lugar-ficha-subtitulo {
   margin: 0;
   font-family: var(--font-display);
-  font-size: var(--fs-lg);
-  font-weight: 400;
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-regular);
   color: var(--mapa-tinta-oscura);
 }
 
 .lugar-ficha-resumen {
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   color: var(--mapa-borde);
 }
 
@@ -451,7 +422,7 @@
   display: flex;
   justify-content: space-between;
   font-family: var(--font-ui);
-  font-size: var(--fs-3xs);
+  font-size: var(--fs-ui-xs);
   color: var(--mapa-borde);
 }
 
@@ -501,14 +472,14 @@
   align-items: center;
   gap: 0.6rem;
   font-family: var(--font-ui);
-  font-size: var(--fs-md);
-  font-weight: 700;
+  font-size: var(--fs-ui-md);
+  font-weight: var(--fw-bold);
   color: var(--mapa-tinta-oscura);
 }
 
 .lugar-ficha-crimen-casos {
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   color: var(--mapa-borde);
   white-space: nowrap;
 }
@@ -521,20 +492,11 @@
   padding-left: calc(9px + 0.6rem);
 }
 
-.lugar-ficha-anio {
-  padding: 0.15rem 0.65rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--mapa-punto-color) 14%, transparent);
-  color: color-mix(in srgb, var(--mapa-punto-color) 70%, #2a1a12);
-  font-family: var(--font-ui);
-  font-size: var(--fs-xs);
-}
-
 // Aviso "sin datos" en cursiva. Lo usa también CrimenesPorTipo.ts (definición
 // de un crimen sin explicación), por eso se conserva con su nombre original.
 .mapa-info-lugar-vacio {
-  font-family: var(--mapa-font);
-  font-size: var(--fs-xs);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
   font-style: italic;
   color: var(--mapa-borde);
 }
@@ -546,109 +508,12 @@
 }
 
 .mapa-wrap-tiempo {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
   flex: 1 1 240px;
-  width: auto;
   max-width: 300px;
 }
 
-.mapa-slider-rango {
-  position: relative;
-  height: 26px;
-  display: flex;
-  align-items: center;
-}
-
-.mapa-slider-track {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--mapa-borde);
-  opacity: 0.25;
-}
-
-.mapa-slider-progreso {
-  position: absolute;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--mapa-acento-linea);
-}
-
-.mapa-slider {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  margin: 0;
-  background: transparent;
-  pointer-events: none;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.mapa-slider::-webkit-slider-runnable-track {
-  background: transparent;
-  height: 4px;
-}
-
-.mapa-slider::-moz-range-track {
-  background: transparent;
-  height: 4px;
-}
-
-.mapa-slider::-webkit-slider-thumb {
-  pointer-events: auto;
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  margin-top: -6px;
-  border-radius: 50%;
-  background: var(--mapa-acento-linea);
-  border: 2px solid var(--mapa-tarjeta-fondo);
-  box-shadow: 0 1px 2px rgba(58, 45, 26, 0.35);
-  cursor: pointer;
-}
-
-.mapa-slider::-moz-range-thumb {
-  pointer-events: auto;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--mapa-acento-linea);
-  border: 2px solid var(--mapa-tarjeta-fondo);
-  box-shadow: 0 1px 2px rgba(58, 45, 26, 0.35);
-  cursor: pointer;
-}
-
-.mapa-slider--min {
-  z-index: 2;
-}
-
-.mapa-slider--max {
-  z-index: 3;
-}
-
-.mapa-slider--encima {
-  z-index: 4;
-}
-
-.mapa-etiqueta-tiempo {
-  text-align: center;
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  color: var(--mapa-tinta-oscura);
-}
-
 .mapa-wrap-crimen {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
   flex: 1 1 190px;
-  width: auto;
   max-width: 240px;
 }
 
@@ -771,9 +636,9 @@
   justify-content: center;
   height: 300px;
   color: var(--mapa-borde);
-  font-family: var(--mapa-font);
+  font-family: var(--font-body);
   font-style: italic;
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
   border: 1px dashed var(--mapa-borde);
   border-radius: 6px;
   background: var(--mapa-fondo-pergamino);
@@ -781,44 +646,39 @@
 
 .mapa-aviso-vacio--compacto {
   height: 220px;
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
 }
 
 /* Cápsula de información del mapa (dibujada en SVG) */
 .mapa-capsula-titulo {
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  font-family: var(--mapa-font);
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   fill: var(--mapa-fondo-pergamino);
 }
 
 .mapa-capsula-subtitulo {
-  font-size: var(--fs-3xs);
-  font-family: var(--mapa-font);
+  font-size: var(--fs-ui-xs);
   fill: var(--mapa-acento-secundario);
 }
 
 .mapa-capsula-sin-casos {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   font-style: italic;
-  font-family: var(--mapa-font);
   fill: var(--mapa-fondo-pergamino);
 }
 
 .mapa-capsula-fila-texto {
-  font-size: var(--fs-2xs);
-  font-family: var(--mapa-font);
+  font-size: var(--fs-ui-xs);
   fill: var(--mapa-fondo-pergamino);
-  font-weight: 400;
+  font-weight: var(--fw-regular);
 }
 
 .mapa-capsula-fila-texto--activa {
-  font-weight: 700;
+  font-weight: var(--fw-bold);
 }
 
 .mapa-capsula-fila-conteo {
-  font-size: var(--fs-3xs);
-  font-family: var(--mapa-font);
+  font-size: var(--fs-ui-xs);
   fill: var(--mapa-fondo-pergamino);
 }
 
@@ -855,33 +715,27 @@
 
 /* Gráfico de líneas "Evolución en el tiempo" (SVG) */
 .mapa-linea-titulo {
-  font-size: var(--fs-md);
-  font-weight: 700;
+  font-size: var(--fs-ui-md);
+  font-weight: var(--fw-bold);
   fill: #222;
 }
 
 .mapa-linea-subtitulo {
-  font-size: var(--fs-2xs);
-  fill: #999;
-}
-
-.mapa-linea-nota {
-  font-size: var(--fs-3xs);
-  font-style: italic;
+  font-size: var(--fs-ui-xs);
   fill: #999;
 }
 
 .mapa-linea-eje-x-texto {
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   fill: #555;
 }
 
 .mapa-linea-eje-x-texto--compacto {
-  font-size: var(--fs-3xs);
+  font-size: var(--fs-ui-xs);
 }
 
 .mapa-linea-eje-y-texto {
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-ui-xs);
   fill: #666;
 }
 
@@ -894,8 +748,8 @@
 }
 
 .mapa-linea-etiqueta-serie {
-  font-size: var(--fs-2xs);
-  font-weight: 600;
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-semibold);
   cursor: pointer;
 }
 

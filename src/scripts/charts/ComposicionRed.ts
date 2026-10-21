@@ -133,7 +133,7 @@ export function dibujarRed({
   const enGrafo = crimenActivo !== null && vecinos.has(crimenActivo);
   const botonCasos = document.createElement('button');
   botonCasos.type = 'button';
-  botonCasos.className = 'cs-ver-casos';
+  botonCasos.className = 'ui-btn ui-btn--primario ui-btn--sm cs-ver-casos';
   let alVerCasos: (() => void) | null = null;
   botonCasos.addEventListener('click', () => alVerCasos?.());
   contenedor.appendChild(botonCasos);

@@ -113,7 +113,7 @@ export function dibujarBarras({
     .attr('role', 'img')
     .attr(
       'aria-label',
-      `Crimenes más registrados: ${ladoIzq.etiqueta} frente a ${ladoDer.etiqueta}`,
+      `Crímenes más registrados: ${ladoIzq.etiqueta} frente a ${ladoDer.etiqueta}`,
     );
   const ladoAtenuado = (lado: { claves: string[] }) =>
     gruposActivos.length > 0 && !lado.claves.some((c) => gruposActivos.includes(c));
@@ -221,17 +221,19 @@ export function dibujarBarras({
   });
   wrapper.appendChild(svg.node()!);
   const leyenda = document.createElement('div');
-  leyenda.className = 'cs-leyenda-cuadros';
+  leyenda.className = 'ui-chip-group cs-leyenda';
   [ladoIzq, ladoDer].forEach((lado) => {
     const item = document.createElement('span');
-    item.innerHTML = `<i style="background:${lado.color}"></i>${lado.etiqueta}`;
+    item.className = 'ui-chip ui-chip--estatico';
+    item.style.setProperty('--chip-dot', lado.color);
+    item.innerHTML = `<span class="ui-chip-punto" aria-hidden="true"></span><span class="ui-chip-texto">${lado.etiqueta}</span>`;
     leyenda.appendChild(item);
   });
   contenedor.appendChild(leyenda);
   if (crimenes.length > limite) {
     const boton = document.createElement('button');
     boton.type = 'button';
-    boton.className = 'cs-boton-mas';
+    boton.className = 'ui-btn ui-btn--sm cs-boton-mas';
     boton.setAttribute('aria-expanded', String(expandido));
     boton.textContent = expandido
       ? 'Mostrar menos'

@@ -3,127 +3,39 @@
 // lo emite solo abstracts/_root.scss desde global.scss.
 @use 'abstracts/variables' as v;
 
-/* =====================================================
-   BOTONES DEL DASHBOARD DE MAPA/GRÁFICOS
-===================================================== */
 .btn-mapa-ver-casos {
-  align-self: flex-start;
-  padding: 6px 14px;
-  font-size: var(--fs-xs);
-  border-radius: 4px;
-  border: 1px solid var(--mapa-acento-linea);
-  background: var(--mapa-acento-linea);
-  color: #fff;
-  cursor: pointer;
-  font-family: var(--font-ui);
-  font-weight: 600;
   display: none;
-}
-
-.btn-mapa-ver-casos:hover {
-  background: var(--mapa-acento-hover);
-  border-color: var(--mapa-acento-hover);
+  align-self: flex-start;
 }
 
 .btn-mapa-ver-casos--separado {
-  margin-bottom: 8px;
-}
-
-.btn-mapa-vista {
-  padding: 8px 22px;
-  font-size: var(--fs-sm);
-  border-radius: 6px;
-  border: 1px solid var(--mapa-borde);
-  background: var(--mapa-fondo-pergamino);
-  color: var(--mapa-tinta-oscura);
-  cursor: pointer;
-  font-family: var(--font-ui);
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  margin-bottom: var(--space-2);
 }
 
 .btn-mapa-limpiar {
-  padding: 8px 14px;
-  font-size: var(--fs-xs);
-  border-radius: 4px;
-  border: 1px solid var(--mapa-borde);
-  background: transparent;
-  color: var(--mapa-borde);
-  cursor: pointer;
-  font-family: var(--font-ui);
-  align-self: center;
-  white-space: nowrap;
   display: none;
 }
 
-.btn-mapa-escalar {
-  align-self: flex-start;
-  margin-bottom: 8px;
-  padding: 6px 14px;
-  font-size: var(--fs-xs);
-  border-radius: 4px;
-  border: 1px solid var(--mapa-borde);
-  cursor: pointer;
-  font-family: var(--font-ui);
-  font-weight: 600;
-  background: var(--mapa-fondo-pergamino);
-  color: var(--mapa-tinta-oscura);
-}
-
-/* Mismo aspecto que .btn-mapa-escalar, con separación a su izquierda: en la
-   vista "Lugar" los dos botones quedan uno junto al otro sobre el mapa. */
+.btn-mapa-escalar,
 .btn-mapa-base-topografico {
   align-self: flex-start;
-  margin-bottom: 8px;
-  margin-left: 8px;
-  padding: 6px 14px;
-  font-size: var(--fs-xs);
-  border-radius: 4px;
-  border: 1px solid var(--mapa-borde);
-  cursor: pointer;
-  font-family: var(--font-ui);
-  font-weight: 600;
-  background: var(--mapa-fondo-pergamino);
-  color: var(--mapa-tinta-oscura);
+  margin-bottom: var(--space-2);
 }
 
-/* Estados compartidos por varios botones de arriba */
-.btn-mapa--activo {
-  background: var(--mapa-acento-linea);
-  color: #fff;
-}
-
-.btn-mapa--activo:hover {
-  background: var(--mapa-acento-hover);
+.btn-mapa-base-topografico {
+  margin-left: var(--space-2);
 }
 
 .btn-mapa--visible {
-  display: inline-block;
+  display: inline-flex;
 }
 
-/* =====================================================
-   BOTÓN "VER CASOS" GENÉRICO (gráficos de personas/agentes)
-===================================================== */
 .btn-ver-casos-generico {
-  align-self: flex-start;
-  margin-bottom: 10px;
-  padding: 7px 16px;
-  border-radius: 6px;
-  border: 1px solid var(--accent);
-  background: #ac8c9b;
-  color: #fff;
-  font-size: var(--fs-xs);
-  font-family: var(--font-ui);
-  font-weight: 600;
-  cursor: pointer;
   display: none;
+  align-self: flex-start;
+  margin-bottom: var(--space-2);
 }
 
 .btn-ver-casos-generico--visible {
-  display: inline-block;
-}
-
-.btn-ver-casos-generico:hover {
-  background: var(--accent-dim);
-  border-color: var(--accent-dim);
+  display: inline-flex;
 }

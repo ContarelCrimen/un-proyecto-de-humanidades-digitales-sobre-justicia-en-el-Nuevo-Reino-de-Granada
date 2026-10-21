@@ -1,0 +1,68 @@
+---
+interface Props {
+  variante?: 'primario' | 'secundario' | 'fantasma';
+  tamano?: 'sm' | 'md';
+  icono?: boolean;
+  href?: string;
+  tipo?: 'button' | 'submit' | 'reset';
+  presionado?: boolean;
+  expandido?: boolean;
+  controla?: string;
+  deshabilitado?: boolean;
+  etiquetaAria?: string;
+  id?: string;
+  clase?: string;
+}
+
+const {
+  variante = 'secundario',
+  tamano = 'md',
+  icono = false,
+  href,
+  tipo = 'button',
+  presionado,
+  expandido,
+  controla,
+  deshabilitado = false,
+  etiquetaAria,
+  id,
+  clase,
+} = Astro.props;
+
+const clases = [
+  'ui-btn',
+  {
+    'ui-btn--primario': variante === 'primario',
+    'ui-btn--fantasma': variante === 'fantasma',
+    'ui-btn--sm': tamano === 'sm',
+    'ui-btn--icono': icono,
+  },
+  clase,
+];
+const booleano = (v?: boolean): 'true' | 'false' | undefined =>
+  v === undefined ? undefined : v ? 'true' : 'false';
+const estado = {
+  'aria-pressed': booleano(presionado),
+  'aria-expanded': booleano(expandido),
+  'aria-controls': controla,
+  'aria-label': etiquetaAria,
+};
+---
+
+{
+  href ? (
+    <a
+      class:list={clases}
+      id={id}
+      href={deshabilitado ? undefined : href}
+      aria-disabled={deshabilitado ? 'true' : undefined}
+      {...estado}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button class:list={clases} id={id} type={tipo} disabled={deshabilitado} {...estado}>
+      <slot />
+    </button>
+  )
+}

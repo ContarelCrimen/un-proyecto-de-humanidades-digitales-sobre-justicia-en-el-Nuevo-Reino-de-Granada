@@ -1,0 +1,78 @@
+---
+interface Opcion {
+  valor: string;
+  texto: string;
+  seleccionada?: boolean;
+}
+
+interface Props {
+  etiqueta?: string;
+  tipo?: 'select' | 'texto' | 'busqueda';
+  opciones?: Opcion[];
+  valor?: string;
+  placeholder?: string;
+  id?: string;
+  nombre?: string;
+  deshabilitado?: boolean;
+  clase?: string;
+}
+
+const {
+  etiqueta,
+  tipo = 'select',
+  opciones = [],
+  valor,
+  placeholder,
+  id,
+  nombre,
+  deshabilitado = false,
+  clase,
+} = Astro.props;
+---
+
+{
+  etiqueta ? (
+    <label class="ui-field">
+      <span class="ui-field-label">{etiqueta}</span>
+      {tipo === 'select' ? (
+        <select class:list={['ui-select', clase]} id={id} name={nombre} disabled={deshabilitado}>
+          {opciones.map((o) => (
+            <option value={o.valor} selected={o.seleccionada}>
+              {o.texto}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <input
+          class:list={['ui-input', clase]}
+          id={id}
+          name={nombre}
+          type={tipo === 'busqueda' ? 'search' : 'text'}
+          value={valor}
+          placeholder={placeholder}
+          disabled={deshabilitado}
+          autocomplete="off"
+        />
+      )}
+    </label>
+  ) : tipo === 'select' ? (
+    <select class:list={['ui-select', clase]} id={id} name={nombre} disabled={deshabilitado}>
+      {opciones.map((o) => (
+        <option value={o.valor} selected={o.seleccionada}>
+          {o.texto}
+        </option>
+      ))}
+    </select>
+  ) : (
+    <input
+      class:list={['ui-input', clase]}
+      id={id}
+      name={nombre}
+      type={tipo === 'busqueda' ? 'search' : 'text'}
+      value={valor}
+      placeholder={placeholder}
+      disabled={deshabilitado}
+      autocomplete="off"
+    />
+  )
+}

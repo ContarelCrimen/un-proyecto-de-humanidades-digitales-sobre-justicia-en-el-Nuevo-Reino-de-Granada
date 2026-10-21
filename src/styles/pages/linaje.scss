@@ -1,27 +1,29 @@
 @use 'abstracts/variables' as v;
 
-/* Ensancha .container solo en esta página (misma idea que
-   .mapa-main-ancho / .personas-main-ancho): la rueda + el abanico + la
-   tarjeta necesitan mucho más ancho que la columna de lectura de 900px. */
-.linaje-main-ancho {
-  max-width: 1700px;
-  width: 96%;
-  align-items: stretch;
+.about-vista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-bloques);
 }
 
-/* style.css define `section { max-width: 750px; }` para toda sección del
-   sitio; sin este override las dos secciones de la rueda quedarían
-   encajonadas sin importar cuánto se ensanche .container. */
+.chart-linaje {
+  width: 100%;
+}
+
 .linaje-seccion-ancha {
   width: 100%;
   max-width: none;
+  margin: 0;
 }
 
-/* Los párrafos sueltos de esta página van directo sobre el fondo vinotinto
-   del body; con el --ink-light global de `p` no se leían. */
-.linaje-main-ancho > div > p,
-.linaje-seccion-ancha > p {
-  color: var(--crema);
+.linaje-seccion-ancha > .page-header--seccion:first-child {
+  margin-top: 0;
+}
+
+.about-parrafo {
+  max-width: none;
+  margin: 0 0 var(--space-4);
+  color: var(--on-panel);
 }
 
 /* =====================================================
@@ -79,11 +81,11 @@
 // Linaje.csv dibuja cada visualización. tituloNivel2 se oculta a mano junto
 // con la subrueda cuando la categoría activa no tiene subcrimenes.
 .linaje-nivel-titulo {
+  max-width: none;
   margin: 0;
   font-family: var(--font-ui);
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: var(--fs-ui-sm);
+  font-weight: var(--fw-bold);
   text-transform: uppercase;
   color: var(--crema);
 }
@@ -156,7 +158,7 @@
 }
 
 .linaje-subrueda-centro .linaje-nodo-circulo-texto {
-  font-size: var(--fs-md);
+  font-size: var(--fs-ui-md);
   -webkit-line-clamp: 4;
 }
 
@@ -251,14 +253,14 @@
 }
 
 .linaje-nodo-circulo--agrandada .linaje-nodo-circulo-texto {
-  font-size: var(--fs-md);
+  font-size: var(--fs-ui-md);
   -webkit-line-clamp: 4;
 }
 
 .linaje-nodo-circulo-texto {
   font-family: var(--font-ui);
-  font-size: var(--fs-3xs);
-  font-weight: 700;
+  font-size: var(--fs-ui-xs);
+  font-weight: var(--fw-bold);
   line-height: var(--lh-snug);
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -269,6 +271,16 @@
   transition: font-size var(--duracion-giro) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.linaje-nodo-circulo-icono {
+  flex: none;
+  width: 55%;
+  aspect-ratio: 1;
+  color: var(--crema);
+  background-color: currentColor;
+  -webkit-mask: var(--icono-crimen) center / contain no-repeat;
+  mask: var(--icono-crimen) center / contain no-repeat;
+}
+
 .linaje-nodo-caja {
   width: 100%;
   height: 100%;
@@ -276,7 +288,7 @@
   border: 1.5px solid var(--categoria-color);
   background: var(--parchment, #f7f2e8);
   color: var(--ink, #1a1410);
-  font-size: var(--fs-3xs);
+  font-size: var(--fs-ui-xs);
   line-height: var(--lh-snug);
   padding: 3px 8px;
   overflow-wrap: anywhere;
@@ -301,7 +313,7 @@
   background: var(--categoria-color);
   color: var(--categoria-color-texto);
   border-color: var(--categoria-color);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 
 /* Hub: tarjeta grande y fija a la derecha de la rueda (ver .linaje-hub-col).
@@ -318,16 +330,18 @@
   width: 100%;
   min-height: 340px;
   box-sizing: border-box;
-  background: var(--parchment, #f7f2e8);
-  border: 1.5px solid var(--categoria-color, var(--rule, #c8b89a));
-  border-radius: 14px;
-  padding: 30px 34px;
+  color: var(--on-surface);
+  text-align: left;
+  background: var(--surface);
+  border: var(--border-width-strong) solid var(--categoria-color, var(--surface-border));
+  border-radius: var(--radius-panel);
+  padding: var(--space-6);
   font-family: var(--font-body);
 }
 
 .linaje-panel-titulo {
   font-family: var(--font-display);
-  font-size: var(--fs-xl);
+  font-size: var(--fs-h3);
   color: var(--categoria-color, var(--accent));
   margin: 0 0 16px;
 }
@@ -338,25 +352,11 @@
 .linaje-selector-crimen {
   display: block;
   width: 100%;
-  box-sizing: border-box;
-  margin: 0 0 18px;
-  padding: 5px 8px;
-  font-family: var(--font-ui);
-  font-size: var(--fs-xs);
-  color: var(--ink-light, #4a3f35);
-  background: transparent;
-  border: 1px solid var(--rule, #c8b89a);
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.linaje-selector-crimen:hover,
-.linaje-selector-crimen:focus-visible {
-  border-color: var(--categoria-color, var(--rule, #c8b89a));
+  margin: 0 0 var(--space-4);
 }
 
 .linaje-panel-definicion {
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
   line-height: var(--lh-relaxed);
   margin: 0 0 16px;
 }
@@ -364,22 +364,13 @@
 .linaje-panel-sinonimos {
   font-size: var(--fs-sm);
   font-style: italic;
-  color: var(--ink-light, #4a3f35);
-  margin: 0 0 20px;
+  color: var(--on-surface-muted);
+  margin: 0 0 var(--space-5);
 }
 
-.linaje-panel-boton {
-  padding: 10px 22px;
-  border-radius: 6px;
-  border: 1px solid var(--categoria-color, var(--accent));
-  background: var(--categoria-color, var(--accent));
-  color: var(--categoria-color-texto, #fff);
-  font-size: var(--fs-sm);
-  font-family: var(--font-ui);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.linaje-panel-boton:hover {
-  filter: brightness(0.92);
+.linaje-panel .linaje-panel-boton {
+  --ui-btn-bg: var(--categoria-color, var(--vinotinto));
+  --ui-btn-borde: var(--categoria-color, var(--vinotinto));
+  --ui-btn-fg: var(--categoria-color-texto, var(--crema));
+  --ui-btn-bg-hover: var(--categoria-color, var(--vinotinto));
 }

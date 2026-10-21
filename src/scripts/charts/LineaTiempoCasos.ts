@@ -145,10 +145,12 @@ export async function crearLineaTiempoCasos(containerId: string) {
   const wrapper = document.createElement('div');
   wrapper.className = 'linea-tiempo-casos-wrapper';
   const selectorVista = document.createElement('div');
-  selectorVista.className = 'linea-tiempo-casos-selector-vista';
+  selectorVista.className = 'ui-tabs ui-tabs--sm linea-tiempo-casos-selector-vista';
+  selectorVista.setAttribute('role', 'tablist');
+  selectorVista.setAttribute('aria-label', 'Vista de la línea de tiempo');
   selectorVista.innerHTML = `
-    <button type="button" class="linea-tiempo-casos-selector-vista__boton linea-tiempo-casos-selector-vista__boton--activo" data-vista="linea">Vista en línea</button>
-    <button type="button" class="linea-tiempo-casos-selector-vista__boton" data-vista="rueda">Vista en detalle</button>
+    <button type="button" class="ui-tab" role="tab" aria-selected="true" data-vista="linea">Vista en línea</button>
+    <button type="button" class="ui-tab" role="tab" aria-selected="false" data-vista="rueda">Vista en detalle</button>
   `;
   wrapper.appendChild(selectorVista);
   const botonVistaLinea = selectorVista.querySelector<HTMLButtonElement>('[data-vista="linea"]')!;
@@ -175,8 +177,8 @@ export async function crearLineaTiempoCasos(containerId: string) {
   function mostrarVistaTimeline(vista: 'linea' | 'rueda') {
     cuerpo.classList.toggle('linea-tiempo-casos-cuerpo--oculto', vista !== 'rueda');
     contenedorLinea.classList.toggle('linea-tiempo-casos-contenedor-linea--oculto', vista !== 'linea');
-    botonVistaLinea.classList.toggle('linea-tiempo-casos-selector-vista__boton--activo', vista === 'linea');
-    botonVistaRueda.classList.toggle('linea-tiempo-casos-selector-vista__boton--activo', vista === 'rueda');
+    botonVistaLinea.setAttribute('aria-selected', String(vista === 'linea'));
+    botonVistaRueda.setAttribute('aria-selected', String(vista === 'rueda'));
     if (elTitulo) elTitulo.textContent = TEXTOS_VISTA[vista].titulo;
     if (elSubtitulo) elSubtitulo.textContent = TEXTOS_VISTA[vista].subtitulo;
     leyenda.classList.toggle('linea-tiempo-casos-leyenda--linea', vista === 'linea');
@@ -192,16 +194,16 @@ export async function crearLineaTiempoCasos(containerId: string) {
   const guiaFecha = document.createElement('div');
   guiaFecha.className = 'linea-tiempo-casos-guia-fecha';
   guiaFecha.innerHTML = `
-    <div class="mapa-slider-rango">
-      <div class="mapa-slider-track"></div>
-      <div class="mapa-slider-progreso"></div>
-      <input type="range" class="mapa-slider" aria-label="Desplazarse en el tiempo" />
+    <div class="ui-range ui-range--simple">
+      <span class="ui-range-pista" aria-hidden="true"></span>
+      <span class="ui-range-relleno" aria-hidden="true"></span>
+      <input type="range" class="ui-range-input" aria-label="Desplazarse en el tiempo" />
     </div>
-    <div class="linea-tiempo-casos-guia-fecha__etiqueta"></div>
+    <output class="ui-range-valor linea-tiempo-casos-guia-fecha__etiqueta"></output>
   `;
   columnaIzq.appendChild(guiaFecha);
-  const guiaProgreso = guiaFecha.querySelector<HTMLElement>('.mapa-slider-progreso')!;
-  const guiaPos = guiaFecha.querySelector<HTMLInputElement>('.mapa-slider')!;
+  const guiaRango = guiaFecha.querySelector<HTMLElement>('.ui-range')!;
+  const guiaPos = guiaFecha.querySelector<HTMLInputElement>('.ui-range-input')!;
   const guiaEtiqueta = guiaFecha.querySelector<HTMLElement>('.linea-tiempo-casos-guia-fecha__etiqueta')!;
   const contenido = document.createElement('div');
   contenido.className = 'linea-tiempo-casos-lista-contenido';
@@ -333,8 +335,8 @@ export async function crearLineaTiempoCasos(containerId: string) {
     const rango = Math.max(1, anioMaxActual - anioMinActual);
     const pctDesde = ((desdeClamp - anioMinActual) / rango) * 100;
     const pctHasta = ((hastaClamp - anioMinActual) / rango) * 100;
-    guiaProgreso.style.left = `${pctDesde}%`;
-    guiaProgreso.style.width = `${Math.max(0, pctHasta - pctDesde)}%`;
+    guiaRango.style.setProperty('--ui-range-desde', String(pctDesde));
+    guiaRango.style.setProperty('--ui-range-hasta', String(Math.max(pctDesde, pctHasta)));
     guiaEtiqueta.textContent = `${desdeClamp} – ${hastaClamp}`;
   }
   guiaPos.addEventListener('input', () => irAAnio(+guiaPos.value));
@@ -394,14 +396,14 @@ export async function crearLineaTiempoCasos(containerId: string) {
   const panelCaso = document.createElement('div');
   panelCaso.className = 'linea-tiempo-casos-panel-caso';
   panelCaso.innerHTML = `
-    <button type="button" class="linea-tiempo-casos-panel-caso__cerrar" aria-label="Cerrar">×</button>
-    <button type="button" class="linea-tiempo-casos-panel-caso__volver" hidden>← Volver al año</button>
+    <button type="button" class="ui-btn ui-btn--fantasma ui-btn--icono ui-btn--sm linea-tiempo-casos-panel-caso__cerrar" aria-label="Cerrar"><span aria-hidden="true">×</span></button>
+    <button type="button" class="ui-btn ui-btn--fantasma ui-btn--sm linea-tiempo-casos-panel-caso__volver" hidden>← Volver al año</button>
     <div class="linea-tiempo-casos-panel-caso__fecha"></div>
     <div class="linea-tiempo-casos-panel-caso__lugar"></div>
     <p class="linea-tiempo-casos-panel-caso__descripcion"></p>
     <ul class="linea-tiempo-casos-panel-caso__lista"></ul>
-    <button type="button" class="linea-tiempo-casos-panel-caso__boton-mapa">Ver en el mapa</button>
-    <button type="button" class="linea-tiempo-casos-panel-caso__boton-caso">Ver caso</button>
+    <button type="button" class="ui-btn ui-btn--primario linea-tiempo-casos-panel-caso__boton-mapa">Ver en el mapa</button>
+    <button type="button" class="ui-btn linea-tiempo-casos-panel-caso__boton-caso">Ver caso</button>
   `;
   cuerpo.appendChild(panelCaso);
   const elFecha = panelCaso.querySelector<HTMLElement>('.linea-tiempo-casos-panel-caso__fecha')!;
@@ -610,7 +612,7 @@ export async function crearLineaTiempoCasos(containerId: string) {
       g.append('circle').attr('r', 4).attr('fill', s.color).style('display', 'none'),
     );
     const tooltip = document.createElement('div');
-    tooltip.className = 'tooltip-grafico tooltip-grafico--sans';
+    tooltip.className = 'tooltip-grafico';
     contenedorLinea.appendChild(tooltip);
     function moverFocoA(anioBruto: number) {
       const anio = Math.min(anioHasta, Math.max(anioDesde, Math.round(anioBruto)));
@@ -657,7 +659,7 @@ export async function crearLineaTiempoCasos(containerId: string) {
     contenedorLinea.appendChild(svg.node()!);
     const botonReproducir = document.createElement('button');
     botonReproducir.type = 'button';
-    botonReproducir.className = 'linea-tiempo-casos-linea-reproducir';
+    botonReproducir.className = 'ui-btn ui-btn--sm linea-tiempo-casos-linea-reproducir';
     botonReproducir.textContent = '▶ Reproducir';
     contenedorLinea.appendChild(botonReproducir);
     const duracionMs = Math.min(9000, Math.max(2500, spanAnios * 20));

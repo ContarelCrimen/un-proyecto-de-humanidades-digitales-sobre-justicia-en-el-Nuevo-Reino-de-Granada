@@ -1,0 +1,71 @@
+---
+interface Props {
+  etiqueta: string;
+  valor: string | number;
+  sub?: string;
+  color?: string;
+  accion?: string;
+  interactiva?: boolean;
+  presionada?: boolean;
+  variante?: 'tarjeta' | 'compacta';
+  vivo?: boolean;
+  id?: string;
+  idValor?: string;
+  idEtiqueta?: string;
+  clase?: string;
+}
+
+const {
+  etiqueta,
+  valor,
+  sub,
+  color,
+  accion,
+  interactiva = false,
+  presionada = false,
+  variante = 'tarjeta',
+  vivo = false,
+  id,
+  idValor,
+  idEtiqueta,
+  clase,
+} = Astro.props;
+
+const clases = ['ui-stat', { 'ui-stat--compacta': variante === 'compacta' }, clase];
+const estilo = color ? `--ui-stat-color: ${color}` : undefined;
+const Etiqueta = interactiva ? 'button' : 'div';
+---
+
+<Etiqueta
+  class:list={clases}
+  id={id}
+  style={estilo}
+  type={interactiva ? 'button' : undefined}
+  aria-pressed={interactiva ? (presionada ? 'true' : 'false') : undefined}
+  aria-live={vivo ? 'polite' : undefined}
+>
+  {
+    variante === 'compacta' ? (
+      <>
+        <span class="ui-stat-valor" id={idValor}>
+          {valor}
+        </span>
+        <span class="ui-stat-etiqueta" id={idEtiqueta}>
+          {etiqueta}
+        </span>
+      </>
+    ) : (
+      <>
+        <span class="ui-stat-cabecera">
+          <span class="ui-stat-etiqueta">
+            {color && <span class="ui-stat-punto" aria-hidden="true" />}
+            {etiqueta}
+          </span>
+          {accion && <span class="ui-stat-accion">{accion}</span>}
+        </span>
+        <span class="ui-stat-valor">{valor}</span>
+        {sub && <span class="ui-stat-sub">{sub}</span>}
+      </>
+    )
+  }
+</Etiqueta>

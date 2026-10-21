@@ -21,12 +21,12 @@
 }
 
 .sunburst-etiqueta {
-  font-size: var(--fs-xs);
+  font-size: var(--fs-ui-sm);
   fill: #222;
 }
 
 .sunburst-etiqueta-pct {
-  font-size: var(--fs-3xs);
+  font-size: var(--fs-ui-xs);
   fill: #555;
 }
 
@@ -37,7 +37,7 @@
 }
 
 .sunburst-texto-central {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-ui-sm);
   fill: #555;
   pointer-events: none;
 }

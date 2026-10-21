@@ -14,13 +14,23 @@
 @use 'abstracts/root';
 @use 'base/reset';
 @use 'base/typography';
+@use 'components/contexto';
+@use 'components/pagina';
+@use 'components/page-header';
+@use 'components/button';
+@use 'components/tabs';
+@use 'components/chip';
+@use 'components/filter-panel';
+@use 'components/select';
+@use 'components/checkbox';
+@use 'components/range';
+@use 'components/stat-card';
+@use 'components/burbuja';
 
 .container {
-  width: 90%;
-  max-width: 900px;
+  width: min(var(--ancho-pagina), 100% - 2 * var(--margen-pagina));
   margin: 0 auto;
-  padding: 3rem 1rem 5rem;
-  padding-top: 100px; /* Espacio para el topnav sticky */
+  padding: 0 0 5rem;
 
   display: flex;
   flex-direction: column;
@@ -46,7 +56,6 @@ section {
   padding: 0 40px;
   box-sizing: border-box;
   background: var(--crema);
-  border-bottom: 2px solid var(--vinotinto);
 
   position: sticky;
   top: 0;
@@ -201,11 +210,14 @@ body.nav-abierto {
   font-style: italic;
   color: var(--vinotinto);
   text-decoration: none;
-  font-size: var(--fs-md);
-  font-weight: 400;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
   transition: color 0.15s;
+}
+
+.logo {
+  font-size: var(--fs-h2);
 }
 
 /* Same horizontal padding as the bar, so the panel's text lines up under the
@@ -230,183 +242,54 @@ body.nav-abierto {
 
 /* =====================================================
    PIE DE PÁGINA
-   Barra vacía por ahora. Deliberadamente más alta que el topnav (65px), y sin
-   borde: el fondo de la página ya es vinotinto, así que un borde vinotinto no
-   se vería contra él. La altura la da min-height porque no hay contenido.
 ===================================================== */
 .site-footer {
   width: 100%;
   min-height: 120px;
+  margin-top: auto;
   display: flex;
-  align-items: center;
-  padding: 0 40px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-6) 40px;
   box-sizing: border-box;
   background: var(--crema);
+
+  p {
+    max-width: none;
+    margin: 0;
+    color: var(--vinotinto);
+  }
 }
 
-/* =====================================================
-   VISUALIZACIONES Y TARJETAS
-===================================================== */
-.col-root {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  width: 100%;
-  max-width: 1400px;
-}
-
-.cards-container {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  width: 100%;
-}
-
-.card {
-  flex: 1;
-  background: #ffffff;
-  border-radius: 2px; /* Bordes más rectos para look manuscrito/antiguo */
-  padding: 25px;
-  border: 1px solid var(--rule);
-  border-left: 4px solid var(--accent); /* Detalle elegante tomado de crime-card */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.15s;
-}
-
-.card:hover {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-}
-
-a.card {
-  display: block;
-  text-align: left;
-  color: inherit;
-  text-decoration: none;
-}
-
-a.card h3 {
+.site-footer-titulo {
   font-family: var(--font-display);
-  font-size: var(--fs-lg);
-  color: var(--accent);
-  margin-bottom: 0.5rem;
-}
-
-a.card p {
-  margin: 0;
-  max-width: none;
-}
-
-/* =====================================================
-   PESTAÑAS DE "SOBRE EL PROYECTO" (AboutTabs.astro)
-   Barra de 3 botones (Fuentes / Delitos / Documentación técnica) que
-   aparece en las tres páginas de la sección para poder saltar de una a otra
-   sin volver antes al índice — son enlaces reales entre páginas, no un
-   cambio de contenido por JS.
-===================================================== */
-.about-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 2.5rem;
-}
-
-.about-tab {
-  padding: 10px 22px;
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  background: #ffffff;
-  color: var(--ink);
-  font-family: var(--font-ui);
   font-size: var(--fs-sm);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  text-decoration: none;
-  transition:
-    background 0.15s,
-    color 0.15s,
-    border-color 0.15s;
+  font-style: italic;
+  line-height: var(--lh-snug);
 }
 
-.about-tab:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.about-tab[aria-current='page'] {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
+.site-footer-institucion {
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
+  line-height: var(--lh-normal);
 }
 
 .chart-linaje,
-#tablaContainer,
-#tablaMetadatos {
+#tablaContainer {
   overflow-x: auto;
   width: 100%;
 }
 
 #mapa-contenedor {
-  font-family: var(--font-display);
-}
-
-/* =====================================================
-   FILTROS
-==================================================== */
-.filtros-tabla select,
-.filtros-tabla input[type='text'] {
-  padding: 0.6rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-md);
-  color: var(--vinotinto);
-  background: var(--crema);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  outline: none;
-}
-
-.filtros-tabla select:focus,
-.filtros-tabla input[type='text']:focus {
-  border-color: var(--accent);
-}
-
-@supports (appearance: base-select) {
-  .filtros-tabla select,
-  .filtros-tabla select::picker(select) {
-    appearance: base-select;
-  }
-
-  .filtros-tabla select::picker(select) {
-    background: var(--crema);
-    color: var(--vinotinto);
-    font-family: var(--font-body);
-    font-size: var(--fs-md);
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-  }
-
-  .filtros-tabla option {
-    padding: 0.6rem;
-    background: var(--crema);
-    color: var(--vinotinto);
-    font-family: var(--font-body);
-    font-size: var(--fs-md);
-  }
-
-  .filtros-tabla option:hover,
-  .filtros-tabla option:focus,
-  .filtros-tabla option:checked {
-    background: var(--vinotinto);
-    color: var(--crema);
-  }
+  font-family: var(--font-ui);
 }
 
 /* =====================================================
    TABLAS ARCHIVÍSTICAS
 ===================================================== */
-.tabla-datos,
-.tabla-metadatos {
+.tabla-datos {
   width: 100%;
   border-collapse: collapse;
   background: #ffffff;
@@ -414,29 +297,26 @@ a.card p {
   margin-top: 1rem;
 }
 
-.tabla-datos th,
-.tabla-metadatos th {
+.tabla-datos th {
   background: var(--parchment-dark);
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
   padding: 1rem;
   text-align: left;
   border-bottom: 2px solid var(--rule);
 }
 
-.tabla-datos td,
-.tabla-metadatos td {
+.tabla-datos td {
+  font-family: var(--font-ui);
   padding: 0.8rem;
-  font-size: var(--fs-md);
+  font-size: var(--fs-ui-md);
   color: var(--ink-light);
   border-bottom: 1px solid var(--rule);
 }
 
-.tabla-datos tr:hover,
-.tabla-metadatos tr:hover {
+.tabla-datos tr:hover {
   background: var(--parchment);
 }
 
@@ -457,7 +337,7 @@ a.card p {
 .orden-icono {
   display: inline-block;
   margin-left: 0.4em;
-  font-size: 0.85em;
+  font-size: var(--fs-ui-xs);
   opacity: 0.4;
 }
 
@@ -482,92 +362,6 @@ a.card p {
 }
 
 /* =====================================================
-   BOTONES DE DESCARGA
-===================================================== */
-.descargas {
-  width: 100%;
-  margin-top: 3rem;
-  text-align: center;
-}
-
-.botones-descarga {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-top: 1rem;
-}
-
-.btn-descarga {
-  background: var(--accent);
-  color: var(--parchment);
-  font-family: var(--font-ui);
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.9rem 1.5rem;
-  text-decoration: none;
-  border-radius: 2px;
-  border: 1px solid transparent;
-  transition: all 0.2s;
-}
-
-.btn-descarga:hover {
-  background: var(--parchment-dark);
-  color: var(--accent);
-  border-color: var(--rule);
-}
-
-/* =====================================================
-   TOGGLE DASHBOARD / HISTORIA
-===================================================== */
-.vista-toggle {
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  margin: 0 0 2rem;
-}
-
-.vista-toggle-btn {
-  padding: 0.55rem 1.5rem;
-  border-radius: 999px;
-  border: 1px solid var(--accent);
-  background: #ffffff;
-  color: var(--accent);
-  font-family: var(--font-ui);
-  font-weight: 600;
-  font-size: var(--fs-md);
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-}
-
-.vista-toggle-btn:hover {
-  background: rgba(122, 59, 30, 0.08);
-}
-
-.vista-toggle-btn--activo,
-.vista-toggle-btn--activo:hover {
-  background: var(--accent);
-  color: #ffffff;
-}
-
-.vista-historia {
-  max-width: 750px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.vista-historia-placeholder {
-  color: var(--accent-dim);
-  font-style: italic;
-  padding: 3rem 0;
-}
-
-/* =====================================================
    RESPONSIVE
 ===================================================== */
 @media (max-width: v.$bp-movil) {
@@ -579,12 +373,5 @@ a.card p {
   }
   .nav-links a {
     padding: 0.9rem 20px;
-  }
-  .col-root,
-  .cards-container {
-    flex-direction: column;
-  }
-  .card {
-    width: 100%;
   }
 }

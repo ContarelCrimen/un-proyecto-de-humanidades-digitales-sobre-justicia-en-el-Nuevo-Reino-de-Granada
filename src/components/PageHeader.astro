@@ -1,0 +1,69 @@
+---
+interface Props {
+  titulo?: string;
+  ceja?: string;
+  subtitulo?: string;
+  idTitulo?: string;
+  idCeja?: string;
+  idSubtitulo?: string;
+  sinMayusculas?: boolean;
+  oculto?: boolean;
+  nivel?: 'pagina' | 'seccion' | 'subseccion';
+  color?: string;
+}
+
+const {
+  titulo,
+  ceja,
+  subtitulo,
+  idTitulo,
+  idCeja,
+  idSubtitulo,
+  sinMayusculas = false,
+  oculto = false,
+  nivel = 'pagina',
+  color,
+} = Astro.props;
+const conExtra = Astro.slots.has('extra');
+const Titulo = nivel === 'pagina' ? 'h1' : nivel === 'seccion' ? 'h2' : 'h3';
+---
+
+<header
+  class:list={['page-header', { [`page-header--${nivel}`]: nivel !== 'pagina' }]}
+  hidden={oculto}
+>
+  <div class="page-header-texto">
+    {
+      (ceja || idCeja) && (
+        <p class="page-header-ceja" id={idCeja}>
+          {ceja}
+        </p>
+      )
+    }
+    <Titulo
+      class:list={['page-header-titulo', { 'page-header-titulo--sin-mayusculas': sinMayusculas }]}
+      id={idTitulo}
+    >
+      {
+        color && (
+          <span class="page-header-punto" style={`--page-header-punto: ${color}`} aria-hidden="true" />
+        )
+      }
+      <slot name="titulo">{titulo}</slot>
+    </Titulo>
+    {
+      (subtitulo || idSubtitulo) && (
+        <p class="page-header-subtitulo" id={idSubtitulo}>
+          {subtitulo}
+        </p>
+      )
+    }
+  </div>
+  {
+    conExtra && (
+      <div class="page-header-extra">
+        <slot name="extra" />
+      </div>
+    )
+  }
+</header>

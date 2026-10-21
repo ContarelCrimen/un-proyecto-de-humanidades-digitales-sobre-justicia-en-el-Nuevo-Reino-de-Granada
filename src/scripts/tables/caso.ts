@@ -84,11 +84,22 @@ function renderNavegacion(id: string, casesMap: Map<string, any>) {
     if (activo) a.href = `${base}base-de-datos/caso.html?caso=${encodeURIComponent(destino)}`;
     else a.removeAttribute('href');
     a.setAttribute('aria-disabled', String(!activo));
-    a.classList.toggle('caso-nav-boton--inactivo', !activo);
   };
   enlazar(anterior, ids[posicion - 1]);
   enlazar(siguiente, ids[posicion + 1]);
   nav.hidden = false;
+}
+function encabezadoSeccion(titulo: string): HTMLElement {
+  const encabezado = document.createElement('header');
+  encabezado.className = 'page-header page-header--seccion';
+  const texto = document.createElement('div');
+  texto.className = 'page-header-texto';
+  const h2 = document.createElement('h2');
+  h2.className = 'page-header-titulo';
+  h2.textContent = titulo;
+  texto.appendChild(h2);
+  encabezado.appendChild(texto);
+  return encabezado;
 }
 function claveDocumento(idCaso?: string, idCrimen?: string): string {
   return `${idCaso}|${idCrimen}`;
@@ -198,33 +209,25 @@ async function loadCase(
   }
 }
 function renderCase(caso: any, personas: Fila[], main: HTMLElement, casesMap: Map<string, any>) {
-  const header = document.createElement('div');
-  header.innerHTML = `
-    <p class="case-eyebrow">Caso ID ${escaparHtml(String(caso.id))}</p>
-    <h1 class="case-title">${formatearDescripcion(caso.descripcion, false)}</h1>
-    <div class="meta-row">
-      <div class="meta-pill">
-        <span class="label">Año</span>
-        ${caso.rangoAnios}
-      </div>
-      <div class="meta-pill">
-        <span class="label">Lugar</span>
-        ${caso.lugar}
-      </div>
-    </div>
+  document.getElementById('casoCeja')!.textContent = `Caso ID ${caso.id}`;
+  document.getElementById('casoTitulo')!.innerHTML = formatearDescripcion(caso.descripcion, false);
+  document.getElementById('casoMeta')!.innerHTML = `
+      <span class="ui-chip ui-chip--estatico">
+        <span class="ui-chip-texto"><span class="ui-chip-etiqueta">Año </span>${caso.rangoAnios}</span>
+      </span>
+      <span class="ui-chip ui-chip--estatico">
+        <span class="ui-chip-texto"><span class="ui-chip-etiqueta">Lugar </span>${caso.lugar}</span>
+      </span>
   `;
-  main.appendChild(header);
+  document.getElementById('casoMeta')!.closest('header')!.hidden = false;
   if (caso.documentos.length > 1) {
-    const secTitle = document.createElement('h2');
-    secTitle.className = 'section-title';
-    secTitle.textContent = `crimenes registrados (${caso.documentos.length})`;
-    main.appendChild(secTitle);
+    main.appendChild(encabezadoSeccion(`Crímenes registrados (${caso.documentos.length})`));
   }
   const list = document.createElement('div');
   list.className = 'crimes-list';
   caso.documentos.forEach((doc: any) => {
     const card = document.createElement('article');
-    card.className = 'crime-card';
+    card.className = 'crime-card ui-clara';
     const agentesDocumento = personas.filter((p: Fila) =>
       ((p['Relación_crimenes'] as string) || '')
         .split(',')
@@ -244,10 +247,12 @@ function renderCase(caso: any, personas: Fila[], main: HTMLElement, casesMap: Ma
       const unSoloRol = entradas.length === 1;
       agentesHTML = `
         <div class="agents-block">
-          <div class="agents-cabecera">
-            <h4>Agentes involucrados</h4>
-            ${unSoloRol ? `<span class="agent-role">${entradas[0][0]}</span>` : ''}
-          </div>
+          <header class="page-header page-header--subseccion">
+            <div class="page-header-texto">
+              <h3 class="page-header-titulo">Agentes involucrados</h3>
+            </div>
+            ${unSoloRol ? `<div class="page-header-extra"><span class="agent-role">${entradas[0][0]}</span></div>` : ''}
+          </header>
           ${entradas
             .map(
               ([atributo, personasGrupo]) => `
@@ -299,7 +304,11 @@ function renderCase(caso: any, personas: Fila[], main: HTMLElement, casesMap: Ma
     const referencia = referenciaArchivistica(doc.fuente);
     const fuenteHTML = `
       <div class="ficha">
-        <h4 class="ficha-titulo">Referencia</h4>
+        <header class="page-header page-header--subseccion">
+          <div class="page-header-texto">
+            <h3 class="page-header-titulo">Referencia</h3>
+          </div>
+        </header>
         ${
           doc.fuente
             ? `<div class="ficha-grid">
@@ -317,11 +326,11 @@ function renderCase(caso: any, personas: Fila[], main: HTMLElement, casesMap: Ma
         }
         <div class="ficha-pie">
           <div class="ficha-chips">
-            ${doc.año ? `<span class="doc-chip">Año ${doc.año}</span>` : ''}
+            ${doc.año ? `<span class="ui-chip ui-chip--estatico"><span class="ui-chip-texto"><span class="ui-chip-etiqueta">Año </span>${doc.año}</span></span>` : ''}
           </div>
           ${
             referencia
-              ? `<button type="button" class="copiar-ref">
+              ? `<button type="button" class="ui-btn copiar-ref">
                   <svg viewBox="0 0 16 16" aria-hidden="true">
                     <rect x="5.25" y="5.25" width="8" height="8" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.3"></rect>
                     <path d="M10.75 5.25V3.5a1.2 1.2 0 0 0-1.2-1.2H3.5a1.2 1.2 0 0 0-1.2 1.2v6.05a1.2 1.2 0 0 0 1.2 1.2h1.75" fill="none" stroke="currentColor" stroke-width="1.3"></path>
@@ -359,7 +368,7 @@ function renderCase(caso: any, personas: Fila[], main: HTMLElement, casesMap: Ma
     `;
     const idDocumentoHTML = `
       <div class="crime-id">
-        <span class="doc-chip doc-chip--id">
+        <span class="ui-chip ui-chip--estatico crime-id-chip">
           <svg viewBox="0 0 16 16" aria-hidden="true">
             <path d="M4 1.75h5.2L12.5 5v9.25H4V1.75Z M9 1.75V5.25h3.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path>
           </svg>
@@ -428,23 +437,22 @@ function renderCasosSimilares(caso: any, casesMap: Map<string, any>, main: HTMLE
   const section = document.createElement('div');
   section.className = 'similares-section';
   section.innerHTML = `
-    <h2 class="section-title">Casos similares</h2>
-    <div class="similares-tabs">
+    <div class="ui-tabs ui-tabs--sm" role="tablist" aria-label="Criterio de similitud">
       ${CRITERIOS_SIMILARES.map(
         ({ criterio, etiqueta }, i) => `
-        <button class="similares-tab${i === 0 ? ' similares-tab--activa' : ''}" data-criterio="${criterio}">
+        <button type="button" class="ui-tab" role="tab" aria-selected="${i === 0}" aria-controls="similaresCarrusel" data-criterio="${criterio}">
           ${etiqueta}
         </button>
       `,
       ).join('')}
     </div>
     <div class="similares-carrusel-wrap">
-      <button class="carrusel-flecha carrusel-flecha--prev" aria-label="Ver casos anteriores">‹</button>
-      <div class="similares-carrusel"></div>
-      <button class="carrusel-flecha carrusel-flecha--next" aria-label="Ver casos siguientes">›</button>
+      <button type="button" class="ui-btn ui-btn--icono carrusel-flecha--prev" aria-label="Ver casos anteriores">‹</button>
+      <div class="similares-carrusel" id="similaresCarrusel" role="tabpanel"></div>
+      <button type="button" class="ui-btn ui-btn--icono carrusel-flecha--next" aria-label="Ver casos siguientes">›</button>
     </div>
   `;
-  main.appendChild(section);
+  main.append(encabezadoSeccion('Casos similares'), section);
   const carrusel = section.querySelector<HTMLElement>('.similares-carrusel')!;
   const flechaPrev = section.querySelector<HTMLButtonElement>('.carrusel-flecha--prev')!;
   const flechaNext = section.querySelector<HTMLButtonElement>('.carrusel-flecha--next')!;
@@ -454,30 +462,24 @@ function renderCasosSimilares(caso: any, casesMap: Map<string, any>, main: HTMLE
       ? similares
           .map(
             (s) => `
-        <article class="similar-card" data-caso="${s.id}" title="Ver expediente ${s.id}">
+        <a class="similar-card ui-clara" href="${base}base-de-datos/caso.html?caso=${encodeURIComponent(s.id)}" title="Ver expediente ${s.id}">
           <div class="similar-card-meta">
             <span>${s.año || 'Sin año'}</span>
             <span>${s.lugar || 'Sin lugar'}</span>
           </div>
           <p class="similar-card-desc">${formatearDescripcion(s.descripcion, false)}</p>
           <div class="similar-card-crimen">${[...crimenesDeCaso(s)].join(', ')}</div>
-        </article>
+        </a>
       `,
           )
           .join('')
       : `<p class="similares-vacio">No se encontraron casos similares para este criterio.</p>`;
-    carrusel.querySelectorAll<HTMLElement>('[data-caso]').forEach((card) => {
-      card.addEventListener('click', () => {
-        window.location.href = `${base}base-de-datos/caso.html?caso=${encodeURIComponent(card.dataset.caso!)}`;
-      });
-    });
   }
-  section.querySelectorAll<HTMLButtonElement>('.similares-tab').forEach((tab) => {
+  section.querySelectorAll<HTMLButtonElement>('.ui-tab').forEach((tab) => {
     tab.addEventListener('click', () => {
       section
-        .querySelectorAll('.similares-tab')
-        .forEach((t) => t.classList.remove('similares-tab--activa'));
-      tab.classList.add('similares-tab--activa');
+        .querySelectorAll('.ui-tab')
+        .forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
       carrusel.scrollTo({ left: 0 });
       pintarCriterio(tab.dataset.criterio as CriterioSimilar);
     });

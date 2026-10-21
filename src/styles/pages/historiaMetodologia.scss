@@ -86,7 +86,7 @@
 .historia-slide-texto {
   margin: 0;
   max-width: 560px;
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
   line-height: var(--lh-relaxed);
   color: var(--ink, #1a1410);
   text-align: left;
@@ -133,21 +133,6 @@
 .historia-flecha {
   flex: none;
   align-self: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--rule, #c8b89a);
-  border-radius: 50%;
-  background: #fff;
-  color: var(--accent);
-  font-size: var(--fs-lg);
-  line-height: var(--lh-tight);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.historia-flecha:hover {
-  background: var(--accent);
-  color: #fff;
 }
 
 .historia-puntos {

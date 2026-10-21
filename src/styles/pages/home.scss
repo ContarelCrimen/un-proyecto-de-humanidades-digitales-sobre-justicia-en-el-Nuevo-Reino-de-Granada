@@ -12,8 +12,7 @@
 // nav is not a descendant of main.
 //
 // Contrast against --vinotinto (#5f233d): --crema 9.83:1, --dorado 5.26:1.
-// Both pass AA. --rosado on the h1's rule is 3.89:1, which is fine for a
-// decorative 1px border but would not be for text.
+// Both pass AA.
 @use 'abstracts/variables' as v;
 
 body.home {
@@ -22,18 +21,15 @@ body.home {
 }
 
 body.home main {
-  .section-mainTitle {
-    color: var(--crema);
-    border-bottom-color: var(--rosado);
-  }
-
   p {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-normal);
     color: var(--crema);
   }
 
   // <a> has no colour rule anywhere in the repo, so without this the link
   // renders in the browser's default blue: 1.25:1 on vinotinto, unreadable.
-  a {
+  p a {
     color: var(--dorado);
     text-decoration: underline;
   }
@@ -70,6 +66,7 @@ body.home main {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: var(--space-7);
   padding: 3rem 2.5rem;
 
   // The hero no longer grows, so on a short viewport long text has to stay
@@ -77,17 +74,17 @@ body.home main {
   min-height: 0;
   overflow-y: auto;
 
-  // .container used to supply text-align: center. Without it the h1 keeps its
-  // own centring rule while the paragraph goes left, which reads as a mistake.
-  // Both are pinned left here, inside the hero only.
-  .section-mainTitle {
-    text-align: left;
+  .page-header,
+  .ui-burbujas {
+    margin: 0;
   }
 
-  // `p` carries margin: 0.5rem auto 1.5rem, and the auto centres it inside the
-  // column. Only the inline half is reset; the vertical rhythm stays.
+  .page-header-titulo {
+    font-size: var(--fs-title-home);
+  }
+
   p {
-    margin-inline: 0;
+    margin: 0;
   }
 }
 
@@ -132,6 +129,10 @@ body.home main {
 
   .hero-texto {
     padding: 2rem 1.25rem;
+
+    .page-header-titulo {
+      font-size: var(--fs-title);
+    }
   }
 
   // Text first, image second comes from source order, so no `order` is needed.

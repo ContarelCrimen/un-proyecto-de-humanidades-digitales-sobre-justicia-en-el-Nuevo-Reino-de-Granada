@@ -1,0 +1,109 @@
+.ui-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.ui-chip {
+  --ui-chip-punto: var(--chip-dot, var(--dorado));
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 100%;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
+  line-height: var(--lh-snug);
+  color: var(--ui-fg);
+  background: transparent;
+  border: var(--border-width) solid var(--ui-linea);
+  border-radius: var(--radius-pill);
+  transition:
+    background var(--duration-fast),
+    border-color var(--duration-fast);
+
+  &:is(button) {
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--ui-linea-fuerte);
+    }
+  }
+
+  &:focus-visible {
+    outline: var(--focus-ring-width) solid var(--ui-foco);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  &[aria-pressed='true'] {
+    color: var(--state-selected-fg);
+    background: var(--state-selected-bg);
+    border-color: var(--state-selected-border);
+    font-weight: var(--fw-bold);
+
+    .ui-chip-punto {
+      box-shadow: 0 0 0 var(--border-width) var(--state-selected-fg);
+    }
+  }
+
+  &:disabled {
+    opacity: var(--state-disabled-opacity);
+    cursor: default;
+  }
+}
+
+.ui-chip-punto {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--radius-circle);
+  background: var(--ui-chip-punto);
+}
+
+.ui-chip-texto {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-chip-etiqueta {
+  color: var(--ui-fg-acento);
+}
+
+.ui-chip--removible {
+  padding-inline-end: var(--space-1);
+}
+
+.ui-chip-quitar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-md);
+  line-height: var(--lh-tight);
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-circle);
+  cursor: pointer;
+  transition: background var(--duration-fast);
+
+  &:hover {
+    background: var(--ui-hover);
+  }
+
+  &:focus-visible {
+    outline: var(--focus-ring-width) solid var(--ui-foco);
+    outline-offset: 0;
+  }
+}
+
+.ui-chip--estatico {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-ui-xs);
+}

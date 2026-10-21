@@ -60,6 +60,24 @@ interface ContenedoresCrimenesPorTipo {
   spikeId: string;
   donutId: string;
 }
+function luminancia(color: string): number {
+  const { r, g, b } = d3.rgb(color);
+  const canal = (v: number) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
+}
+function contraste(a: string, b: string): number {
+  const [claro, oscuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (claro + 0.05) / (oscuro + 0.05);
+}
+function textoSobre(fondo: string): string {
+  const estilos = getComputedStyle(document.documentElement);
+  const claro = estilos.getPropertyValue('--on-panel').trim();
+  const oscuro = estilos.getPropertyValue('--on-surface').trim();
+  return contraste(fondo, claro) >= contraste(fondo, oscuro) ? 'var(--on-panel)' : 'var(--on-surface)';
+}
 export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
   const contenedorBarras = document.getElementById(ids.barrasId);
   const contenedorSpike = document.getElementById(ids.spikeId);
@@ -217,7 +235,9 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       const barra = document.createElement('div');
       barra.className = 'crimenes-tipo-barra';
       barra.style.width = `${anchoPct}%`;
-      barra.style.background = colorDeCrimen(codigoPorNombreCrimen.get(delito.nombre));
+      const fondoBarra = colorDeCrimen(codigoPorNombreCrimen.get(delito.nombre));
+      barra.style.background = fondoBarra;
+      barra.style.color = textoSobre(fondoBarra);
       const nombreEl = document.createElement('div');
       nombreEl.className = 'crimenes-tipo-nombre';
       const marca = document.createElement('span');
@@ -237,7 +257,8 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       panelDefinicion.appendChild(cuerpo);
       const botonVerCasos = document.createElement('button');
       botonVerCasos.type = 'button';
-      botonVerCasos.className = 'btn-mapa-ver-casos btn-mapa--visible crimenes-tipo-boton-ver-casos';
+      botonVerCasos.className =
+        'ui-btn ui-btn--primario ui-btn--sm btn-mapa-ver-casos btn-mapa--visible crimenes-tipo-boton-ver-casos';
       botonVerCasos.textContent = `Ver casos: ${delito.nombre}`;
       botonVerCasos.addEventListener('click', (evento) => {
         evento.stopPropagation();
@@ -306,12 +327,12 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
     if (foco) {
       const banner = document.createElement('div');
       banner.style.cssText =
-        'display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-size:0.85rem;';
+        'display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-family:var(--font-ui);font-size:var(--fs-ui-sm);';
       const texto = document.createElement('span');
       texto.textContent = `Subcrimen: ${foco.sub} (dentro de ${foco.crimen})`;
       const volver = document.createElement('button');
       volver.type = 'button';
-      volver.className = 'crimenes-tipo-fijados-limpiar';
+      volver.className = 'ui-btn ui-btn--fantasma ui-btn--sm';
       volver.textContent = 'Volver a la comparación';
       volver.addEventListener('click', () => {
         subcrimenEnSpike = null;
@@ -360,7 +381,7 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       .y((v: number) => y(v))
       .curve(d3.curveMonotoneX);
     const tooltip = document.createElement('div');
-    tooltip.className = 'tooltip-grafico tooltip-grafico--sans';
+    tooltip.className = 'tooltip-grafico';
     contenedorSpike.appendChild(tooltip);
     seleccion.forEach((serie) => {
       const color = colorDe.get(serie.nombre)!;
@@ -382,7 +403,7 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
           .attr('r', 9)
           .attr('class', 'crimenes-tipo-spike-punto-hit')
           .on('mouseenter', () => {
-            tooltip.innerHTML = `<strong>${serie.nombre}</strong><br/>${formatoDecada(decadas[i])}: ${valor.toLocaleString('es')} caso${valor === 1 ? '' : 's'}`;
+            tooltip.innerHTML = `<strong>${serie.nombre}</strong><br/>${formatoDecada(decadas[i])}: ${valor.toLocaleString('es')} registro${valor === 1 ? '' : 's'}`;
             tooltip.classList.add('tooltip-grafico--visible');
           })
           .on('mousemove', (event: MouseEvent) => {
@@ -419,14 +440,14 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
     seleccion.forEach((serie) => {
       const chip = document.createElement('button');
       chip.type = 'button';
-      chip.className = 'crimenes-tipo-leyenda-chip';
+      chip.className = 'ui-chip';
       const punto = document.createElement('span');
-      punto.className = 'crimenes-tipo-leyenda-punto';
+      punto.className = 'ui-chip-punto';
       punto.style.background = colorDe.get(serie.nombre)!;
       chip.append(
         punto,
         document.createTextNode(
-          ` ${serie.nombre} · ${serie.total.toLocaleString('es')} caso${serie.total === 1 ? '' : 's'}`,
+          ` ${serie.nombre} · ${serie.total.toLocaleString('es')} registro${serie.total === 1 ? '' : 's'}`,
         ),
       );
       chip.addEventListener('click', () => {
@@ -455,12 +476,15 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
     }
     if (seleccion.length > 1) {
       const selector = document.createElement('div');
-      selector.className = 'crimenes-tipo-donut-selector';
+      selector.className = 'ui-tabs ui-tabs--sm crimenes-tipo-donut-selector';
+      selector.setAttribute('role', 'tablist');
+      selector.setAttribute('aria-label', 'Crimen del gráfico de subcrímenes');
       seleccion.forEach((nombre) => {
         const boton = document.createElement('button');
         boton.type = 'button';
-        boton.className = 'crimenes-tipo-donut-tab';
-        boton.classList.toggle('crimenes-tipo-donut-tab--activo', nombre === crimenActivoDonut);
+        boton.className = 'ui-tab';
+        boton.setAttribute('role', 'tab');
+        boton.setAttribute('aria-selected', String(nombre === crimenActivoDonut));
         boton.textContent = nombre;
         boton.addEventListener('click', () => {
           crimenActivoDonut = nombre;
@@ -475,7 +499,7 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
     if (datos.length === 0) {
       const aviso = document.createElement('div');
       aviso.className = 'mapa-aviso-vacio mapa-aviso-vacio--compacto';
-      aviso.textContent = `"${crimenActivoDonut}" no tiene subcrimenes registrados.`;
+      aviso.textContent = `"${crimenActivoDonut}" no tiene subcrímenes registrados.`;
       contenedorDonut.appendChild(aviso);
       return;
     }
@@ -499,7 +523,7 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       .innerRadius(RADIO * 0.55)
       .outerRadius(RADIO * 0.95);
     const tooltip = document.createElement('div');
-    tooltip.className = 'tooltip-grafico tooltip-grafico--sans';
+    tooltip.className = 'tooltip-grafico';
     contenedorDonut.appendChild(tooltip);
     const marcarPorciones = () => {
       g.selectAll('path')
@@ -562,9 +586,9 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
     leyenda.className = 'crimenes-tipo-leyenda';
     datos.forEach((d) => {
       const chip = document.createElement('div');
-      chip.className = 'crimenes-tipo-leyenda-chip crimenes-tipo-leyenda-chip--estatico';
+      chip.className = 'ui-chip ui-chip--estatico';
       const punto = document.createElement('span');
-      punto.className = 'crimenes-tipo-leyenda-punto';
+      punto.className = 'ui-chip-punto';
       punto.style.background = colorDe.get(d.nombre)!;
       chip.append(
         punto,
@@ -615,24 +639,29 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
       contenedorFijados.classList.toggle('crimenes-tipo-fijados--oculto', !haySeleccion);
       if (!haySeleccion) return;
       const etiqueta = document.createElement('span');
-      etiqueta.className = 'crimenes-tipo-fijados-etiqueta';
+      etiqueta.className = 'ui-field-label';
       etiqueta.textContent = 'Fijados para comparar:';
       contenedorFijados.appendChild(etiqueta);
       [...crimenesSeleccionados].forEach((nombre) => {
         const chip = document.createElement('button');
         chip.type = 'button';
-        chip.className = 'crimenes-tipo-fijados-chip';
+        chip.className = 'ui-chip ui-chip--removible';
         chip.title = `Quitar "${nombre}" de la comparación`;
+        chip.setAttribute('aria-label', `Quitar "${nombre}" de la comparación`);
+        const texto = document.createElement('span');
+        texto.className = 'ui-chip-texto';
+        texto.textContent = nombre;
         const quitar = document.createElement('span');
-        quitar.className = 'crimenes-tipo-fijados-chip-quitar';
+        quitar.className = 'ui-chip-quitar';
+        quitar.setAttribute('aria-hidden', 'true');
         quitar.textContent = '×';
-        chip.append(document.createTextNode(`${nombre} `), quitar);
+        chip.append(texto, quitar);
         chip.addEventListener('click', () => alternarSeleccion(nombre));
         contenedorFijados.appendChild(chip);
       });
       const botonLimpiar = document.createElement('button');
       botonLimpiar.type = 'button';
-      botonLimpiar.className = 'crimenes-tipo-fijados-limpiar';
+      botonLimpiar.className = 'ui-btn ui-btn--fantasma ui-btn--sm crimenes-tipo-fijados-limpiar';
       botonLimpiar.textContent = 'Quitar selección';
       botonLimpiar.addEventListener('click', limpiarSeleccion);
       contenedorFijados.appendChild(botonLimpiar);

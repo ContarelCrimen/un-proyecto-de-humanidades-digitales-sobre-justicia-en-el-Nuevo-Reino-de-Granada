@@ -25,7 +25,7 @@ export async function crearHistoriaMetodologia(containerId: string) {
   wrap.className = 'historia-wrap';
   const flechaPrev = document.createElement('button');
   flechaPrev.type = 'button';
-  flechaPrev.className = 'historia-flecha historia-flecha--prev';
+  flechaPrev.className = 'ui-btn ui-btn--icono historia-flecha historia-flecha--prev';
   flechaPrev.setAttribute('aria-label', 'Diapositiva anterior');
   flechaPrev.textContent = '‹';
   const pista = document.createElement('div');
@@ -35,7 +35,7 @@ export async function crearHistoriaMetodologia(containerId: string) {
   pista.appendChild(contenido);
   const flechaNext = document.createElement('button');
   flechaNext.type = 'button';
-  flechaNext.className = 'historia-flecha historia-flecha--next';
+  flechaNext.className = 'ui-btn ui-btn--icono historia-flecha historia-flecha--next';
   flechaNext.setAttribute('aria-label', 'Diapositiva siguiente');
   flechaNext.textContent = '›';
   filas.forEach((fila, i) => {

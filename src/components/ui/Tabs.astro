@@ -1,0 +1,66 @@
+---
+interface Pestana {
+  texto: string;
+  valor?: string;
+  href?: string;
+  activa?: boolean;
+  controla?: string;
+  id?: string;
+}
+
+interface Props {
+  pestanas: Pestana[];
+  etiquetaAria: string;
+  tamano?: 'sm' | 'md';
+  orientacion?: 'horizontal' | 'vertical';
+  id?: string;
+  clase?: string;
+}
+
+const {
+  pestanas,
+  etiquetaAria,
+  tamano = 'md',
+  orientacion = 'horizontal',
+  id,
+  clase,
+} = Astro.props;
+const sonEnlaces = pestanas.some((p) => p.href);
+const vertical = orientacion === 'vertical';
+const clases = ['ui-tabs', { 'ui-tabs--sm': tamano === 'sm', 'ui-tabs--vertical': vertical }, clase];
+---
+
+{
+  sonEnlaces ? (
+    <nav class:list={clases} id={id} aria-label={etiquetaAria}>
+      {pestanas.map((p) => (
+        <a class="ui-tab" id={p.id} href={p.href} aria-current={p.activa ? 'page' : undefined}>
+          {p.texto}
+        </a>
+      ))}
+    </nav>
+  ) : (
+    <div
+      class:list={clases}
+      id={id}
+      role="tablist"
+      aria-label={etiquetaAria}
+      aria-orientation={vertical ? 'vertical' : undefined}
+    >
+      {pestanas.map((p) => (
+        <button
+          class="ui-tab"
+          id={p.id}
+          type="button"
+          role="tab"
+          data-valor={p.valor}
+          aria-selected={p.activa ? 'true' : 'false'}
+          aria-controls={p.controla}
+          tabindex={vertical && !p.activa ? -1 : undefined}
+        >
+          {p.texto}
+        </button>
+      ))}
+    </div>
+  )
+}

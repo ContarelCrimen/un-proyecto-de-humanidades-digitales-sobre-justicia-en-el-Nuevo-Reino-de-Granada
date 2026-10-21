@@ -3,6 +3,9 @@
 // las dos páginas de esta carpeta (index.astro y otrosAgentes.astro), que solo
 // cambian el modo.
 import type { Modo } from '../../scripts/charts/ComposicionDatos';
+import PageHeader from '../../components/PageHeader.astro';
+import Button from '../../components/ui/Button.astro';
+import Tabs from '../../components/ui/Tabs.astro';
 
 // Hojas que siguen usando los sunbursts reutilizados (tooltip, botón "Ver
 // casos", envoltorio y etiquetas) más la propia del layout.
@@ -23,8 +26,8 @@ const base = import.meta.env.BASE_URL;
 const esPersonas = modo === 'personas';
 const titulo = esPersonas ? 'Personas' : 'Otros agentes';
 const pista = esPersonas
-  ? 'Haz clic en un género, un crimen o un nodo del grafo, los demás paneles se actualizan'
-  : 'Haz clic en un tipo de agente, un crimen o un nodo del grafo, los demás paneles se actualizan';
+  ? 'Haz clic en un género, un crimen o un nodo del grafo. Los demás paneles se actualizan.'
+  : 'Haz clic en un tipo de agente, un crimen o un nodo del grafo. Los demás paneles se actualizan.';
 
 const pestañas = [
   { modo: 'personas', texto: 'Personas', href: `${base}personas/index.html` },
@@ -32,74 +35,67 @@ const pestañas = [
 ] as const;
 ---
 
-<main class="container cs-pagina" data-modo={modo}>
-  <header class="cs-encabezado">
-    <p class="cs-eyebrow">Agentes registrados</p>
-    <h1 class="cs-titulo">{titulo}</h1>
+<main class="container pagina-dashboard" data-modo={modo}>
+  <PageHeader ceja="Agentes registrados" titulo={titulo} subtitulo={pista} />
 
-    <nav class="cs-pestañas" aria-label="Tipo de agente">
-      {
-        pestañas.map((p) => (
-          <a
-            href={p.href}
-            class={`cs-pestaña${p.modo === modo ? ' cs-pestaña--activa' : ''}`}
-            aria-current={p.modo === modo ? 'page' : undefined}
-          >
-            {p.texto}
-          </a>
-        ))
-      }
-    </nav>
+  <Tabs
+    etiquetaAria="Tipo de agente"
+    pestanas={pestañas.map((p) => ({ texto: p.texto, href: p.href, activa: p.modo === modo }))}
+  />
 
-    <p class="cs-pista">{pista}</p>
-  </header>
+  <div
+    id="csFiltros"
+    class="cs-filtros ui-filter-panel ui-filter-panel--fijo"
+    role="group"
+    aria-label="Filtros"
+  >
+  </div>
 
-  <div id="csFiltros" class="cs-filtros"></div>
+  <PageHeader nivel="seccion" titulo="¿Quién? Selecciona para mayor información" />
+  <div id="csTarjetas" class="ui-stat-group"></div>
+  <div id="csRol" class="cs-panel cs-panel--rol ui-clara" hidden></div>
 
-  <h2 class="cs-seccion-titulo"><span>¿Quién? Selecciona para mayor información</span></h2>
-  <div id="csTarjetas" class="cs-tarjetas"></div>
-  <div id="csRol" class="cs-panel cs-panel--rol" hidden></div>
-
-  <section class="cs-panel">
-    <h3 class="cs-panel-titulo">
-      {esPersonas ? 'Personas registradas' : 'Agentes registrados'} a lo largo del tiempo
-    </h3>
-    <p id="csLineaSubtitulo" class="cs-panel-subtitulo"></p>
+  <section class="cs-panel ui-clara">
+    <PageHeader
+      nivel="subseccion"
+      titulo={`${esPersonas ? 'Personas registradas' : 'Agentes registrados'} a lo largo del tiempo`}
+      idSubtitulo="csLineaSubtitulo"
+    />
     <div id="csLinea"></div>
   </section>
 
-  <h2 class="cs-seccion-titulo">
-    <span>¿Cómo se relacionan?</span>
-  </h2>
+  <PageHeader nivel="seccion" titulo="¿Cómo se relacionan?" />
   <div id="csRejilla" class="cs-rejilla">
-    <section class="cs-panel cs-panel--barras">
-      <h3 class="cs-panel-titulo">Distribución por crimenes</h3>
-      <p class="cs-panel-subtitulo">
-        Haz clic en un crimen para ver sus subcrimenes. También puedes interacturar con el sunburst o el grafo. 
-      </p>
+    <section class="cs-panel cs-panel--barras ui-clara">
+      <PageHeader
+        nivel="subseccion"
+        titulo="Distribución por crímenes"
+        subtitulo="Haz clic en un crimen para ver sus subcrímenes. También puedes interactuar con el sunburst o el grafo."
+      />
       <div id="csBarras"></div>
     </section>
 
-    <section class="cs-panel cs-panel--dona">
-      <h3 class="cs-panel-titulo">Recorrido por rol y {esPersonas ? 'género' : 'tipo'}</h3>
-      <p id="csDonaSubtitulo" class="cs-panel-subtitulo"></p>
+    <section class="cs-panel cs-panel--dona ui-clara">
+      <PageHeader
+        nivel="subseccion"
+        titulo={`Recorrido por rol y ${esPersonas ? 'género' : 'tipo'}`}
+        idSubtitulo="csDonaSubtitulo"
+      />
       <div class="cs-herramientas" role="group" aria-label="Vista del gráfico circular">
-        <button type="button" id="csDonaNivel" class="cs-herramienta" aria-pressed="false">
-          Un nivel a la vez
-        </button>
-        <button type="button" id="csDonaAmpliar" class="cs-herramienta" aria-pressed="false">
-          Ampliar
-        </button>
+        <Button id="csDonaNivel" tamano="sm" presionado={false}>Un nivel a la vez</Button>
+        <Button id="csDonaAmpliar" tamano="sm" presionado={false}>Ampliar</Button>
       </div>
       <div id="csDonaGrafico"></div>
     </section>
   </div>
 
-  <section class="cs-panel">
-    <h3 class="cs-panel-titulo"> Crimenes que suelen coincidir en un mismo caso</h3>
-    <p id="csRedSubtitulo" class="cs-panel-subtitulo">
-      Puedes observar cuáles son los crimenes que más suceden en un mismo caso, puedes hacer clic en los nodos para ver su conexión.
-    </p>
+  <section class="cs-panel ui-clara">
+    <PageHeader
+      nivel="subseccion"
+      titulo="Crímenes que suelen coincidir en un mismo caso"
+      idSubtitulo="csRedSubtitulo"
+      subtitulo="Puedes observar cuáles son los crímenes que más suceden en un mismo caso. Puedes hacer clic en los nodos para ver su conexión."
+    />
     <div id="csRed"></div>
   </section>
 </main>

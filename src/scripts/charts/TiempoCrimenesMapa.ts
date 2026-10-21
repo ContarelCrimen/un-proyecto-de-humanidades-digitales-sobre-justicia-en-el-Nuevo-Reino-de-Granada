@@ -300,7 +300,7 @@ export async function inicializarDashboard() {
   function crearBotonVerCasos() {
     const boton = document.createElement('button');
     boton.type = 'button';
-    boton.className = 'btn-mapa-ver-casos';
+    boton.className = 'ui-btn ui-btn--primario ui-btn--sm btn-mapa-ver-casos';
     let handlerActivo: (() => void) | null = null;
     boton.addEventListener('click', () => {
       if (handlerActivo) handlerActivo();
@@ -424,7 +424,7 @@ export async function inicializarDashboard() {
     const anioMax = Math.max(...todosLosAnios);
     const encabezado = crearElemento('div', 'lugar-ficha-encabezado');
     encabezado.append(
-      crearElemento('h4', 'lugar-ficha-subtitulo', 'crimenes documentados'),
+      crearElemento('h4', 'lugar-ficha-subtitulo', 'Crímenes documentados'),
       crearElemento(
         'span',
         'lugar-ficha-resumen',
@@ -468,7 +468,7 @@ export async function inicializarDashboard() {
         `${r.casos} ${r.casos === 1 ? 'caso' : 'casos'}`,
       );
       const anios = crearElemento('span', 'lugar-ficha-anios');
-      r.anios.forEach((anio) => anios.appendChild(crearElemento('span', 'lugar-ficha-anio', String(anio))));
+      r.anios.forEach((anio) => anios.appendChild(crearElemento('span', 'ui-chip ui-chip--estatico', String(anio))));
       li.append(nombre, casos, anios);
       const ir = () => irATablasFiltradas({ lugar, codigo: r.crimen, subcodigo: null });
       li.addEventListener('click', ir);
@@ -487,7 +487,6 @@ export async function inicializarDashboard() {
     if (!contenedorInfoLugares) return;
     contenedorInfoLugares.innerHTML = '';
     [...estado.lugaresFijados].forEach((lugar: NodoMutable, i: number) => {
-      if (i > 0) contenedorInfoLugares!.appendChild(crearElemento('div', 'mapa-tarjeta-divisor'));
       contenedorInfoLugares!.appendChild(crearFichaLugar(lugar));
     });
   }
@@ -532,29 +531,25 @@ export async function inicializarDashboard() {
   if (!mapaContenedor) return;
   const contenedorLineasEl = document.getElementById('crimenesChart');
   const dashboardWrap = mapaContenedor.parentElement;
-  const mainContenedor = document.querySelector('main.container');
-  if (mainContenedor) {
-    mainContenedor.classList.add('mapa-main-ancho');
-  }
   function envolverEnTarjeta(el: HTMLElement, titulo: string, subtitulo?: string) {
     const tarjeta = document.createElement('div');
-    tarjeta.className = 'mapa-tarjeta';
-    const encabezado = document.createElement('div');
-    encabezado.className = 'mapa-tarjeta-encabezado';
-    const h = document.createElement('div');
+    tarjeta.className = 'mapa-tarjeta ui-clara';
+    const encabezado = document.createElement('header');
+    encabezado.className = 'page-header page-header--subseccion';
+    const texto = document.createElement('div');
+    texto.className = 'page-header-texto';
+    const h = document.createElement('h3');
     h.textContent = titulo as unknown as string;
-    h.className = 'mapa-tarjeta-titulo';
-    encabezado.appendChild(h);
+    h.className = 'page-header-titulo';
+    texto.appendChild(h);
     if (subtitulo) {
-      const sub = document.createElement('div');
+      const sub = document.createElement('p');
       sub.textContent = subtitulo as unknown as string;
-      sub.className = 'mapa-tarjeta-subtitulo';
-      encabezado.appendChild(sub);
+      sub.className = 'page-header-subtitulo';
+      texto.appendChild(sub);
     }
+    encabezado.appendChild(texto);
     tarjeta.appendChild(encabezado);
-    const divisor = document.createElement('div');
-    divisor.className = 'mapa-tarjeta-divisor';
-    tarjeta.appendChild(divisor);
     tarjeta.appendChild(el);
     return tarjeta;
   }
@@ -574,7 +569,7 @@ export async function inicializarDashboard() {
   columnaMapa.appendChild(
     envolverEnTarjeta(
       mapaContenedor,
-      'Distribución geográfica de los crimenes',
+      'Distribución geográfica de los crímenes',
       'Puedes hacer clic en un punto para fijarlo y compararlo',
     ),
   );
@@ -588,12 +583,12 @@ export async function inicializarDashboard() {
       envolverEnTarjeta(
         contenedorLineasEl,
         'Evolución en el tiempo',
-        'Crimenes ocurridos en el lugar seleccionado según el rango elegido. Puedes fijar varios lugares para compararlos.',
+        'Crímenes ocurridos en el lugar seleccionado según el rango elegido. Puedes fijar varios lugares para compararlos.',
       ),
     );
     contenedorInfoLugares = document.createElement('div');
     contenedorInfoLugares.id = 'info-lugares-fijados';
-    contenedorInfoLugares.className = 'mapa-tarjeta mapa-info-lugares';
+    contenedorInfoLugares.className = 'mapa-tarjeta ui-clara mapa-info-lugares';
     columnaSpike.appendChild(contenedorInfoLugares);
     layoutLugar.appendChild(columnaSpike);
   }
@@ -610,11 +605,9 @@ export async function inicializarDashboard() {
   if (contenedorLineasEl) {
     contenedorLineasEl.classList.add('mapa-panel-ancho-completo');
   }
-  panelFiltros!.classList.add('panel-filtros-mapa');
-  const tituloPanel = document.createElement('div');
-  tituloPanel.textContent = 'Filtros';
-  tituloPanel.className = 'panel-filtros-titulo';
-  panelFiltros!.appendChild(tituloPanel);
+  panelFiltros!.classList.add('ui-filter-panel', 'ui-filter-panel--fijo');
+  panelFiltros!.setAttribute('role', 'group');
+  panelFiltros!.setAttribute('aria-label', 'Filtros');
   function crearComboBuscable({
     etiqueta,
     opciones,
@@ -629,17 +622,19 @@ export async function inicializarDashboard() {
     notaVacia?: string;
   }) {
     const wrap = document.createElement('div');
-    wrap.className = 'filtro-combo';
+    wrap.className = 'ui-field ui-combo filtro-combo';
     const label = document.createElement('label');
     label.textContent = etiqueta as unknown as string;
-    label.className = 'filtro-label';
+    label.className = 'ui-field-label';
     const input = document.createElement('input');
     input.type = 'text';
     input.value = valorInicial as unknown as string;
     input.readOnly = true;
-    input.className = 'filtro-combo-input';
+    input.className = 'ui-input filtro-combo-input';
+    input.setAttribute('aria-label', etiqueta);
     const lista = document.createElement('ul');
-    lista.className = 'filtro-combo-lista';
+    lista.className = 'ui-combo-lista filtro-combo-lista';
+    lista.setAttribute('role', 'listbox');
     const nota = document.createElement('div');
     nota.className = 'filtro-combo-nota';
     let opcionesCompletas = ['Todos', ...opciones];
@@ -652,7 +647,9 @@ export async function inicializarDashboard() {
       filtradas.slice(0, 200).forEach((op) => {
         const li = document.createElement('li');
         li.textContent = op as unknown as string;
-        li.className = 'filtro-combo-item';
+        li.className = 'ui-combo-opcion';
+        li.setAttribute('role', 'option');
+        li.setAttribute('aria-selected', String(op === input.dataset.valorPrevio));
         li.addEventListener('mousedown', (e) => e.preventDefault());
         li.addEventListener('click', () => {
           input.value = op as unknown as string;
@@ -667,9 +664,9 @@ export async function inicializarDashboard() {
       input.readOnly = false;
       const valorActual = input.value;
       input.value = '' as unknown as string;
+      input.dataset.valorPrevio = valorActual;
       pintarLista('');
       lista.classList.add('filtro-combo-lista--abierta');
-      input.dataset.valorPrevio = valorActual;
     });
     input.addEventListener('input', () => pintarLista(input.value));
     input.addEventListener('blur', () => {
@@ -701,25 +698,30 @@ export async function inicializarDashboard() {
     return { wrap, actualizarOpciones, establecerValor };
   }
   const wrapTiempo = document.createElement('div');
-  wrapTiempo.className = 'mapa-wrap-tiempo';
-  const labelTiempo = document.createElement('label');
+  wrapTiempo.className = 'ui-field mapa-wrap-tiempo';
+  const cabeceraTiempo = document.createElement('div');
+  cabeceraTiempo.className = 'ui-range-cabecera';
+  const labelTiempo = document.createElement('span');
   labelTiempo.textContent = 'Fecha';
-  labelTiempo.className = 'filtro-label';
+  labelTiempo.className = 'ui-field-label';
   const sliderRango = document.createElement('div');
-  sliderRango.className = 'mapa-slider-rango';
-  const sliderTrack = document.createElement('div');
-  sliderTrack.className = 'mapa-slider-track';
-  const sliderProgreso = document.createElement('div');
-  sliderProgreso.className = 'mapa-slider-progreso';
+  sliderRango.className = 'ui-range';
+  const sliderTrack = document.createElement('span');
+  sliderTrack.className = 'ui-range-pista';
+  const sliderProgreso = document.createElement('span');
+  sliderProgreso.className = 'ui-range-relleno';
   const sliderMin = document.createElement('input');
   sliderMin.type = 'range';
-  sliderMin.className = 'mapa-slider mapa-slider--min';
+  sliderMin.className = 'ui-range-input ui-range-input--desde';
+  sliderMin.setAttribute('aria-label', 'Fecha: desde');
   const sliderMax = document.createElement('input');
   sliderMax.type = 'range';
-  sliderMax.className = 'mapa-slider mapa-slider--max';
+  sliderMax.className = 'ui-range-input ui-range-input--hasta';
+  sliderMax.setAttribute('aria-label', 'Fecha: hasta');
   sliderRango.append(sliderTrack, sliderProgreso, sliderMin, sliderMax);
-  const etiquetaTiempo = document.createElement('div');
-  etiquetaTiempo.className = 'mapa-etiqueta-tiempo';
+  const etiquetaTiempo = document.createElement('output');
+  etiquetaTiempo.className = 'ui-range-valor';
+  cabeceraTiempo.append(labelTiempo, etiquetaTiempo);
   function sincronizarSlider() {
     const maxIdx = DECADAS.length - 1;
     sliderMin.min = sliderMax.min = 0 as unknown as string;
@@ -729,9 +731,9 @@ export async function inicializarDashboard() {
     sliderMax.value = estado.decadaMaxIdx as unknown as string;
     const pctMin = maxIdx === 0 ? 0 : (estado.decadaMinIdx / maxIdx) * 100;
     const pctMax = maxIdx === 0 ? 100 : (estado.decadaMaxIdx / maxIdx) * 100;
-    sliderProgreso.style.left = `${pctMin}%`;
-    sliderProgreso.style.width = `${pctMax - pctMin}%`;
-    sliderMin.classList.toggle('mapa-slider--encima', estado.decadaMinIdx >= estado.decadaMaxIdx);
+    sliderRango.style.setProperty('--ui-range-desde', String(pctMin));
+    sliderRango.style.setProperty('--ui-range-hasta', String(pctMax));
+    sliderRango.classList.toggle('ui-range--desde-encima', estado.decadaMinIdx >= estado.decadaMaxIdx);
     etiquetaTiempo.textContent = etiquetaRangoActual();
   }
   function actualizarPorCambioRango() {
@@ -748,7 +750,7 @@ export async function inicializarDashboard() {
     estado.decadaMaxIdx = Math.max(+sliderMax.value, estado.decadaMinIdx);
     actualizarPorCambioRango();
   });
-  wrapTiempo.append(labelTiempo, sliderRango, etiquetaTiempo);
+  wrapTiempo.append(cabeceraTiempo, sliderRango);
   panelFiltros!.appendChild(wrapTiempo);
   function subcrimenesParaCrimen(crimen: string) {
     if (crimen === 'Todos') return subcrimenesLista;
@@ -764,12 +766,13 @@ export async function inicializarDashboard() {
     ].sort(compararPorLinaje);
   }
   const wrapCrimen = document.createElement('div');
-  wrapCrimen.className = 'mapa-wrap-crimen';
+  wrapCrimen.className = 'ui-field mapa-wrap-crimen';
   const labelCrimen = document.createElement('label');
   labelCrimen.textContent = 'Crimen';
-  labelCrimen.className = 'filtro-label';
+  labelCrimen.className = 'ui-field-label';
   const selectCrimen = document.createElement('select');
-  selectCrimen.className = 'filtro-select';
+  selectCrimen.className = 'ui-select';
+  selectCrimen.setAttribute('aria-label', 'Crimen');
   ['Todos', ...crimenesLista].forEach((c) => {
     const opt = document.createElement('option');
     opt.value = c as unknown as string;
@@ -798,7 +801,7 @@ export async function inicializarDashboard() {
     etiqueta: 'Subcrimen',
     opciones: subcrimenesParaCrimen(estado.crimen),
     valorInicial: estado.subcrimen,
-    notaVacia: 'Este crimen no tiene subcrimenes registrados.',
+    notaVacia: 'Este crimen no tiene subcrímenes registrados.',
     onChange: (valor: any) => {
       estado.subcrimen = valor;
       actualizarMapa();
@@ -854,7 +857,7 @@ export async function inicializarDashboard() {
   const btnLimpiarPines = document.createElement('button');
   btnLimpiarPines.type = 'button';
   btnLimpiarPines.textContent = 'Quitar selección';
-  btnLimpiarPines.className = 'btn-mapa-limpiar';
+  btnLimpiarPines.className = 'ui-btn btn-mapa-limpiar';
   btnLimpiarPines.addEventListener('click', () => {
     estado.lugaresFijados.clear();
     lugarFijadoPorCombo = null;
@@ -870,7 +873,10 @@ export async function inicializarDashboard() {
     actualizarVisibilidadSpike();
     if (habiaLugarElegido) actualizarCrimenesPorTipo();
   });
-  panelFiltros!.appendChild(btnLimpiarPines);
+  const accionesFiltros = document.createElement('div');
+  accionesFiltros.className = 'ui-filter-actions';
+  accionesFiltros.appendChild(btnLimpiarPines);
+  panelFiltros!.appendChild(accionesFiltros);
   function actualizarVisibilidadBotonLimpiar() {
     btnLimpiarPines.classList.toggle(
       'btn-mapa--visible',
@@ -878,7 +884,8 @@ export async function inicializarDashboard() {
     );
   }
   const avisoSinDatos = document.createElement('div');
-  avisoSinDatos.className = 'filtro-aviso-sin-datos';
+  avisoSinDatos.className = 'ui-filter-aviso filtro-aviso-sin-datos';
+  avisoSinDatos.setAttribute('role', 'status');
   panelFiltros!.appendChild(avisoSinDatos);
   function actualizarAvisoLugar() {
     if (estado.lugar === 'Todos') {
@@ -909,10 +916,10 @@ export async function inicializarDashboard() {
   mapaContenedor.appendChild(botonVerCasosMapa.boton);
   const btnEscalarTamanio = document.createElement('button');
   btnEscalarTamanio.type = 'button';
-  btnEscalarTamanio.textContent = 'Aumentar según cantidad de crimenes';
-  btnEscalarTamanio.className = 'btn-mapa-escalar';
+  btnEscalarTamanio.textContent = 'Aumentar según cantidad de crímenes';
+  btnEscalarTamanio.className = 'ui-btn ui-btn--sm btn-mapa-escalar';
   function actualizarEstiloBotonEscalar() {
-    btnEscalarTamanio.classList.toggle('btn-mapa--activo', escalarPorCantidad);
+    btnEscalarTamanio.setAttribute('aria-pressed', String(escalarPorCantidad));
   }
   btnEscalarTamanio.addEventListener('click', () => {
     escalarPorCantidad = !escalarPorCantidad;
@@ -924,7 +931,8 @@ export async function inicializarDashboard() {
   const btnMapaBase = document.createElement('button');
   btnMapaBase.type = 'button';
   btnMapaBase.textContent = 'Ver en un mapa actual';
-  btnMapaBase.className = 'btn-mapa-base-topografico';
+  btnMapaBase.className = 'ui-btn ui-btn--sm btn-mapa-base-topografico';
+  btnMapaBase.setAttribute('aria-pressed', 'false');
   mapaContenedor.appendChild(btnMapaBase);
   const mapaLienzo = document.createElement('div');
   mapaLienzo.className = 'mapa-lienzo';
@@ -961,7 +969,7 @@ export async function inicializarDashboard() {
   const gZoom = svgMapa.append('g').attr('class', 'capa-zoom');
   const gMapaBase = gZoom.append('g').attr('class', 'capa-mapa');
   const tooltipProvincia = document.createElement('div');
-  tooltipProvincia.className = 'tooltip-grafico tooltip-grafico--sans';
+  tooltipProvincia.className = 'tooltip-grafico';
   mapaContenedor.appendChild(tooltipProvincia);
   gMapaBase
     .selectAll('path')
@@ -1021,7 +1029,7 @@ export async function inicializarDashboard() {
   svgMapa.call(zoom as any);
   btnMapaBase.addEventListener('click', () => {
     mapaBaseVisible = !mapaBaseVisible;
-    btnMapaBase.classList.toggle('btn-mapa--activo', mapaBaseVisible);
+    btnMapaBase.setAttribute('aria-pressed', String(mapaBaseVisible));
     svgMapa.classed('mapa-svg--fondo-transparente', mapaBaseVisible);
     gMapaBase.selectAll('path').classed('mapa-provincia--sin-relleno', mapaBaseVisible);
     const kActual = d3.zoomTransform(svgMapa.node()!).k;
@@ -1397,7 +1405,7 @@ export async function inicializarDashboard() {
     let serieResaltada: string | null = null;
     let lineGroupsPorSerie = new Map();
     const tooltipLineas = document.createElement('div');
-    tooltipLineas.className = 'tooltip-grafico tooltip-grafico--sans';
+    tooltipLineas.className = 'tooltip-grafico';
     const MARGIN = { top: 60, right: 170, bottom: 50, left: 55 };
     const WIDTH = 700,
       HEIGHT = 300;
@@ -1428,7 +1436,7 @@ export async function inicializarDashboard() {
     function buildSerieTotal() {
       const lista = decadasSeleccionadas();
       const filtrados = datosFiltradosBase();
-      const nombreSerie = estado.crimen === 'Todos' ? 'Todos los crimenes' : estado.crimen;
+      const nombreSerie = estado.crimen === 'Todos' ? 'Todos los crímenes' : estado.crimen;
       const puntos = lista.map((t) => {
         const set = new Set(
           filtrados
@@ -1597,7 +1605,7 @@ export async function inicializarDashboard() {
       (enModoComparacion
         ? `Comparando ${series.length} ${series.length === 1 ? 'lugar' : 'lugares'}`
         : estado.crimen === 'Todos'
-          ? 'Todos los crimenes'
+          ? 'Todos los crímenes'
           : estado.crimen) + sufijoProvincia;
       svgLine
         .append('text')

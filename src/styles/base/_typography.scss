@@ -7,37 +7,16 @@ h4,
 h5,
 h6 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: var(--fw-regular);
 }
 
-.section-mainTitle {
-  font-family: var(--font-display);
-  font-size: var(--fs-2xl);
-  color: var(--crema);
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 0.4rem;
-  margin: 2.5rem 0 1.25rem;
-  letter-spacing: 0.02em;
-  text-align: center;
-  width: 100%;
-}
-
-// Títulos de sección con el estilo editorial
-section h2,
-.section-title {
-  font-family: var(--font-display);
-  font-size: var(--fs-xl);
-  color: var(--crema);
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 0.4rem;
-  margin: 2.5rem 0 1.25rem;
-  letter-spacing: 0.02em;
-  text-align: left;
-  width: 100%;
+h1 {
+  font-style: italic;
+  text-transform: uppercase;
 }
 
 p {
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
   line-height: var(--lh-relaxed);
   max-width: 650px;
   color: var(--ink-light);
@@ -47,4 +26,10 @@ p {
 svg {
   display: block;
   margin: 0 auto;
+  font-family: var(--font-ui);
+}
+
+svg g:has(> .tick),
+svg .tick text {
+  font-family: var(--font-ui);
 }
