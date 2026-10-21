@@ -85,9 +85,9 @@ $mapa-tinta-oscura: #3a2d1a;
 $mapa-acento-linea: $rosado;
 // Hover de los botones que usan $mapa-acento-linea.
 $mapa-acento-hover: $dorado;
-$mapa-acento-secundario: #4e9bbb;
+$mapa-acento-secundario: #e8ab1b;
 $mapa-tarjeta-fondo: #fdf8ec;
-$mapa-punto-color: #7b5ea7;
+$mapa-punto-color: #2e5f32;
 
 // Las diez series del mapa. TiempoCrimenesMapa.js:27 las pide por nombre
 // construido en runtime (`--mapa-serie-${i + 1}`), así que los diez nombres
@@ -112,10 +112,10 @@ $mapa-series: (
 // TODOS los pares sobre el fondo pergamino de este mapa (#f4ecd8) — ver
 // PROVINCIA_FALLBACK en TiempoCrimenesMapa.ts.
 $mapa-provincias: (
-  1: #95336d,
-  2: #ac8c9b,
-  3: #ccb2dd,
-  4: #804a8c,
+  1: #b4c1c6,
+  2: #ad939f,
+  3: #96a89e,
+  4: #b9cfbd,
 );
 
 // ── Paleta de género ─────────────────────────────────────
