@@ -4,7 +4,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   // GitHub Pages sirve el sitio en una subruta. OJO: BASE_URL termina en '/',
   // así que las rutas se construyen como `${BASE_URL}data/x.csv`, sin barra inicial.
-  base: '/ColonialExperimento/',
+  base: '/un-proyecto-de-humanidades-digitales-sobre-justicia-en-el-Nuevo-Reino-de-Granada/',
 
   // 'preserve' genera los HTML tal como están en src/pages/, lo que conserva las
   // rutas actuales (base-de-datos/caso.html, about/fuentes.html, personas/personas.html).
