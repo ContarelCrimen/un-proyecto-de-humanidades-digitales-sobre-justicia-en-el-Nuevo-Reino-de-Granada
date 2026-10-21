@@ -13,10 +13,6 @@ import burbujaFuentes from '../assets/home/burbuja-fuentes.jpg';
 
 import '../styles/pages/home.scss';
 
-// The paragraph's link used to be relative to the root ("about/index.html"). It
-// is now built with BASE_URL, with no leading slash on the segment.
-const base = import.meta.env.BASE_URL;
-
 const imagenesBurbuja: Partial<Record<(typeof enlacesNav)[number]['id'], ImageMetadata>> = {
   tiempo: burbujaTiempo,
   personas: burbujaSocial,
@@ -52,7 +48,7 @@ const burbujas = enlacesNav.flatMap((enlace) => {
         el periodo colonial en el Nuevo Reino de Granada con el fin de construir bases de datos
         relacionales que permitan analizar, en perspectiva agregada, las prácticas judiciales, las
         tipologías delictivas y las configuraciones sociales que emergen de la justicia penal de la
-        época. <a href={`${base}about/index.html`}>Más sobre la metodología</a>
+        época.
       </p>
     </div>
 
@@ -66,7 +62,7 @@ const burbujas = enlacesNav.flatMap((enlace) => {
         src={fotoArca}
         alt=""
         widths={[420, 520, 640, 800, 1047]}
-        sizes="(max-width: 768px) 100vw, 50vw"
+        sizes="(max-width: 768px) 100vw, 45vw"
         loading="eager"
         fetchpriority="high"
         class="hero-imagen"

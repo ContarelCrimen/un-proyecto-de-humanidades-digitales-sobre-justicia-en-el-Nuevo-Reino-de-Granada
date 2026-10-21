@@ -22,16 +22,9 @@ body.home {
 
 body.home main {
   p {
-    font-size: var(--fs-lead);
+    font-size: var(--fs-base);
     line-height: var(--lh-normal);
     color: var(--crema);
-  }
-
-  // <a> has no colour rule anywhere in the repo, so without this the link
-  // renders in the browser's default blue: 1.25:1 on vinotinto, unreadable.
-  p a {
-    color: var(--dorado);
-    text-decoration: underline;
   }
 }
 
@@ -48,7 +41,7 @@ body.home main {
 // hero cannot live inside that.
 .hero {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 11fr 9fr;
 
   // The hero is exactly the viewport below the nav. It has to be a definite
   // height and not a min-height: with an auto-sized row the image's intrinsic
