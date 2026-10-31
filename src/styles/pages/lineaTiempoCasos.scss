@@ -418,3 +418,63 @@
 .linea-tiempo-casos-contenedor-linea .tooltip-grafico {
   max-width: 20rem;
 }
+.linea-tiempo-casos-filtro-no-penal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.25rem 0 0;
+  cursor: pointer;
+  font-family: var(--fuente-mono, ui-monospace, 'Courier New', monospace);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--color-texto, #5a2a3a);
+  user-select: none;
+}
+
+/* El input real queda oculto pero accesible por teclado */
+.linea-tiempo-casos-filtro-no-penal__input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.linea-tiempo-casos-filtro-no-penal__caja {
+  position: relative;
+  flex: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 1.5px solid var(--color-acento, #7a3b4e);
+  border-radius: 3px;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.linea-tiempo-casos-filtro-no-penal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: fit-content;
+  margin: 0.5rem auto 0;   
+  align-self: center;     
+  cursor: pointer;
+  font-family: var(--fuente-mono, ui-monospace, 'Courier New', monospace);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--color-texto, #5a2a3a);
+  user-select: none;
+}
+
+.linea-tiempo-casos-filtro-no-penal__input:checked + .linea-tiempo-casos-filtro-no-penal__caja {
+  background: var(--color-acento, #7a3b4e);
+}
+
+.linea-tiempo-casos-filtro-no-penal__input:checked + .linea-tiempo-casos-filtro-no-penal__caja::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.linea-tiempo-casos-filtro-no-penal__input:focus-visible + .linea-tiempo-casos-filtro-no-penal__caja {
+  outline: 2px solid var(--color-acento, #7a3b4e);
+  outline-offset: 2px;
+}

@@ -2,28 +2,20 @@ import * as d3 from 'd3';
 import { esLinajeCriminal } from './linajeComun.js';
 import { crearBotonVerCasos } from './verCasos.js';
 import { colorDeCrimen } from './coloresCrimen.js';
+import { ULTIMA_DECADA, getDecada, decadaValida, formatoDecada } from './fechasComunes.ts';
 type SeleccionD3 = any;
 interface ConteoCrimen {
   nombre: string;
   total: number;
 }
-const ULTIMO_ANIO_COLONIAL = 1824;
-const ULTIMA_DECADA = Math.floor(ULTIMO_ANIO_COLONIAL / 10) * 10;
-function formatoDecada(decada: number): number {
-  return decada === ULTIMA_DECADA ? ULTIMO_ANIO_COLONIAL : decada;
-}
-function getDecada(y: number): number {
-  return Math.floor(y / 10) * 10;
-}
-function decadaValida(y: number): boolean {
-  return y >= 1500 && y <= 1899;
-}
+
 interface FiltrosCrimenesPorTipo {
   decadaDesde: number;
   decadaHasta: number;
   codigo: string | null;
   subcodigo: string | null;
   lugar: string | null;
+  provincia: string | null;
 }
 interface FocoSubcrimen {
   crimen: string;
@@ -45,13 +37,15 @@ function irATablasFiltradas(
     params.set('fechaDesde', String(filtros.decadaDesde));
     params.set('fechaHasta', String(filtros.decadaHasta));
   }
-  window.location.href = `${import.meta.env.BASE_URL}base-de-datos/index.html?${params.toString()}`;
+  window.location
+  .href = `${import.meta.env.BASE_URL}base-de-datos/index.html?${params.toString()}`;
 }
 declare global {
   interface Window {
     __obtenerFiltrosCrimenesPorTipo?: () => FiltrosCrimenesPorTipo | null;
     __actualizarCrimenesPorTipoDashboard?: () => void;
     __limpiarFiltroCrimenSiCoincide?: (nombre: string) => void;
+    __provinciaPorLugar?: Record<string, string>;
   }
 }
 const ANCHO_MINIMO_PCT = 30;
@@ -145,18 +139,22 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
   let redibujarDonut: (() => void) | null = null;
   function contar(filtros: FiltrosCrimenesPorTipo | null) {
     const pasaFiltrosBase = (d: (typeof crimenesAplicables)[number]) => {
-      const okSubcodigo = !filtros?.subcodigo || d['Sub_Código'] === filtros.subcodigo;
-      const okLugar = !filtros?.lugar || d.Lugar?.trim() === filtros.lugar;
-      return okSubcodigo && okLugar;
-    };
+    const okSubcodigo = !filtros?.subcodigo || d['Sub_Código'] === filtros.subcodigo;
+    const okLugar = !filtros?.lugar || d.Lugar?.trim() === filtros.lugar;
+    const okProvincia =
+      !filtros?.provincia ||
+      window.__provinciaPorLugar?.[(d.Lugar || '').trim()] === filtros.provincia;
+    return okSubcodigo && okLugar && okProvincia;
+  };
     const decadaDesde = filtros?.decadaDesde ?? decadaMinGlobal;
     const decadaHasta = filtros?.decadaHasta ?? ULTIMA_DECADA;
     const decadasRango: number[] = [];
     for (let t = decadaDesde; t <= decadaHasta; t += 10) decadasRango.push(t);
     const filtrados = crimenesAplicables.filter((d) => {
-      const decada = getDecada(+d.Año);
-      const okDecada = decada >= decadaDesde && decada <= decadaHasta;
-      return okDecada && pasaFiltrosBase(d);
+      const anio = +d.Año;
+      if (!decadaValida(anio)) return false;
+      const decada = getDecada(anio);
+      return decada >= decadaDesde && decada <= decadaHasta && pasaFiltrosBase(d);
     });
     const conteos = new Map<string, number>();
     filtrados.forEach((d) => {
@@ -271,7 +269,7 @@ export async function crearCrimenesPorTipo(ids: ContenedoresCrimenesPorTipo) {
     });
     const nota = document.createElement('div');
     nota.className = 'crimenes-tipo-nota';
-    nota.textContent = `${totalGeneral.toLocaleString('es')} casos · clic en uno o más delitos para ver su definición y comparar su tendencia por década`;
+    nota.textContent = `${totalGeneral.toLocaleString('es')} crímenes · clic en uno o más delitos para ver su definición y comparar su tendencia por década`;
     wrapper.appendChild(nota);
     contenedorBarras!.appendChild(wrapper);
   }

@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import Lenis from 'lenis';
+import { ULTIMA_DECADA, getDecada, decadaValida, finDecada } from './fechasComunes.js';
 import type { FilaCsv } from './agentesComun.js';
 import { colorDeCrimen } from './coloresCrimen.js';
 type SeleccionD3 = any;
@@ -9,10 +10,12 @@ interface FiltrosCrimenesPorTipo {
   codigo: string | null;
   subcodigo: string | null;
   lugar: string | null;
+  provincia: string | null;
 }
 declare global {
   interface Window {
     __obtenerFiltrosCrimenesPorTipo?: () => FiltrosCrimenesPorTipo | null;
+    __provinciaPorLugar?: Record<string, string>;
     __actualizarLineaTiempoCasosDashboard?: () => void;
     __irAVistaLugar?: () => void;
     __resaltarCasoEnMapa?: (lugar: string) => void;
@@ -22,12 +25,7 @@ function leerVariableCss(nombre: string, fallback: string): string {
   const valor = getComputedStyle(document.documentElement).getPropertyValue(nombre).trim();
   return valor || fallback;
 }
-function getDecada(y: number): number {
-  return Math.floor(y / 10) * 10;
-}
-function decadaValida(y: number): boolean {
-  return y >= 1500 && y <= 1899;
-}
+
 
 // Formato con punto de miles (2.000, 1.500) para el eje Y.
 const formatoMiles = d3
@@ -37,8 +35,14 @@ const formatoMiles = d3
 // El CSV trae el texto "null" en algunos lugares: se trata como "sin información".
 const textoLugar = (l?: string) => (!l || l.trim().toLowerCase() === 'null' ? 'Lugar no identificado' : l);
 
-const ULTIMA_DECADA = 1820;
 const SIN_TIPO_PROCESO = 'Sin información';
+
+// Tipo de proceso que NO es un caso penal con delito identificable.
+// Se compara normalizado para tolerar mayúsculas/tildes/espacios.
+const normalizarTexto = (s: string) =>
+  s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
+const esNoPenal = (tipo: string) => normalizarTexto(tipo).startsWith('no es un proceso penal');
+
 interface ResumenCaso {
   id: string;
   anioDesde: number;
@@ -128,7 +132,11 @@ export async function crearLineaTiempoCasos(containerId: string) {
     (a, b) => a - b,
   );
   const decadaMinGlobal = decadasConDatos[0] as number;
-  function calcularCasos(decadaDesde: number, decadaHasta: number): ResumenCaso[] {
+
+  // Por defecto NO se muestran los casos "No es un proceso penal…".
+  let mostrarNoPenal = false;
+
+function calcularCasos(decadaDesde: number, decadaHasta: number): ResumenCaso[] {
     const filtros = window.__obtenerFiltrosCrimenesPorTipo?.() ?? null;
     const idsCalifican = new Set<string>();
     crimenesAplicables.forEach((d) => {
@@ -136,11 +144,20 @@ export async function crearLineaTiempoCasos(containerId: string) {
       const okCodigo = !filtros?.codigo || d['Código'] === filtros.codigo;
       const okSubcodigo = !filtros?.subcodigo || d['Sub_Código'] === filtros.subcodigo;
       const okLugar = !filtros?.lugar || d.Lugar?.trim() === filtros.lugar;
-      if (okDecada && okCodigo && okSubcodigo && okLugar) idsCalifican.add(d['ID_Caso']);
+      const okProvincia =
+        !filtros?.provincia ||
+        window.__provinciaPorLugar?.[(d.Lugar || '').trim()] === filtros.provincia;
+      if (okDecada && okCodigo && okSubcodigo && okLugar && okProvincia) {
+        idsCalifican.add(d['ID_Caso']);
+      }
     });
+
+    const anioFin = finDecada(decadaHasta);
     return [...idsCalifican]
       .map((id) => resumenPorCaso.get(id))
-      .filter((c): c is ResumenCaso => !!c);
+      .filter((c): c is ResumenCaso => !!c)
+      .filter((c) => c.anioDesde >= decadaDesde && c.anioDesde <= anioFin)
+      .filter((c) => mostrarNoPenal || !esNoPenal(c.tipoProceso));
   }
   const wrapper = document.createElement('div');
   wrapper.className = 'linea-tiempo-casos-wrapper';
@@ -153,6 +170,7 @@ export async function crearLineaTiempoCasos(containerId: string) {
     <button type="button" class="ui-tab" role="tab" aria-selected="false" data-vista="rueda">Vista en detalle</button>
   `;
   wrapper.appendChild(selectorVista);
+
   const botonVistaLinea = selectorVista.querySelector<HTMLButtonElement>('[data-vista="linea"]')!;
   const botonVistaRueda = selectorVista.querySelector<HTMLButtonElement>('[data-vista="rueda"]')!;
   const cuerpo = document.createElement('div');
@@ -182,6 +200,7 @@ export async function crearLineaTiempoCasos(containerId: string) {
     if (elTitulo) elTitulo.textContent = TEXTOS_VISTA[vista].titulo;
     if (elSubtitulo) elSubtitulo.textContent = TEXTOS_VISTA[vista].subtitulo;
     leyenda.classList.toggle('linea-tiempo-casos-leyenda--linea', vista === 'linea');
+    filtroNoPenal.style.display = vista === 'linea' ? '' : 'none';
   }
   botonVistaLinea.addEventListener('click', () => mostrarVistaTimeline('linea'));
   botonVistaRueda.addEventListener('click', () => mostrarVistaTimeline('rueda'));
@@ -225,7 +244,7 @@ export async function crearLineaTiempoCasos(containerId: string) {
   let indiceActivoPrevio = -1;
   let espaciadorFinal: HTMLElement | null = null;
   let anioMinActual = decadaMinGlobal;
-  let anioMaxActual = ULTIMA_DECADA + 9;
+  let anioMaxActual = finDecada(ULTIMA_DECADA);
   let anchoInterior = 0;
   const xScale = d3.scaleLinear();
   function actualizarDesvanecido() {
@@ -379,18 +398,46 @@ export async function crearLineaTiempoCasos(containerId: string) {
   const nota = document.createElement('div');
   nota.className = 'linea-tiempo-casos-nota';
   wrapper.appendChild(nota);
+
+  // Leyenda: cada tipo de proceso es un ítem; "No es un proceso penal…" se
+  // oculta mientras la casilla esté desmarcada.
   const leyenda = document.createElement('div');
   leyenda.className = 'linea-tiempo-casos-leyenda';
+  const itemsLeyenda = new Map<string, HTMLElement>();
   tiposProceso.forEach((tipo) => {
     const item = document.createElement('span');
     item.className = 'linea-tiempo-casos-leyenda-item';
+    if (esNoPenal(tipo) && !mostrarNoPenal) item.style.display = 'none';
     const punto = document.createElement('span');
     punto.className = 'linea-tiempo-casos-leyenda-punto';
     punto.style.setProperty('--tipo-color', colorDeTipo(tipo));
     item.append(punto, tipo);
     leyenda.appendChild(item);
+    itemsLeyenda.set(tipo, item);
   });
   wrapper.appendChild(leyenda);
+
+  // Casilla para mostrar/ocultar los casos "No es un proceso penal…" (desmarcada por defecto).
+  // Va al final de la vista en línea, debajo de la leyenda.
+  const filtroNoPenal = document.createElement('label');
+  filtroNoPenal.className = 'linea-tiempo-casos-filtro-no-penal';
+  filtroNoPenal.innerHTML = `
+    <input type="checkbox" class="linea-tiempo-casos-filtro-no-penal__input" />
+    <span class="linea-tiempo-casos-filtro-no-penal__caja" aria-hidden="true"></span>
+    <span class="linea-tiempo-casos-filtro-no-penal__texto">Mostrar los casos que no son un proceso penal con delito identificable</span>
+  `;
+  wrapper.appendChild(filtroNoPenal);
+  const checkNoPenal = filtroNoPenal.querySelector<HTMLInputElement>('input')!;
+  checkNoPenal.checked = mostrarNoPenal;
+  checkNoPenal.addEventListener('change', () => {
+    mostrarNoPenal = checkNoPenal.checked;
+    // La leyenda también oculta/muestra el tipo correspondiente.
+    itemsLeyenda.forEach((item, tipo) => {
+      if (esNoPenal(tipo)) item.style.display = mostrarNoPenal ? '' : 'none';
+    });
+    dibujar();
+  });
+
 
   // ---------- Panel de detalle ----------
   const panelCaso = document.createElement('div');
@@ -532,9 +579,11 @@ export async function crearLineaTiempoCasos(containerId: string) {
       conteoPorAnio.set(c.anioDesde, entrada);
     });
     const anios = d3.range(anioDesde, anioHasta + 1);
-    const series = tiposProceso.map((tipo) => ({
+    // Una serie por tipo de proceso; "No es un proceso penal…" solo si la casilla está marcada.
+    const tiposVisibles = tiposProceso.filter((t) => mostrarNoPenal || !esNoPenal(t));
+    const series = tiposVisibles.map((tipo) => ({
       tipo,
-      color: colorDeTipo(tipo),
+      color: colorDeTipo(tipo), // el color sigue siendo estable por tipo
       valores: anios.map((a) => conteoPorAnio.get(a)?.get(tipo) ?? 0),
     }));
     const MARGIN = { top: 16, right: 20, bottom: 34, left: 56 };
@@ -699,7 +748,7 @@ export async function crearLineaTiempoCasos(containerId: string) {
     const decadaDesde = filtros?.decadaDesde ?? decadaMinGlobal;
     const decadaHasta = filtros?.decadaHasta ?? ULTIMA_DECADA;
     const casos = calcularCasos(decadaDesde, decadaHasta);
-    renderizarLinea(decadaDesde, decadaHasta + 9, casos);
+    renderizarLinea(decadaDesde, decadaHasta, casos);
     contenido.innerHTML = '';
     ocultarPopup();
     filas = [];
@@ -716,7 +765,7 @@ export async function crearLineaTiempoCasos(containerId: string) {
       return;
     }
     anioMinActual = decadaDesde;
-    anioMaxActual = decadaHasta + 9;
+    anioMaxActual = finDecada(decadaHasta);
     const porAnio = d3.group(casos, (c) => c.anioDesde);
     const aniosConCasos = [...porAnio.keys()].sort((a, b) => a - b);
     aniosConCasos.forEach((anio) => {
@@ -769,7 +818,21 @@ export async function crearLineaTiempoCasos(containerId: string) {
     recolocarColumnas();
     lenis.scrollTo(0, { immediate: true });
     actualizarDesvanecido();
-    nota.textContent = `${casos.length.toLocaleString('es')} caso${casos.length === 1 ? '' : 's'} en ${aniosConCasos.length} año${aniosConCasos.length === 1 ? '' : 's'} · desplázate por los años o haz clic en un punto para ver el detalle`;
+
+    // Totales de abajo: total general + desglose por tipo de proceso.
+    const totalesPorTipo = d3.rollup(
+      casos,
+      (v) => v.length,
+      (c) => c.tipoProceso,
+    );
+    const desglose = tiposProceso
+      .filter((t) => totalesPorTipo.has(t))
+      .map((t) => `${t}: ${totalesPorTipo.get(t)!.toLocaleString('es')}`)
+      .join(' · ');
+    nota.textContent =
+      `${casos.length.toLocaleString('es')} caso${casos.length === 1 ? '' : 's'} en ` +
+      `${aniosConCasos.length} año${aniosConCasos.length === 1 ? '' : 's'} (${desglose}) · ` +
+      `desplázate por los años o haz clic en un punto para ver el detalle`;
   }
   window.__actualizarLineaTiempoCasosDashboard = dibujar;
   container.appendChild(wrapper);

@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import { guardarResultados, leerResultados } from './resultadosGuardados.js';
+import { guardarResultados, leerResultados } from './resultadosGuardados.ts';
+import { ANIO_MIN_VALIDO, ANIO_MAX_VALIDO, getDecada, finDecada } from '../charts/fechasComunes.ts';
 const fmt = (n: number) => n.toLocaleString('de-DE');
 interface FiltrosOrigen {
   genero: string | null;
@@ -41,7 +42,7 @@ export async function crearTabla() {
   const crimenPorId = new Map(dataCrimenes.map((d) => [d['ID_Crímen'], d]));
   function añoValido(valor: string | undefined): number | null {
     const n = +(valor || '').trim();
-    return !isNaN(n) && n >= 1500 && n <= 1899 ? n : null;
+    return !isNaN(n) && n >= ANIO_MIN_VALIDO && n <= ANIO_MAX_VALIDO ? n : null;
   }
   const params = new URLSearchParams(window.location.search);
   const origen: FiltrosOrigen = {
@@ -56,7 +57,7 @@ export async function crearTabla() {
     fechaHasta: params.get('fechaHasta'),
     casos: params.get('casos'),
   };
-  const getDecada = (y: number) => Math.floor(y / 10) * 10;
+
   function calcularBase() {
     const { genero, atributo, agente, codigo, subcodigo, fecha, fechaDesde, fechaHasta } = origen;
     const lugarParam = origen.lugar;
@@ -114,10 +115,11 @@ export async function crearTabla() {
               const cumpleCodigo = !codigo || d.crimen === codigo;
               const cumpleSubcodigo = !subcodigo || d.subcrimen === subcodigo;
               const cumpleLugar = !lugarParam || d.Lugar?.trim() === lugarParam;
+              const año = añoValido(d.Año);
               const cumpleFecha = fecha
-                ? getDecada(+d.Año) === +fecha
+                ? año !== null && getDecada(año) === +fecha
                 : fechaDesde && fechaHasta
-                  ? getDecada(+d.Año) >= +fechaDesde && getDecada(+d.Año) <= +fechaHasta
+                  ? año !== null && getDecada(año) >= +fechaDesde && getDecada(año) <= +fechaHasta
                   : true;
               return cumpleCodigo && cumpleSubcodigo && cumpleLugar && cumpleFecha;
             })
@@ -225,6 +227,10 @@ export async function crearTabla() {
     poblarSelectores();
     renderTodo();
   }
+  const etiquetaDecadas = (desde: number, hasta: number) => {
+    const fin = finDecada(hasta);
+    return desde === fin ? `${desde}` : `${desde} – ${fin}`;
+  };
   function etiquetasActivas(): EtiquetaActiva[] {
     const lista: EtiquetaActiva[] = [];
     const conOrigen = (claves: (keyof FiltrosOrigen)[], texto: string, titulo: string) =>
@@ -240,13 +246,13 @@ export async function crearTabla() {
     if (origen.subcodigo) conOrigen(['subcodigo'], `Subcrimen: ${origen.subcodigo}`, 'Subcrimen');
     if (origen.lugar) conOrigen(['lugar'], origen.lugar, 'Lugar');
     if (origen.fecha) {
-      conOrigen(['fecha'], origen.fecha, 'Fecha');
+      conOrigen(['fecha'], etiquetaDecadas(+origen.fecha, +origen.fecha), 'Fecha');
     } else if (origen.fechaDesde && origen.fechaHasta) {
-      const rango =
-        origen.fechaDesde === origen.fechaHasta
-          ? origen.fechaDesde
-          : `${origen.fechaDesde} – ${origen.fechaHasta}`;
-      conOrigen(['fechaDesde', 'fechaHasta'], rango, 'Fecha');
+      conOrigen(
+        ['fechaDesde', 'fechaHasta'],
+        etiquetaDecadas(+origen.fechaDesde, +origen.fechaHasta),
+        'Fecha',
+      );
     }
     if (filtroLugar.value) {
       lista.push({

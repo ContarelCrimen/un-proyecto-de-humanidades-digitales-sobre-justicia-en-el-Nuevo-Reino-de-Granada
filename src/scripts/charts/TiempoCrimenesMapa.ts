@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import rewind from '@turf/rewind';
 import { crearMapaBaseTopografico } from './mapaBaseTopografico.js';
 import { colorDeCrimen } from './coloresCrimen.js';
+import { ULTIMA_DECADA, getDecada, decadaValida, formatoDecada } from './fechasComunes.js';
 import type { FilaCsv } from './agentesComun.js';
 type NodoMutable = any;
 type SeleccionD3 = any;
@@ -14,7 +15,9 @@ declare global {
       codigo: string | null;
       subcodigo: string | null;
       lugar: string | null;
+      provincia: string | null;
     } | null;
+    __provinciaPorLugar?: Record<string, string>;
     __actualizarCrimenesPorTipoDashboard?: () => void;
     __limpiarFiltroCrimenSiCoincide?: (nombre: string) => void;
     __actualizarLineaTiempoCasosDashboard?: () => void;
@@ -38,11 +41,7 @@ function leerVariableCss(nombre: string, fallback: string): string {
   const valor = getComputedStyle(document.documentElement).getPropertyValue(nombre).trim();
   return valor || fallback;
 }
-const ULTIMO_ANIO_COLONIAL = 1824;
-const ULTIMA_DECADA = Math.floor(ULTIMO_ANIO_COLONIAL / 10) * 10;
-function formatoDecada(decada: number): number {
-  return decada === ULTIMA_DECADA ? ULTIMO_ANIO_COLONIAL : decada;
-}
+
 function construirGruposColorProvincia(features: NodoMutable[]): number[] {
   const DECIMALES = 3;
   const claveDe = ([lon, lat]: [number, number]) => `${lon.toFixed(DECIMALES)},${lat.toFixed(DECIMALES)}`;
@@ -114,8 +113,6 @@ export async function inicializarDashboard() {
     d3.csv(`${import.meta.env.BASE_URL}data/Linaje.csv`),
   ]);
   const NuevaGranada = rewind(NuevaGranadaRaw as any, { reverse: true }) as any;
-  const getDecada = (y: number) => Math.floor(y / 10) * 10;
-  const decadaValida = (y: number) => y >= 1500 && y <= 1899;
   const coordPorLugar: Record<string, any> = {};
   function valorONulo(v: string | undefined): string | null {
     const limpio = (v || '').trim();
@@ -219,6 +216,7 @@ export async function inicializarDashboard() {
   Object.entries(coordPorLugar).forEach(([lugar, coords]) => {
     provinciaPorLugar[lugar] = getProvincia(coords as [number, number]);
   });
+  window.__provinciaPorLugar = provinciaPorLugar;
   function lugaresDeProvincia(provincia: string) {
     if (provincia === 'Todos') return lugaresLista;
     return lugaresLista.filter((lugar: NodoMutable) => provinciaPorLugar[lugar] === provincia);
@@ -261,6 +259,7 @@ export async function inicializarDashboard() {
       codigo: estado.crimen === 'Todos' ? null : codigoPorNombreCrimen.get(estado.crimen) || null,
       subcodigo: estado.subcrimen === 'Todos' ? null : codigoPorNombreSub.get(estado.subcrimen) || null,
       lugar: estado.lugar === 'Todos' ? null : estado.lugar,
+      provincia: estado.provincia === 'Todos' ? null : estado.provincia,
     };
   };
   function actualizarCrimenesPorTipo() {
@@ -1534,7 +1533,7 @@ export async function inicializarDashboard() {
         seleccionPuntoLinea = clave;
         serieResaltada = serie.nombre;
         aplicarResaltadoLinea();
-        botonVerCasosLinea.mostrar(`${serie.nombre} · ${tiempo}`, () =>
+        botonVerCasosLinea.mostrar(`${serie.nombre} · ${formatoDecada(tiempo)}`, () =>
           irDesdeLineaSerie(serie, tiempo),
         );
       }
